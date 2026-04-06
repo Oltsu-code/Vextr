@@ -1,0 +1,77 @@
+# Build directories
+/cmake-build-debug/
+/build/
+/cmake-build*/
+
+# CMake generated files
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/compile_commands.json
+/build.ninja
+/*.ninja
+
+# Object files and static/shared libs
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Generated archives
+*.tar
+*.zip
+
+# CLion/JetBrains
+.idea/
+*.iml
+.clion/
+
+# VSCode
+.vscode/
+
+# Visual Studio
+*.sln
+*.vcxproj*
+*.vcproj*
+*.user
+*.suo
+ipch/
+Debug/
+Release/
+x64/
+*.pdb
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*~
+*.tmp
+*.swp
+
+# Misc
+.env
+*.pyc
+
+# Ignore compiled library placed at repo root (if any)
+/libvextr.a
+
+# Ignore CMake build directories anywhere
+**/CMakeFiles/
+**/cmake_install.cmake
+**/CMakeCache.txt
+
+# Editor backups
+*#*
+
+# End of .gitignore
