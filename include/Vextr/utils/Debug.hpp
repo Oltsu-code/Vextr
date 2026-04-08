@@ -1,6 +1,11 @@
 #pragma once
+#include <string>
 
 namespace vextr::utils {
-class Debug {
-};
+
+void debugLog(const std::string& msg);
+void debugLog(const std::string& msg, const void* source);
+
 } // vextr::utils
+
+#define VEXTR_LOG(msg, source) vextr::utils::debugLog(msg, source)

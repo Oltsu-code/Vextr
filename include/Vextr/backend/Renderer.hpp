@@ -1,8 +1,12 @@
 #pragma once
+#include <Vextr/backend/Buffer.hpp>
+#include <Vextr/core/Widget.hpp>
 
-namespace vextr {
-namespace backend {
+namespace vextr::backend {
+
 class Renderer {
+public:
+    void render(core::Widget& root, Buffer& buf);
 };
-} // backend
-} // vextr
+
+} // vextr::backend

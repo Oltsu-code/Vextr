@@ -1,4 +1,37 @@
 #include <Vextr/core/Container.hpp>
 
 namespace vextr::core {
+
+void Container::addChild(std::shared_ptr<Widget> child, LayoutSpec spec) {
+    children.push_back({child, spec});
+}
+
+Size Container::measure(int availW, int availH) {
+    if (children.empty()) return { availW, availH };
+
+    return { availW, availH };
+}
+
+void Container::layout(int x, int y, int width, int height) {
+    Widget::layout(x, y, width, height);
+    if (children.empty()) return;
+
+    int p = style.padding;
+    Rect inner = { x + p, y + p, width - p * 2, height - p * 2 };
+
+    layoutEngine->apply(children, inner);
+}
+
+void Container::render(backend::Buffer& buf) {
+    Widget::render(buf);
+    for (auto& slot : children)
+        slot.widget->render(buf);
+}
+
+bool Container::onEvent(const Event& e) {
+    for (auto& slot : children)
+        if (slot.widget->onEvent(e)) return true;
+    return false;
+}
+
 } // vextr::core
