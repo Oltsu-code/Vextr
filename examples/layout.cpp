@@ -1,7 +1,7 @@
 #include <Vextr/App.hpp>
-#include <Vextr/core/Container.hpp>
-#include <Vextr/core/StackLayout.hpp>
-#include <Vextr/core/GridLayout.hpp>
+#include <../include/Vextr/widgets/Container.hpp>
+#include <../include/Vextr/layout/StackLayout.hpp>
+#include <../include/Vextr/layout/GridLayout.hpp>
 #include <Vextr/widgets/Label.hpp>
 
 using namespace vextr::core;

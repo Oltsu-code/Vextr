@@ -1,4 +1,4 @@
-#include <Vextr/core/AbsoluteLayout.hpp>
+#include <Vextr/layout/AbsoluteLayout.hpp>
 #include <Vextr/core/Widget.hpp>
 
 namespace vextr::core {

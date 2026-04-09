@@ -1,4 +1,4 @@
-#include <Vextr/core/GridLayout.hpp>
+#include <Vextr/layout/GridLayout.hpp>
 #include <Vextr/core/Widget.hpp>
 #include <algorithm>
 

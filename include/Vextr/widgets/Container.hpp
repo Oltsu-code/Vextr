@@ -1,7 +1,7 @@
 #pragma once
 #include <Vextr/core/Widget.hpp>
 #include <Vextr/core/Layout.hpp>
-#include <Vextr/core/StackLayout.hpp>
+#include <Vextr/layout/StackLayout.hpp>
 #include <vector>
 #include <memory>
 
