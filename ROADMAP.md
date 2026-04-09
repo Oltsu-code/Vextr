@@ -62,17 +62,17 @@ The building blocks users actually put in their UIs.
 
 ---
 
-## Phase 5 — Focus and input routing ⬜
+## Phase 5 — Focus and input routing 🔄
 
 Keyboard navigation and event routing.
 
-- ⬜ FocusManager — tracks focused widget, lives in Context
-- ⬜ Focus traversal — Tab/Shift-Tab cycles through focusable widgets in tree order
-- ⬜ Navigation groups — containers where arrow keys move focus between children
-- ⬜ Event bubbling — unhandled events walk up parent chain
+- ✅ FocusManager — tracks focused widget, lives in Context
+- 🔄 Focus traversal — Tab/Shift-Tab cycles through focusable widgets in tree order
+- 🔄 Navigation groups — containers where arrow keys move focus between children
+- 🔄 Event bubbling — unhandled events walk up parent chain
 - ⬜ Mouse hit-testing — click sets focus to widget under cursor
-- ⬜ isFocusable() — widgets declare focus eligibility
-- ⬜ Focus styles — visual indicator on focused widget
+- ✅ isFocusable() — widgets declare focus eligibility
+- ✅ Focus styles — visual indicator on focused widget
 
 ---
 
@@ -142,5 +142,4 @@ Not committed, just worth thinking about.
 - 💡 Mouse support — full mouse tracking with hover states
 - 💡 Async data binding — widgets that re-render when an observable changes
 - 💡 GUI backend — swap Terminal for a windowed renderer, widgets unchanged
-- 💡 Lua scripting — define UIs in a config/script file
 - 💡 Hot reload — rebuild widget tree without restarting the process
