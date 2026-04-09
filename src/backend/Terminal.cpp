@@ -70,50 +70,12 @@ void Terminal::clear_scrollback() {
     std::cout << utils::ansi::clear_scrollback();
 }
 
-void Terminal::flush(const Buffer& buf) {
-    std::ostringstream out;
+#include <cstdio>
 
-    // move to top left once
-    out << utils::ansi::cursor(1, 1);
-
-    core::Color lastFg = {255, 255, 255};
-    core::Color lastBg = {0, 0, 0};
-    bool lastBold      = false;
-    bool lastUnderline = false;
-
-    for (int y = 0; y < buf.height(); ++y) {
-        for (int x = 0; x < buf.width(); ++x) {
-            const Cell& cell = buf.get(x, y);
-
-            // only emit color codes when they change
-            if (cell.fg.r != lastFg.r || cell.fg.g != lastFg.g || cell.fg.b != lastFg.b) {
-                out << utils::ansi::fg_rgb(cell.fg.r, cell.fg.g, cell.fg.b);
-                lastFg = cell.fg;
-            }
-            if (cell.bg.r != lastBg.r || cell.bg.g != lastBg.g || cell.bg.b != lastBg.b) {
-                out << utils::ansi::bg_rgb(cell.bg.r, cell.bg.g, cell.bg.b);
-                lastBg = cell.bg;
-            }
-            if (cell.bold != lastBold || cell.underline != lastUnderline) {
-                out << utils::ansi::reset();
-                if (cell.bold)      out << utils::ansi::bold();
-                if (cell.underline) out << utils::ansi::underline();
-                // re emit colors after reset
-                out << utils::ansi::fg_rgb(cell.fg.r, cell.fg.g, cell.fg.b);
-                out << utils::ansi::bg_rgb(cell.bg.r, cell.bg.g, cell.bg.b);
-                lastBold      = cell.bold;
-                lastUnderline = cell.underline;
-            }
-
-            out << cell.ch;
-
-        }
-        // dont print new line on last row or it will scroll
-        if (y < buf.height() - 1) out << '\n';
-    }
-
-    std::cout << out.str();
-    std::cout.flush();
+void Terminal::write(std::string_view bytes)
+{
+    std::fwrite(bytes.data(), 1, bytes.size(), stdout);
+    std::fflush(stdout);
 }
 
 vextr::core::Size Terminal::terminalSize() const {

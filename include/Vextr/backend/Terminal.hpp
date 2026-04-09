@@ -1,6 +1,6 @@
 #pragma once
-#include <Vextr/backend/Buffer.hpp>
 #include <Vextr/core/Geometry.hpp>
+#include <string_view>
 
 namespace vextr::backend {
 
@@ -10,17 +10,14 @@ public:
     ~Terminal();
 
     void setup();
-    void restore();  // undo setup on exit
+    void restore();
 
     void clear();
     void clear_scrollback();
-    void flush(const Buffer& buf);  // render full buffer to terminal
 
-    core::Size terminalSize() const; // queries ioctl
+    void write(std::string_view bytes);
 
-private:
-    void moveCursor(int x, int y);
-    void applyCell(const Cell& cell);
+    core::Size terminalSize() const;
 };
 
-} // vextr::backend
+}

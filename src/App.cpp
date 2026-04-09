@@ -72,7 +72,7 @@ void App::tick() {
     if (root) {
         buffer->clear();
         renderer.render(*root, *buffer);
-        terminal.flush(*buffer);
+        renderer.present(*buffer, terminal);
     }
 }
 
