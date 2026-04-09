@@ -12,8 +12,8 @@ struct Style {
     Color bg = {0, 0, 0};
     bool bold      = false;
     bool underline = false;
+
     int  padding   = 0;
-    bool expand    = false; // fill available space in layout
 };
 
 } // vextr::core
