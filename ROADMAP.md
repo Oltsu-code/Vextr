@@ -39,7 +39,7 @@ Rich per-widget visual properties.
 - ✅ Color — RGB fg/bg per cell
 - ✅ Bold, underline per cell
 - 🔄 Padding — per-side with percent support
-- ⬜ Margin — handled by parent layout
+- ✅ Margin — handled by parent layout
 - ⬜ Border — Single, Double, Rounded, Thick, Dashed styles
 - ⬜ Transparent color — widgets that don't fill their background
 - ⬜ Dim, italic, blink attributes
