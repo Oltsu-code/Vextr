@@ -3,6 +3,7 @@
 namespace vextr::core {
 
 void Container::addChild(std::shared_ptr<Widget> child, LayoutSpec spec) {
+    child->parent = shared_from_this();
     children.push_back({child, spec});
 }
 

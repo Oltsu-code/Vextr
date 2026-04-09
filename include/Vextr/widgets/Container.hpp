@@ -14,12 +14,19 @@ public:
         : layoutEngine(std::move(layout)) {}
 
     void addChild(std::shared_ptr<Widget> child, LayoutSpec spec = {});
+
     void setLayout(std::shared_ptr<Layout> l) { layoutEngine = std::move(l); }
 
     Size measure(int availW, int availH) override;
     void layout(int x, int y, int width, int height) override;
     void render(backend::Buffer& buf) override;
     bool onEvent(const Event& e) override;
+
+    std::vector<std::shared_ptr<Widget>> getChildren() const override {
+        std::vector<std::shared_ptr<Widget>> out;
+        for (auto& slot : children) out.push_back(slot.widget);
+        return out;
+    }
 
 private:
     std::shared_ptr<Layout> layoutEngine;

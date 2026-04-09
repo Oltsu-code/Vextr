@@ -8,9 +8,15 @@ file(GLOB_RECURSE VEXTR_SRC src/*.cpp)
 
 # include folder
 add_library(vextr STATIC ${VEXTR_SRC}
-        include/Vextr/core/Align.hpp)
+        include/Vextr/core/Align.hpp
+        src/core/FocusManager.cpp)
 target_include_directories(vextr PUBLIC include)
 
 # examples — inherit includes from vextr via link
-add_executable(example_hello examples/layout.cpp)
-target_link_libraries(example_hello PRIVATE vextr)
+add_executable(layout_example examples/layout.cpp
+        examples/focus.cpp)
+target_link_libraries(layout_example PRIVATE vextr)
+
+add_executable(focus_example examples/focus.cpp
+        examples/focus.cpp)
+target_link_libraries(focus_example PRIVATE vextr)

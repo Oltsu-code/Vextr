@@ -61,12 +61,31 @@ void App::tick() {
 
     int key = pollInput();
     if (key != -1) {
-        if (key == 'q') { running = false; return; }
         core::Event e;
         e.type = core::EventType::Key;
         e.key  = key;
-        utils::debugLog(std::to_string(key), this);
-        if (root) root->onEvent(e);
+
+        if (key == '\t') {
+            core::Context::get().focusManager.focusNext(root);
+        } else if (key == 'q') {
+            running = false;
+            return;
+        } else {
+            bool handled = false;
+            auto focused = core::Context::get().focusManager.focused();
+            if (focused) {
+                handled = focused->onEvent(e);
+                if (!handled) {
+                    auto p = focused->parent.lock();
+                    while (p && !handled) {
+                        handled = p->onEvent(e);
+                        p = p->parent.lock();
+                    }
+                }
+            }
+            if (!handled && root)
+                root->onEvent(e);
+        }
     }
 
     if (root) {

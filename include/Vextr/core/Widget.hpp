@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <Vextr/core/Style.hpp>
 #include <Vextr/core/Geometry.hpp>
 #include <Vextr/backend/Buffer.hpp>
@@ -6,7 +7,7 @@
 
 namespace vextr::core {
 
-class Widget {
+class Widget : public std::enable_shared_from_this<Widget> {
 public:
     virtual ~Widget() = default;
 
@@ -15,13 +16,26 @@ public:
     virtual void render(backend::Buffer& buf);
     virtual bool onEvent(const Event& event) { return false; }
     virtual bool isFocusable() const { return false; }
+    virtual void onFocus() {}
+    virtual void onBlur() {}
+
+    virtual std::vector<std::shared_ptr<Widget>> getChildren() const { return {}; }
+
+    bool focused() const;
 
     void setStyle(const Style& s) { style = s; }
+    void setFocusedStyle(const Style s) {focusedStyle = s;}
     const Style& getStyle() const { return style; }
+    const Style& getFocusedStyle() const { return focusedStyle; }
     const Rect& getRect() const { return rect; }
 
+    std::weak_ptr<Widget> parent;
+
 protected:
+    const Style& activeStyle() const;
+
     Style style;
+    Style focusedStyle;
     Rect  rect;
 };
 
