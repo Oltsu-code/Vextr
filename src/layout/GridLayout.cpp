@@ -5,26 +5,61 @@
 namespace vextr::core {
 
 void GridLayout::apply(std::vector<ChildSlot>& children, Rect inner) {
-    if (cols <= 0 || rows <= 0) return;
+    if (cols <= 0 || rows <= 0 || children.empty()) return;
 
-    int cellW = (inner.width  - gapX * (cols - 1)) / cols;
-    int cellH = (inner.height - gapY * (rows - 1)) / rows;
+    int cellW = std::max(1, (inner.width  - gapX * (cols - 1)) / cols);
+    int cellH = std::max(1, (inner.height - gapY * (rows - 1)) / rows);
 
     for (auto& slot : children) {
-        int c = std::clamp(slot.spec.col, 0, cols - 1);
-        int r = std::clamp(slot.spec.row, 0, rows - 1);
+        int c     = std::clamp(slot.spec.col,     0, cols - 1);
+        int r     = std::clamp(slot.spec.row,     0, rows - 1);
         int cSpan = std::clamp(slot.spec.colSpan, 1, cols - c);
         int rSpan = std::clamp(slot.spec.rowSpan, 1, rows - r);
 
-        int x = inner.x + c * (cellW + gapX);
-        int y = inner.y + r * (cellH + gapY);
-        int w = cellW * cSpan + gapX * (cSpan - 1);
-        int h = cellH * rSpan + gapY * (rSpan - 1);
+        int slotX = inner.x + c * (cellW + gapX);
+        int slotY = inner.y + r * (cellH + gapY);
+        int slotW = cellW * cSpan + gapX * (cSpan - 1);
+        int slotH = cellH * rSpan + gapY * (rSpan - 1);
 
-        w = std::clamp(w, slot.spec.minW, slot.spec.maxW);
-        h = std::clamp(h, slot.spec.minH, slot.spec.maxH);
+        // resolve margins
+        int mT = slot.spec.margin.resolvedTop   (slotH);
+        int mB = slot.spec.margin.resolvedBottom(slotH);
+        int mL = slot.spec.margin.resolvedLeft  (slotW);
+        int mR = slot.spec.margin.resolvedRight (slotW);
 
-        slot.widget->layout(x, y, w, h);
+        int innerX = slotX + mL;
+        int innerY = slotY + mT;
+        int innerW = std::max(0, slotW - mL - mR);
+        int innerH = std::max(0, slotH - mT - mB);
+
+        // alignment
+        int finalW = innerW, finalH = innerH;
+        int offX = 0, offY = 0;
+
+        bool needMeasure = slot.spec.alignH != Align::Stretch
+                        || slot.spec.alignV != Align::Stretch;
+        if (needMeasure) {
+            Size desired = slot.widget->measure(innerW, innerH);
+
+            if (slot.spec.alignH != Align::Stretch) {
+                finalW = std::clamp(desired.width, 0, innerW);
+                switch (slot.spec.alignH) {
+                    case Align::Center: offX = (innerW - finalW) / 2; break;
+                    case Align::End:    offX = innerW - finalW;        break;
+                    default: break;
+                }
+            }
+            if (slot.spec.alignV != Align::Stretch) {
+                finalH = std::clamp(desired.height, 0, innerH);
+                switch (slot.spec.alignV) {
+                    case Align::Center: offY = (innerH - finalH) / 2; break;
+                    case Align::End:    offY = innerH - finalH;        break;
+                    default: break;
+                }
+            }
+        }
+
+        slot.widget->layout(innerX + offX, innerY + offY, finalW, finalH);
     }
 }
 

@@ -7,8 +7,6 @@ void Container::addChild(std::shared_ptr<Widget> child, LayoutSpec spec) {
 }
 
 Size Container::measure(int availW, int availH) {
-    if (children.empty()) return { availW, availH };
-
     return { availW, availH };
 }
 
@@ -17,7 +15,12 @@ void Container::layout(int x, int y, int width, int height) {
     if (children.empty()) return;
 
     int p = style.padding;
-    Rect inner = { x + p, y + p, width - p * 2, height - p * 2 };
+    Rect inner = {
+        x + p,
+        y + p,
+        std::max(0, width  - p * 2),
+        std::max(0, height - p * 2)
+    };
 
     layoutEngine->apply(children, inner);
 }
@@ -35,3 +38,4 @@ bool Container::onEvent(const Event& e) {
 }
 
 } // vextr::core
+
