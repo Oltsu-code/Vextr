@@ -8,4 +8,4 @@ void debugLog(const std::string& msg, const void* source);
 
 } // vextr::utils
 
-#define VEXTR_LOG(msg, source) vextr::utils::debugLog(msg, source)
+#define VEXTR_LOG(msg) vextr::utils::debugLog(msg)
