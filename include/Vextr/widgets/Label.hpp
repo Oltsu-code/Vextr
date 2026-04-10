@@ -15,8 +15,6 @@ public:
     core::Size measure(int availW, int availH) override;
     void render(backend::Buffer& buf) override;
 
-    bool isFocusable() const override { return true; }
-
 private:
     std::string text;
 };
