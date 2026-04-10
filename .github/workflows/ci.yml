@@ -52,13 +52,16 @@ jobs:
           find include src examples tests -type f \( -name "*.cpp" -o -name "*.hpp" \) -exec clang-format-14 -i {} \;
           git diff --exit-code
 
+      - name: Configure (for cppcheck)
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
       - name: Run cppcheck
         run: |
           cppcheck --enable=all \
             --suppress=missingIncludeSystem \
             --suppress=unusedFunction \
             --error-exitcode=1 \
-            include src examples tests
+            --project=build/compile_commands.json
 
   package:
     name: Dev Package (Linux)
