@@ -1,4 +1,5 @@
 #include <Vextr/utils/Input.hpp>
+#include <Vextr/utils/Unicode.hpp>
 #include <Vextr/widgets/Input.hpp>
 #include <algorithm>
 
@@ -55,6 +56,7 @@ void Input::moveCursor(int delta) {
 }
 
 void Input::render(backend::Buffer &buf) {
+  using namespace vextr::utils::unicode;
   const core::Style &s = activeStyle();
   int visibleW = rect.width - 2;
   int cy = rect.y + rect.height / 2;
@@ -79,9 +81,28 @@ void Input::render(backend::Buffer &buf) {
   int startX = rect.x + 1;
   int maxX = rect.x + rect.width - 1;
 
-  for (int i = 0; i < visibleW && (scroll + i) < (int)display.size(); ++i) {
+  int screenX = startX;
+  size_t i = 0;
+  int bytePos = 0;
+
+  while (i < display.size() && screenX < maxX) {
+    size_t start_i = i;
+    uint32_t cp = nextCodepoint(display, i);
+
+    if (i == start_i)
+      break;
+
+    int w = displayWidth(cp);
+    if (w <= 0) {
+      bytePos = i;
+      continue;
+    }
+
+    if (screenX + w > maxX)
+      break;
+
     backend::Cell cell;
-    cell.ch = display[scroll + i];
+    cell.ch = encode(cp);
     if (isEmpty) {
       // placeholder style - dimmer
       cell.fg = {(uint8_t)(s.fg.r / 2), (uint8_t)(s.fg.g / 2),
@@ -92,7 +113,16 @@ void Input::render(backend::Buffer &buf) {
     cell.bg = s.bg;
     cell.bold = s.bold;
     cell.underline = s.underline;
-    buf.set(startX + i, cy, cell);
+    buf.set(screenX, cy, cell);
+
+    if (w == 2 && screenX + 1 < maxX) {
+      backend::Cell wide_cell = cell;
+      wide_cell.ch = "";
+      buf.set(screenX + 1, cy, wide_cell);
+    }
+
+    screenX += w;
+    bytePos = i;
   }
 
   // draw cursor when focused

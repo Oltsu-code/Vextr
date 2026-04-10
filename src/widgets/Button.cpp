@@ -9,6 +9,7 @@ core::Size Button::measure(int availW, int availH) {
 }
 
 void Button::render(backend::Buffer &buf) {
+  using namespace vextr::utils::unicode;
   const core::Style &s = activeStyle();
 
   // fill background
@@ -25,24 +26,48 @@ void Button::render(backend::Buffer &buf) {
   int cy = rect.y + rect.height / 2;
   int maxX = rect.x + rect.width;
 
-  auto putChar = [&](char c) {
-    if (cx >= maxX)
+  auto putChar = [&](const std::string &ch, int width = 1) {
+    if (cx + width > maxX)
       return;
     backend::Cell cell;
-    cell.ch = c;
+    cell.ch = ch;
     cell.fg = s.fg;
     cell.bg = s.bg;
     cell.bold = s.bold;
     cell.underline = s.underline;
-    buf.set(cx++, cy, cell);
+    buf.set(cx, cy, cell);
+
+    if (width == 2 && cx + 1 < maxX) {
+      backend::Cell wide_cell = cell;
+      wide_cell.ch = "";
+      buf.set(cx + 1, cy, wide_cell);
+    }
+    cx += width;
   };
 
-  putChar('[');
-  putChar(' ');
-  for (unsigned char c : label)
-    putChar(c);
-  putChar(' ');
-  putChar(']');
+  putChar("[");
+  putChar(" ");
+
+  size_t i = 0;
+  while (i < label.size() && cx < maxX) {
+    size_t start_i = i;
+    uint32_t cp = nextCodepoint(label, i);
+
+    if (i == start_i)
+      break;
+
+    int w = displayWidth(cp);
+    if (w <= 0)
+      continue;
+
+    if (cx + w > maxX)
+      break;
+
+    putChar(encode(cp), w);
+  }
+
+  putChar(" ");
+  putChar("]");
 }
 
 bool Button::onEvent(const core::Event &e) {
