@@ -2,6 +2,7 @@
 /cmake-build-debug/
 /build/
 /cmake-build*/
+/cmake-*/
 
 # CMake generated files
 /CMakeFiles/
