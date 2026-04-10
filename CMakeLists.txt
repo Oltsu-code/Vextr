@@ -4,6 +4,8 @@ project(Vextr VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
 # Compiler warnings (informational only, don't break builds)
 if(MSVC)
     add_compile_options(/W3)
@@ -22,58 +24,61 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
 file(GLOB_RECURSE VEXTR_SRC src/*.cpp)
 
-add_library(vextr STATIC ${VEXTR_SRC}
-    include/Vextr/core/Align.hpp
-    src/core/FocusManager.cpp
-)
+add_library(vextr STATIC ${VEXTR_SRC})
 
 target_include_directories(vextr PUBLIC include)
+
+# link utf8proc
+target_link_libraries(vextr PUBLIC utf8proc)
 
 # ============================================================================
 # EXAMPLES
 # ============================================================================
 
-# Layout showcase - demonstrates grid, stack, and absolute layouts
-add_executable(layout_example examples/layout/main.cpp)
-target_link_libraries(layout_example PRIVATE vextr)
-target_include_directories(layout_example PRIVATE examples)
+function(add_example name)
+    add_executable(${name} examples/${name}/main.cpp)
+    target_link_libraries(${name} PRIVATE vextr)
+    target_include_directories(${name} PRIVATE examples)
+endfunction()
 
-# Focus demo - demonstrates focus management and custom widgets
-add_executable(focus_example examples/focus/main.cpp)
-target_link_libraries(focus_example PRIVATE vextr)
-target_include_directories(focus_example PRIVATE examples)
-
-add_executable(button_example examples/buttons/main.cpp)
-target_link_libraries(button_example PRIVATE vextr)
-target_include_directories(button_example PRIVATE examples)
-
-add_executable(navigator_example examples/navigator/main.cpp)
-target_link_libraries(navigator_example PRIVATE vextr)
-target_include_directories(navigator_example PRIVATE examples)
-
-add_executable(input_example examples/input/main.cpp)
-target_link_libraries(input_example PRIVATE vextr)
-target_include_directories(input_example PRIVATE examples)
+add_example(layout_example)
+add_example(focus_example)
+add_example(button_example)
+add_example(navigator_example)
+add_example(input_example)
 
 # ============================================================================
-# TESTING
+# EXTERNAL DEPENDENCIES
 # ============================================================================
 
 include(FetchContent)
+
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
+# GoogleTest
 FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG v1.14.0
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.14.0
 )
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+# utf8proc
+FetchContent_Declare(
+        utf8proc
+        GIT_REPOSITORY https://github.com/JuliaStrings/utf8proc.git
+        GIT_TAG v2.9.0
+)
+
+FetchContent_MakeAvailable(utf8proc)
+
+# ============================================================================
+# TESTING
+# ============================================================================
 
 include(GoogleTest)
-
 enable_testing()
 
 add_executable(vextr_tests

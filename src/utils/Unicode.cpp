@@ -1,47 +1,67 @@
 #include <Vextr/utils/Unicode.hpp>
+#include <utf8proc.h>
 
 namespace vextr::utils::unicode {
 
-int displayWidth(uint32_t cp) {
-  // wide: CJK and other double-width blocks
-  if ((cp >= 0x1100 && cp <= 0x115F) || (cp >= 0x2E80 && cp <= 0x303E) ||
-      (cp >= 0x3040 && cp <= 0xA4CF) || (cp >= 0xAC00 && cp <= 0xD7AF) ||
-      (cp >= 0xF900 && cp <= 0xFAFF) || (cp >= 0xFE10 && cp <= 0xFE1F) ||
-      (cp >= 0xFE30 && cp <= 0xFE6F) || (cp >= 0xFF00 && cp <= 0xFF60) ||
-      (cp >= 0xFFE0 && cp <= 0xFFE6) || (cp >= 0x1F300 && cp <= 0x1F9FF)) {
-    return 2;
-  }
-  return 1;
+int displayWidth(uint32_t codepoint) {
+  // Basic rule: use utf8proc width if possible
+  int w = utf8proc_charwidth(static_cast<utf8proc_int32_t>(codepoint));
+
+  // utf8proc returns -1 for non-printables -> treat as 0
+  if (w < 0)
+    return 0;
+
+  return w;
 }
 
 int stringWidth(const std::string &utf8) {
   int width = 0;
-  size_t i = 0;
-  while (i < utf8.size()) {
-    uint32_t cp = 0;
-    unsigned char c = utf8[i];
-    int bytes;
-    if (c < 0x80) {
-      cp = c;
-      bytes = 1;
-    } else if (c < 0xE0) {
-      cp = c & 0x1F;
-      bytes = 2;
-    } else if (c < 0xF0) {
-      cp = c & 0x0F;
-      bytes = 3;
-    } else {
-      cp = c & 0x07;
-      bytes = 4;
-    }
 
-    for (int b = 1; b < bytes && i + b < utf8.size(); ++b)
-      cp = (cp << 6) | (utf8[i + b] & 0x3F);
+  const utf8proc_uint8_t *str =
+      reinterpret_cast<const utf8proc_uint8_t *>(utf8.data());
 
-    width += displayWidth(cp);
-    i += bytes;
+  utf8proc_int32_t cp;
+  utf8proc_ssize_t i = 0;
+
+  while (i < (utf8proc_ssize_t)utf8.size()) {
+    i += utf8proc_iterate(str + i, -1, &cp);
+    if (i <= 0)
+      break;
+
+    int w = utf8proc_charwidth(cp);
+    if (w > 0)
+      width += w;
   }
+
   return width;
+}
+
+uint32_t nextCodepoint(const std::string &s, size_t &i) {
+  const utf8proc_uint8_t *data =
+      reinterpret_cast<const utf8proc_uint8_t *>(s.data());
+
+  utf8proc_int32_t cp = 0;
+
+  utf8proc_ssize_t step = utf8proc_iterate(data + i, -1, &cp);
+
+  if (step <= 0) {
+    i++;
+    return 0xFFFD;
+  }
+
+  i += step;
+  return static_cast<uint32_t>(cp);
+}
+
+std::string encode(uint32_t cp) {
+  utf8proc_uint8_t out[4];
+  utf8proc_ssize_t len =
+      utf8proc_encode_char(static_cast<utf8proc_int32_t>(cp), out);
+
+  if (len <= 0)
+    return std::string("�");
+
+  return std::string(reinterpret_cast<char *>(out), len);
 }
 
 } // namespace vextr::utils::unicode

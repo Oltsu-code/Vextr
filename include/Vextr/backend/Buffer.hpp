@@ -1,11 +1,12 @@
 #pragma once
 #include <Vextr/core/Style.hpp>
+#include <string>
 #include <vector>
 
 namespace vextr::backend {
 
 struct Cell {
-  char ch = ' ';
+  std::string ch = " "; // string bc utf-8
   core::Color fg = {255, 255, 255};
   core::Color bg = {0, 0, 0};
   bool bold = false;
