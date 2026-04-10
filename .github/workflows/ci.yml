@@ -58,18 +58,19 @@ jobs:
       - name: Run cppcheck
         run: |
           set +e
-          cppcheck --enable=all \
-            --suppress=missingIncludeSystem \
-            --suppress=unusedFunction \
+          cppcheck \
+            --project=build/compile_commands.json \
+            --enable=all \
             --inline-suppr \
             --force \
-            --language=c++ \
             --std=c++20 \
             --error-exitcode=1 \
             --output-file=cppcheck.txt \
+            --suppress=missingIncludeSystem \
+            --suppress=missingInclude \
+            --suppress=unusedFunction \
             -ibuild \
-            -itests \
-            --project=build/compile_commands.json
+            -itests
           code=$?
           echo "==== cppcheck.txt ===="
           cat cppcheck.txt || true
