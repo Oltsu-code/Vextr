@@ -13,10 +13,8 @@ add_library(vextr STATIC ${VEXTR_SRC}
 target_include_directories(vextr PUBLIC include)
 
 # examples — inherit includes from vextr via link
-add_executable(layout_example examples/layout.cpp
-        examples/focus.cpp)
+add_executable(layout_example examples/layout.cpp)
 target_link_libraries(layout_example PRIVATE vextr)
 
-add_executable(focus_example examples/focus.cpp
-        examples/focus.cpp)
+add_executable(focus_example examples/focus.cpp)
 target_link_libraries(focus_example PRIVATE vextr)
