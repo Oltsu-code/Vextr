@@ -8,7 +8,7 @@
 
 using namespace vextr::core;
 
-// a focusable label — lights up when focused
+// a focusable label - lights up when focused
 class FocusableLabel : public vextr::widgets::Label {
 public:
   explicit FocusableLabel(const std::string &text) : Label(text) {}
@@ -65,7 +65,7 @@ int main() {
       std::make_shared<StackLayout>(Axis::Vertical, 1));
   root->setStyle(Style{.bg = {15, 15, 25}});
 
-  // header — not focusable
+  // header - not focusable
   auto header = std::make_shared<vextr::widgets::Label>(
       "Tab to move focus  Enter to select  Q to quit");
   header->setStyle(Style{.fg = {150, 150, 150}, .bg = {25, 25, 40}});

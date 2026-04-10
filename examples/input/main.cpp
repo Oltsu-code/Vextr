@@ -5,6 +5,8 @@
 #include <Vextr/widgets/Input.hpp>
 #include <Vextr/widgets/Label.hpp>
 
+#include "Vextr/utils/Debug.hpp"
+
 using namespace vextr::core;
 using namespace vextr::widgets;
 
@@ -13,7 +15,7 @@ int main() {
       std::make_shared<StackLayout>(Axis::Vertical, 1));
   root->setStyle(Style{.bg = {15, 15, 25}});
 
-  auto title = std::make_shared<Label>("Input demo — Tab to focus");
+  auto title = std::make_shared<Label>("Input demo - Tab to focus");
   title->setStyle(Style{.fg = {200, 200, 255}, .bg = {25, 25, 50}});
 
   auto nameInput = std::make_shared<Input>("Enter your name...");
@@ -40,7 +42,7 @@ int main() {
   submitBtn->setFocusedStyle(
       Style{.fg = {255, 255, 100}, .bg = {80, 160, 80}, .bold = true});
   submitBtn->setOnClick(
-      [&]() { status->setText("Submitted: " + nameInput->getText()); });
+      [&]() { status->setText("Submitted: " + nameInput->getText()); VEXTR_LOG(nameInput->getText()); });
 
   root->addChild(title, {.fixedH = pct(8)});
   root->addChild(nameInput, {.fixedH = pct(8),

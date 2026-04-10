@@ -22,7 +22,7 @@ int main() {
       std::make_shared<StackLayout>(Axis::Vertical, 1));
   mainScreen->setStyle(Style{.bg = {15, 15, 25}});
 
-  auto mainTitle = std::make_shared<Label>("Main Screen — Tab to focus");
+  auto mainTitle = std::make_shared<Label>("Main Screen - Tab to focus");
   mainTitle->setStyle(Style{.fg = {200, 200, 255}, .bg = {25, 25, 50}});
 
   auto openBtn = std::make_shared<Button>("Open Settings");
@@ -57,7 +57,7 @@ int main() {
   // ── dialog overlay ───────────────────────────────────────────
   auto dialogOverlay =
       std::make_shared<Container>(std::make_shared<AbsoluteLayout>());
-  // transparent bg — main screen shows through
+  // transparent bg - main screen shows through
   dialogOverlay->setStyle(Style{.bg = Color::clear()});
 
   auto dialogBox = std::make_shared<Container>(

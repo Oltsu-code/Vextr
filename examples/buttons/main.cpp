@@ -15,7 +15,7 @@ int main() {
   root->setStyle(Style{.bg = {15, 15, 25}});
 
   auto title =
-      std::make_shared<Label>("Button demo — Tab to focus, Enter to click");
+      std::make_shared<Label>("Button demo - Tab to focus, Enter to click");
   title->setStyle(Style{.fg = {150, 150, 200}, .bg = {25, 25, 40}});
 
   auto status = std::make_shared<Label>("nothing clicked yet");

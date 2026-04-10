@@ -27,7 +27,7 @@ void InputParser::tryParse() {
   if (buf.empty())
     return;
 
-  // plain character — not an escape sequence
+  // plain character - not an escape sequence
   if (buf[0] != 27) {
     // ctrl+key detection: ctrl+a = 1, ctrl+z = 26
     bool ctrl = (buf[0] > 0 && buf[0] < 27 && buf[0] != Key::Tab &&
@@ -37,16 +37,16 @@ void InputParser::tryParse() {
     return;
   }
 
-  // lone escape — caller handles timeout via pendingEscape()
+  // lone escape - caller handles timeout via pendingEscape()
   if (buf.size() == 1)
     return;
 
-  // esc + [ — csi sequence
+  // esc + [ - csi sequence
   if (buf[1] == '[') {
     if (buf.size() == 2)
       return; // wait for more
 
-    // esc [ x — simple sequences
+    // esc [ x - simple sequences
     if (buf.size() == 3) {
       switch (buf[2]) {
       case 'A':
@@ -76,12 +76,12 @@ void InputParser::tryParse() {
       // wait for more
       if (buf[2] >= '0' && buf[2] <= '9')
         return;
-      // unknown 3 byte — drop
+      // unknown 3 byte - drop
       buf.clear();
       return;
     }
 
-    // esc [ n ~ — extended sequences
+    // esc [ n ~ - extended sequences
     if (buf.size() == 4 && buf[3] == '~') {
       switch (buf[2]) {
       case '1':
@@ -108,7 +108,7 @@ void InputParser::tryParse() {
       }
     }
 
-    // esc [ 1 ; 2 x — modified sequences (shift/ctrl/alt + arrow)
+    // esc [ 1 ; 2 x - modified sequences (shift/ctrl/alt + arrow)
     if (buf.size() == 5 && buf[2] == '1' && buf[3] == ';') {
       bool shift =
           (buf[4] == '2' || buf[4] == '4' || buf[4] == '6' || buf[4] == '8');
@@ -166,7 +166,7 @@ void InputParser::tryParse() {
       }
     }
 
-    // still accumulating — wait if buffer is short
+    // still accumulating - wait if buffer is short
     if (buf.size() < 6)
       return;
 
@@ -175,7 +175,7 @@ void InputParser::tryParse() {
     return;
   }
 
-  // esc O — ss3 sequences (f1-f4 on some terminals)
+  // esc O - ss3 sequences (f1-f4 on some terminals)
   if (buf[1] == 'O') {
     if (buf.size() == 2)
       return; // wait
@@ -198,7 +198,7 @@ void InputParser::tryParse() {
     }
   }
 
-  // esc + anything else — alt+key
+  // esc + anything else - alt+key
   if (buf.size() == 2) {
     emit((int)buf[1], false, false, true);
     return;

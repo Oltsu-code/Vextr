@@ -83,7 +83,7 @@ void Input::render(backend::Buffer &buf) {
     backend::Cell cell;
     cell.ch = display[scroll + i];
     if (isEmpty) {
-      // placeholder style — dimmer
+      // placeholder style - dimmer
       cell.fg = {(uint8_t)(s.fg.r / 2), (uint8_t)(s.fg.g / 2),
                  (uint8_t)(s.fg.b / 2)};
     } else {
