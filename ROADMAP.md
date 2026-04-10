@@ -67,7 +67,7 @@ The building blocks users actually put in their UIs.
 Keyboard navigation and event routing.
 
 - ✅ FocusManager — tracks focused widget, lives in Context
-- 🔄 Focus traversal — Tab/Shift-Tab cycles through focusable widgets in tree order
+- ✅ Focus traversal — Tab/Shift-Tab cycles through focusable widgets in tree order
 - 🔄 Navigation groups — containers where arrow keys move focus between children
 - 🔄 Event bubbling — unhandled events walk up parent chain
 - ⬜ Mouse hit-testing — click sets focus to widget under cursor
