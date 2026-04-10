@@ -60,10 +60,17 @@ jobs:
           cppcheck --enable=all \
             --suppress=missingIncludeSystem \
             --suppress=unusedFunction \
+            --inline-suppr \
+            --force \
+            --language=c++ \
+            --std=c++20 \
             --error-exitcode=1 \
+            --output-file=cppcheck.txt \
             -ibuild \
             -itests \
             --project=build/compile_commands.json
+      
+          cat cppcheck.txt
 
   package:
     name: Dev Package (Linux)
