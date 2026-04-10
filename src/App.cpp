@@ -1,6 +1,5 @@
 #include <Vextr/App.hpp>
 #include <Vextr/core/Context.hpp>
-#include <Vextr/utils/Input.hpp>
 
 #if defined(_WIN32)
     #include <windows.h>

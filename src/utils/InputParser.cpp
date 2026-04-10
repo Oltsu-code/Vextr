@@ -1,18 +1,9 @@
 #include <Vextr/utils/InputParser.hpp>
 #include <Vextr/utils/Input.hpp>
 
-#include "Vextr/utils/Debug.hpp"
-
 namespace vextr::utils {
 
 void InputParser::emit(int key, bool shift, bool ctrl, bool alt) {
-    VEXTR_LOG(
-    "key=" + std::to_string(key) + "\n"
-    " ctrl=" + std::to_string(ctrl) + "\n"
-    " alt=" + std::to_string(alt) + "\n"
-    " shift=" + std::to_string(shift) + "\n"
-    );
-
     core::Event e;
     e.type  = core::EventType::Key;
     e.key   = key;

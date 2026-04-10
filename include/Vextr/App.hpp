@@ -3,8 +3,8 @@
 #include <Vextr/backend/Terminal.hpp>
 #include <Vextr/backend/Buffer.hpp>
 #include <Vextr/backend/Renderer.hpp>
-#include <Vextr/Utils/InputParser.hpp>
-#include <Vextr/Utils/InputReader.hpp>
+#include <Vextr/utils/InputParser.hpp>
+#include <Vextr/utils/InputReader.hpp>
 #include <memory>
 
 namespace vextr {
