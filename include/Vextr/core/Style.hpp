@@ -5,6 +5,9 @@ namespace vextr::core {
 
 struct Color {
   uint8_t r = 255, g = 255, b = 255;
+  bool transparent = false;
+
+  static Color clear() { return {0, 0, 0, true}; }
 };
 
 struct Style {

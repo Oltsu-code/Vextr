@@ -5,11 +5,11 @@
 namespace vextr::backend {
 
 struct Cell {
-  char ch = ' ';
-  core::Color fg = {255, 255, 255};
-  core::Color bg = {0, 0, 0};
-  bool bold = false;
-  bool underline = false;
+    char    ch = ' ';
+    core::Color fg = {255, 255, 255};
+    core::Color bg = {0, 0, 0};
+    bool bold      = false;
+    bool underline = false;
 };
 
 class Buffer {

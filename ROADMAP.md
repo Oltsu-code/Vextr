@@ -76,15 +76,15 @@ Keyboard navigation and event routing.
 
 ---
 
-## Phase 6 — Navigator and screens ⬜
+## Phase 6 — Navigator and screens ✅
 
 Multi-view navigation and overlay system.
 
-- ⬜ Navigator widget — screen stack, push/pop, renderable anywhere in the tree
-- ⬜ Screen alias — Container used as a full-view screen
-- ⬜ Overlay rendering — all stack layers rendered bottom to top
-- ⬜ Dialog — modal overlay with transparent background showing screen beneath
-- ⬜ Transition hooks — callbacks on push/pop for future animation support
+- ✅ Navigator widget — screen stack, push/pop, renderable anywhere in the tree
+- ✅ Screen alias — Container used as a full-view screen
+- ✅ Overlay rendering — all stack layers rendered bottom to top
+- ✅ Dialog — modal overlay with transparent background showing screen beneath
+- ✅ Transition hooks — callbacks on push/pop for future animation support
 
 ---
 
