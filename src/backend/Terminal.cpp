@@ -21,6 +21,8 @@ Terminal::~Terminal() { restore(); }
 
 void Terminal::setup() {
 #if defined(_WIN32)
+  SetConsoleOutputCP(CP_UTF8);
+
   HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
   GetConsoleMode(hIn, &originalConsoleMode);
   SetConsoleMode(hIn, ENABLE_VIRTUAL_TERMINAL_INPUT);
