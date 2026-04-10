@@ -111,12 +111,12 @@ Layout engine improvements and new types.
 
 ---
 
-## Phase 9 — Unicode and rendering quality ⬜
+## Phase 9 — Unicode and rendering quality ✅
 
 Correctness improvements for real-world text.
 
-- ⬜ Wide character support — CJK and emoji take 2 columns, Buffer aware
-- ⬜ UTF-8 iteration in Label/Input — correct codepoint handling
+- ✅ Wide character support — CJK and emoji take 2 columns, Buffer aware
+- ✅ UTF-8 iteration in Label/Input — correct codepoint handling
 - ⬜ Grapheme cluster support — combining characters treated as one unit
 - ⬜ Dirty region tracking — only re-flush cells that changed since last frame
 
