@@ -43,6 +43,10 @@ add_executable(focus_example examples/focus/main.cpp)
 target_link_libraries(focus_example PRIVATE vextr)
 target_include_directories(focus_example PRIVATE examples)
 
+add_executable(button_example examples/buttons/main.cpp)
+target_link_libraries(button_example PRIVATE vextr)
+target_include_directories(button_example PRIVATE examples)
+
 # ============================================================================
 # TESTING
 # ============================================================================
