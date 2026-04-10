@@ -51,7 +51,7 @@ Rich per-widget visual properties.
 The building blocks users actually put in their UIs.
 
 - ✅ Label — static text rendering
-- ⬜ Button — focusable, onClick callback, hover/active states
+- ✅ Button — focusable, onClick callback, hover/active states
 - ⬜ Input — single-line text field with cursor, selection
 - ⬜ TextView — multi-line read-only text with word wrap
 - ⬜ ScrollView — clipping container with vertical/horizontal scroll
