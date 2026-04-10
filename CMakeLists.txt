@@ -51,6 +51,10 @@ add_executable(navigator_example examples/navigator/main.cpp)
 target_link_libraries(navigator_example PRIVATE vextr)
 target_include_directories(navigator_example PRIVATE examples)
 
+add_executable(input_example examples/input/main.cpp)
+target_link_libraries(input_example PRIVATE vextr)
+target_include_directories(input_example PRIVATE examples)
+
 # ============================================================================
 # TESTING
 # ============================================================================
