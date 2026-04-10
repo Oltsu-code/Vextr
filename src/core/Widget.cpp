@@ -17,14 +17,14 @@ void Widget::layout(int x, int y, int width, int height) {
   rect = {x, y, width, height};
 }
 
-void Widget::render(backend::Buffer& buf) {
-  const Style& s = activeStyle();
+void Widget::render(backend::Buffer &buf) {
+  const Style &s = activeStyle();
 
   backend::Cell cell;
-  cell.ch        = ' ';
-  cell.fg        = s.fg;
-  cell.bg        = s.bg;
-  cell.bold      = s.bold;
+  cell.ch = ' ';
+  cell.fg = s.fg;
+  cell.bg = s.bg;
+  cell.bold = s.bold;
   cell.underline = s.underline;
 
   if (!s.bg.transparent) {

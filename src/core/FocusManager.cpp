@@ -24,13 +24,15 @@ void FocusManager::clearFocus() {
 }
 
 void FocusManager::collectFocusable(std::shared_ptr<Widget> w,
-                                     std::vector<std::shared_ptr<Widget>>& out) {
-  if (!w) return;
+                                    std::vector<std::shared_ptr<Widget>> &out) {
+  if (!w)
+    return;
   VEXTR_LOG("collecting from: " + std::to_string((size_t)w.get()) +
             " focusable=" + std::to_string(w->isFocusable()) +
             " children=" + std::to_string(w->getChildren().size()));
-  if (w->isFocusable()) out.push_back(w);
-  for (auto& child : w->getChildren())
+  if (w->isFocusable())
+    out.push_back(w);
+  for (auto &child : w->getChildren())
     collectFocusable(child, out);
 }
 
