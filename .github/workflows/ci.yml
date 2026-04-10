@@ -61,6 +61,8 @@ jobs:
             --suppress=missingIncludeSystem \
             --suppress=unusedFunction \
             --error-exitcode=1 \
+            -ibuild \
+            -itests \
             --project=build/compile_commands.json
 
   package:
