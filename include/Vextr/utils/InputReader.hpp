@@ -5,8 +5,8 @@ namespace vextr::utils {
 
 class InputReader {
 public:
-    // reads all available bytes this tick and feeds them to parser
-    void poll(InputParser& parser);
+  // reads all available bytes this tick and feeds them to parser
+  void poll(InputParser &parser);
 };
 
-} // vextr::utils
+} // namespace vextr::utils

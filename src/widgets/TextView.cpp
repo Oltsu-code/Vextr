@@ -1,4 +1,3 @@
 #include <Vextr/widgets/TextView.hpp>
 
-namespace vextr::widgets {
-} // vextr::widgets
+namespace vextr::widgets {} // namespace vextr::widgets

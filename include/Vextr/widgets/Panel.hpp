@@ -1,6 +1,5 @@
 #pragma once
 
 namespace vextr::widgets {
-class Panel {
-};
-} // vextr::widgets
+class Panel {};
+} // namespace vextr::widgets

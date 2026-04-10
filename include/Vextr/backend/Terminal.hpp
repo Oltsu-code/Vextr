@@ -6,18 +6,18 @@ namespace vextr::backend {
 
 class Terminal {
 public:
-    Terminal();
-    ~Terminal();
+  Terminal();
+  ~Terminal();
 
-    void setup();
-    void restore();
+  void setup();
+  void restore();
 
-    void clear();
-    void clear_scrollback();
+  void clear();
+  void clear_scrollback();
 
-    void write(std::string_view bytes);
+  void write(std::string_view bytes);
 
-    core::Size terminalSize() const;
+  core::Size terminalSize() const;
 };
 
-}
+} // namespace vextr::backend

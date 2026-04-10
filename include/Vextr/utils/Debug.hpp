@@ -3,9 +3,9 @@
 
 namespace vextr::utils {
 
-void debugLog(const std::string& msg);
-void debugLog(const std::string& msg, const void* source);
+void debugLog(const std::string &msg);
+void debugLog(const std::string &msg, const void *source);
 
-} // vextr::utils
+} // namespace vextr::utils
 
 #define VEXTR_LOG(msg) vextr::utils::debugLog(msg)

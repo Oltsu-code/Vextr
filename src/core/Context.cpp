@@ -2,9 +2,9 @@
 
 namespace vextr::core {
 
-Context& Context::get() {
-    static Context instance;
-    return instance;
+Context &Context::get() {
+  static Context instance;
+  return instance;
 }
 
-} // vextr::core
+} // namespace vextr::core

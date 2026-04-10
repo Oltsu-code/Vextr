@@ -1,4 +1,3 @@
 #include <Vextr/utils/String.hpp>
 
-namespace vextr::utils {
-} // vextr::utils
+namespace vextr::utils {} // namespace vextr::utils

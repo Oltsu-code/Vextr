@@ -1,6 +1,5 @@
 #pragma once
 
 namespace vextr::utils {
-class String {
-};
-} // vextr::utils
+class String {};
+} // namespace vextr::utils

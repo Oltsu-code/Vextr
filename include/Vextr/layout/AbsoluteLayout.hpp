@@ -5,7 +5,7 @@ namespace vextr::core {
 
 class AbsoluteLayout : public Layout {
 public:
-    void apply(std::vector<ChildSlot>& children, Rect inner) override;
+  void apply(std::vector<ChildSlot> &children, Rect inner) override;
 };
 
-} // vextr::core
+} // namespace vextr::core

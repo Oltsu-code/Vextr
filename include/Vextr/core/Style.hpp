@@ -4,16 +4,16 @@
 namespace vextr::core {
 
 struct Color {
-    uint8_t r = 255, g = 255, b = 255;
+  uint8_t r = 255, g = 255, b = 255;
 };
 
 struct Style {
-    Color fg = {255, 255, 255};
-    Color bg = {0, 0, 0};
-    bool bold      = false;
-    bool underline = false;
+  Color fg = {255, 255, 255};
+  Color bg = {0, 0, 0};
+  bool bold = false;
+  bool underline = false;
 
-    int  padding   = 0;
+  int padding = 0;
 };
 
-} // vextr::core
+} // namespace vextr::core

@@ -4,7 +4,6 @@
 
 namespace vextr::widgets {
 
-class Button{
-};
+class Button {};
 
-} // vextr::widgets
+} // namespace vextr::widgets

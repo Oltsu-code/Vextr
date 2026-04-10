@@ -1,4 +1,3 @@
 #include <Vextr/core/Theme.hpp>
 
-namespace vextr::core {
-} // vextr::core
+namespace vextr::core {} // namespace vextr::core

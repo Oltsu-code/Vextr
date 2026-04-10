@@ -8,6 +8,6 @@ namespace vextr::utils::unicode {
 int displayWidth(uint32_t codepoint);
 
 // returns total display width of a utf8 string
-int stringWidth(const std::string& utf8);
+int stringWidth(const std::string &utf8);
 
-} // vextr::utils::unicode
+} // namespace vextr::utils::unicode

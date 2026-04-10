@@ -1,4 +1,3 @@
 #include <Vextr/widgets/ScrollView.hpp>
 
-namespace vextr::widgets {
-} // vextr::widgets
+namespace vextr::widgets {} // namespace vextr::widgets
