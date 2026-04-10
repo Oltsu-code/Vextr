@@ -2,6 +2,9 @@
 #include <Vextr/widgets/Container.hpp>
 #include <Vextr/layout/StackLayout.hpp>
 #include <Vextr/widgets/Label.hpp>
+#include <Vextr/utils/Input.hpp>
+
+#include "Vextr/utils/Debug.hpp"
 
 using namespace vextr::core;
 
@@ -17,9 +20,14 @@ public:
     }
 
     bool onEvent(const Event& e) override {
-        if (e.type == EventType::Key && e.key == '\r') {
+        if (e.type == EventType::Key && e.key == vextr::utils::Key::Enter) {
             // enter pressed while focused
-            setText("[" + getText() + "]");
+
+            if (getText().contains("[") && getText().contains("]"))
+                setText(getText().substr(1, getText().size() - 2));
+            else
+                setText("[" + getText() + "]");
+
             return true;
         }
         return false;

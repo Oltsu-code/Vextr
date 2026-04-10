@@ -1,5 +1,6 @@
 #include <Vextr/core/Context.hpp>
 #include <Vextr/core/Widget.hpp>
+#include <Vextr/utils/Input.hpp>
 
 #include "Vextr/utils/Debug.hpp"
 
@@ -19,7 +20,7 @@ void FocusManager::clearFocus() {
 }
 
 void FocusManager::collectFocusable(std::shared_ptr<Widget> w,
-                                     std::vector<std::shared_ptr<Widget>>& out) {
+                                    std::vector<std::shared_ptr<Widget>>& out) {
     if (!w) return;
     if (w->isFocusable()) out.push_back(w);
 
@@ -59,6 +60,34 @@ void FocusManager::focusPrev(std::shared_ptr<Widget> root) {
         }
     }
     setFocus(focusable.back());
+}
+
+bool FocusManager::dispatch(const Event& e, std::shared_ptr<Widget> root) {
+    if (e.type == EventType::Key) {
+        if (e.key == utils::Key::Tab) {
+            focusNext(root); return true;
+        }
+        if (e.key == utils::Key::ShiftTab) {
+            focusPrev(root); return true;
+        }
+        if (e.key == utils::Key::Escape) {
+            clearFocus(); return true;
+        }
+    }
+
+    // route to focused widget
+    auto fw = focused();
+    if (!fw) return false;
+
+    if (fw->onEvent(e)) return true;
+
+    // bubble up
+    auto p = fw->parent.lock();
+    while (p) {
+        if (p->onEvent(e)) return true;
+        p = p->parent.lock();
+    }
+    return false;
 }
 
 } // vextr::core

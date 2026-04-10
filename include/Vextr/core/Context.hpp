@@ -1,5 +1,6 @@
 #pragma once
 #include <Vextr/core/Geometry.hpp>
+#include <Vextr/core/Event.hpp>
 #include <memory>
 #include <vector>
 
@@ -15,6 +16,8 @@ public:
 
     void focusNext(std::shared_ptr<Widget> root);
     void focusPrev(std::shared_ptr<Widget> root);
+
+    bool dispatch(const Event& e, std::shared_ptr<Widget> root);
 
 private:
     std::weak_ptr<Widget> current;

@@ -3,6 +3,8 @@
 #include <Vextr/backend/Terminal.hpp>
 #include <Vextr/backend/Buffer.hpp>
 #include <Vextr/backend/Renderer.hpp>
+#include <Vextr/Utils/InputParser.hpp>
+#include <Vextr/Utils/InputReader.hpp>
 #include <memory>
 
 namespace vextr {
@@ -17,6 +19,11 @@ public:
     void setRoot(std::shared_ptr<core::Widget> root);
     void run();
     void quit() { running = false; }
+
+    utils::InputReader inputReader;
+    utils::InputParser inputParser;
+    int escapeTimer = 0;
+
 
 private:
     void tick();

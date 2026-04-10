@@ -1,6 +1,6 @@
 #include <Vextr/App.hpp>
 #include <Vextr/core/Context.hpp>
-#include <Vextr/utils/Debug.hpp>
+#include <Vextr/utils/Input.hpp>
 
 #if defined(_WIN32)
     #include <windows.h>
@@ -59,33 +59,27 @@ void App::tick() {
     }
 #endif
 
-    int key = pollInput();
-    if (key != -1) {
-        core::Event e;
-        e.type = core::EventType::Key;
-        e.key  = key;
+    inputReader.poll(inputParser);
 
-        if (key == '\t') {
-            core::Context::get().focusManager.focusNext(root);
-        } else if (key == 'q') {
+    // lone escape timeout
+    if (inputParser.pendingEscape()) {
+        escapeTimer++;
+        if (escapeTimer > 2) {
+            inputParser.flushEscape();
+            escapeTimer = 0;
+        }
+    } else {
+        escapeTimer = 0;
+    }
+
+    // dispatch events
+    while (inputParser.hasEvent()) {
+        core::Event e = inputParser.nextEvent();
+        if (e.key == 'q' && !e.ctrl && !e.shift) {
             running = false;
             return;
-        } else {
-            bool handled = false;
-            auto focused = core::Context::get().focusManager.focused();
-            if (focused) {
-                handled = focused->onEvent(e);
-                if (!handled) {
-                    auto p = focused->parent.lock();
-                    while (p && !handled) {
-                        handled = p->onEvent(e);
-                        p = p->parent.lock();
-                    }
-                }
-            }
-            if (!handled && root)
-                root->onEvent(e);
         }
+        core::Context::get().focusManager.dispatch(e, root);
     }
 
     if (root) {
