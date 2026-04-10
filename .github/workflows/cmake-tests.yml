@@ -1,0 +1,84 @@
+name: CMake Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        build-type: [Debug, Release]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up CMake
+      uses: jwlawson/actions-setup-cmake@v1
+      with:
+        cmake-version: '3.20.x'
+
+    - name: Setup compiler on Linux
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ gcc
+
+    - name: Setup compiler on macOS
+      if: runner.os == 'macOS'
+      run: |
+        brew install gcc
+
+    - name: Create build directory
+      run: mkdir -p cmake-build-${{ matrix.build-type }}
+
+    - name: Configure CMake
+      run: cmake -B cmake-build-${{ matrix.build-type }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+      working-directory: ${{ github.workspace }}
+
+    - name: Build all targets
+      run: cmake --build cmake-build-${{ matrix.build-type }} -j 4 --verbose
+      working-directory: ${{ github.workspace }}
+
+    - name: Run test suite
+      run: ctest --output-on-failure --verbose
+      working-directory: cmake-build-${{ matrix.build-type }}
+
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Code Quality Checks
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cppcheck clang-format-14
+
+    - name: Check code formatting (clang-format)
+      run: |
+        find include src examples tests -type f \( -name "*.cpp" -o -name "*.hpp" \) \
+          -exec clang-format-14 -i {} \;
+        git diff --exit-code || (echo "Code formatting issues found. Run 'clang-format' on your code." && exit 1)
+      continue-on-error: true
+
+    - name: Static analysis (cppcheck)
+      run: |
+        cppcheck --enable=all \
+          --suppress=missingIncludeSystem \
+          --suppress=unusedFunction \
+          --error-exitcode=1 \
+          --inline-suppr \
+          include/ src/ examples/ tests/
+      continue-on-error: true
+
+    - name: CMake configuration check
+      run: |
+        cmake -B cmake-build-ci -DCMAKE_BUILD_TYPE=Release
+        cmake --build cmake-build-ci -j 2
