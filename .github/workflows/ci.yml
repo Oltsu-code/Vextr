@@ -57,6 +57,7 @@ jobs:
 
       - name: Run cppcheck
         run: |
+          set +e
           cppcheck --enable=all \
             --suppress=missingIncludeSystem \
             --suppress=unusedFunction \
@@ -69,8 +70,10 @@ jobs:
             -ibuild \
             -itests \
             --project=build/compile_commands.json
-      
-          cat cppcheck.txt
+          code=$?
+          echo "==== cppcheck.txt ===="
+          cat cppcheck.txt || true
+          exit $code
 
   package:
     name: Dev Package (Linux)
