@@ -13,7 +13,9 @@ public:
   const std::string &getText() const { return text; }
 
   core::Size measure(int availW, int availH) override;
-  void render(backend::Buffer &buf) override;
+
+protected:
+  void drawContent(backend::Buffer &buf, core::Rect inner) override;
 
 private:
   std::string text;

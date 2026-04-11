@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
-# Compiler warnings (informational only, don't break builds)
 if(MSVC)
     add_compile_options(/W3)
 else()
@@ -46,6 +45,7 @@ add_example(focus_example)
 add_example(button_example)
 add_example(navigator_example)
 add_example(input_example)
+add_example(border_example)
 
 # ============================================================================
 # EXTERNAL DEPENDENCIES

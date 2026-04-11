@@ -17,8 +17,10 @@ public:
   bool isFocusable() const override { return true; }
 
   core::Size measure(int availW, int availH) override;
-  void render(backend::Buffer &buf) override;
   bool onEvent(const core::Event &e) override;
+
+protected:
+  void drawContent(backend::Buffer &buf, core::Rect inner) override;
 
 private:
   std::string label;

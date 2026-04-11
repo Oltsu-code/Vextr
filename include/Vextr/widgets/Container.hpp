@@ -19,7 +19,6 @@ public:
 
   Size measure(int availW, int availH) override;
   void layout(int x, int y, int width, int height) override;
-  void render(backend::Buffer &buf) override;
   bool onEvent(const Event &e) override;
 
   std::vector<std::shared_ptr<Widget>> getChildren() const override {
@@ -28,6 +27,9 @@ public:
       out.push_back(slot.widget);
     return out;
   }
+
+protected:
+  void drawContent(backend::Buffer &buf, Rect inner) override;
 
 private:
   std::shared_ptr<Layout> layoutEngine;

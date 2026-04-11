@@ -8,16 +8,13 @@ namespace vextr::widgets {
 core::Size Input::measure(int availW, int availH) { return {availW, 1}; }
 
 void Input::updateScroll() {
-  int visibleW = rect.width - 2; // 1 char padding each side
+  int visibleW = rect.width - 2;
   if (visibleW <= 0)
     return;
-
-  // keep cursor visible
   if (cursor - scroll >= visibleW)
     scroll = cursor - visibleW + 1;
   if (cursor - scroll < 0)
     scroll = cursor;
-
   scroll = std::max(0, scroll);
 }
 
@@ -55,56 +52,49 @@ void Input::moveCursor(int delta) {
   updateScroll();
 }
 
-void Input::render(backend::Buffer &buf) {
-  using namespace vextr::utils::unicode;
+void Input::drawContent(backend::Buffer &buf, core::Rect inner) {
   const core::Style &s = activeStyle();
-  int visibleW = rect.width - 2;
-  int cy = rect.y + rect.height / 2;
 
-  // fill background
-  backend::Cell base;
-  base.ch = ' ';
-  base.fg = s.fg;
-  base.bg = s.bg;
-  for (int y = rect.y; y < rect.y + rect.height; ++y)
-    for (int x = rect.x; x < rect.x + rect.width; ++x)
-      buf.set(x, y, base);
-
-  // left padding space
-  buf.set(rect.x, cy, base);
-
+  int visibleW = inner.width;
+  int cy = inner.y + inner.height / 2;
   bool isEmpty = text.empty();
   bool isFocused = focused();
 
-  // draw text or placeholder
   const std::string &display = isEmpty ? placeholder : text;
-  int startX = rect.x + 1;
-  int maxX = rect.x + rect.width - 1;
 
-  int screenX = startX;
+  // render visible characters
+  int screenX = inner.x;
+  int maxX = inner.x + inner.width;
   size_t i = 0;
-  int bytePos = 0;
+  int byteIdx = 0;
+
+  // skip scrolled characters
+  size_t tempI = 0;
+  int skipped = 0;
+  while (skipped < scroll && tempI < display.size()) {
+    size_t before = tempI;
+    utils::unicode::nextCodepoint(display, tempI);
+    if (tempI == before)
+      break;
+    skipped++;
+  }
+  i = tempI;
 
   while (i < display.size() && screenX < maxX) {
-    size_t start_i = i;
-    uint32_t cp = nextCodepoint(display, i);
-
-    if (i == start_i)
+    size_t start = i;
+    uint32_t cp = utils::unicode::nextCodepoint(display, i);
+    if (i == start)
       break;
 
-    int w = displayWidth(cp);
-    if (w <= 0) {
-      bytePos = i;
+    int w = utils::unicode::displayWidth(cp);
+    if (w <= 0)
       continue;
-    }
-
     if (screenX + w > maxX)
       break;
 
     backend::Cell cell;
-    cell.ch = encode(cp);
+    cell.ch = utils::unicode::encode(cp);
     if (isEmpty) {
-      // placeholder style - dimmer
       cell.fg = {(uint8_t)(s.fg.r / 2), (uint8_t)(s.fg.g / 2),
                  (uint8_t)(s.fg.b / 2)};
     } else {
@@ -116,22 +106,23 @@ void Input::render(backend::Buffer &buf) {
     buf.set(screenX, cy, cell);
 
     if (w == 2 && screenX + 1 < maxX) {
-      backend::Cell wide_cell = cell;
-      wide_cell.ch = "";
-      buf.set(screenX + 1, cy, wide_cell);
+      backend::Cell wide;
+      wide.ch = "";
+      wide.fg = cell.fg;
+      wide.bg = s.bg;
+      buf.set(screenX + 1, cy, wide);
     }
 
     screenX += w;
-    bytePos = i;
   }
 
-  // draw cursor when focused
+  // cursor
   if (isFocused) {
-    int cursorScreenX = startX + (cursor - scroll);
-    if (cursorScreenX >= startX && cursorScreenX < maxX) {
+    int cursorScreenX = inner.x + (cursor - scroll);
+    if (cursorScreenX >= inner.x && cursorScreenX < maxX) {
       backend::Cell cursorCell;
-      // cursor: invert colors
-      cursorCell.ch = (cursor < (int)text.size()) ? text[cursor] : ' ';
+      cursorCell.ch =
+          (cursor < (int)text.size()) ? std::string(1, text[cursor]) : " ";
       cursorCell.fg = s.bg;
       cursorCell.bg = s.fg;
       buf.set(cursorScreenX, cy, cursorCell);
@@ -169,9 +160,8 @@ bool Input::onEvent(const core::Event &e) {
       onSubmit(text);
     return true;
   case utils::Key::Escape:
-    return false; // let escape bubble
+    return false;
   default:
-    // printable characters
     if (e.key >= 32 && e.key < 127 && !e.ctrl && !e.alt) {
       insertChar((char)e.key);
       return true;

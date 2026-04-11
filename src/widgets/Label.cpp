@@ -7,55 +7,50 @@ core::Size Label::measure(int availW, int availH) {
   return {utils::unicode::stringWidth(text), 1};
 }
 
-void Label::render(backend::Buffer &buf) {
-  using namespace vextr::utils::unicode;
+void Label::drawContent(backend::Buffer &buf, core::Rect inner) {
+  const core::Style &s = activeStyle();
 
-  backend::Cell base;
-  base.ch = ' ';
-  base.fg = style.fg;
-  base.bg = style.bg;
+  int textW = utils::unicode::stringWidth(text);
 
-  for (int y = rect.y; y < rect.y + rect.height; ++y)
-    for (int x = rect.x; x < rect.x + rect.width; ++x)
-      buf.set(x, y, base);
+  core::Rect r =
+      alignContentRect(inner, textW, 1, s.contentAlignX, s.contentAlignY);
 
-  int cx = rect.x;
-  int maxX = rect.x + rect.width;
+  int screenX = r.x;
+  int maxX = inner.x + inner.width;
+  int cy = r.y;
 
   size_t i = 0;
 
-  while (i < text.size() && cx < maxX) {
-    size_t start_i = i;
-    uint32_t cp = nextCodepoint(text, i);
-
-    if (i == start_i)
+  while (i < text.size() && screenX < maxX) {
+    size_t start = i;
+    uint32_t cp = utils::unicode::nextCodepoint(text, i);
+    if (i == start)
       break;
 
-    int w = displayWidth(cp);
-
+    int w = utils::unicode::displayWidth(cp);
     if (w <= 0)
       continue;
-
-    if (cx + w > maxX)
+    if (screenX + w > maxX)
       break;
 
     backend::Cell cell;
-    cell.ch = encode(cp);
+    cell.ch = utils::unicode::encode(cp);
+    cell.fg = s.fg;
+    cell.bg = s.bg;
+    cell.bold = s.bold;
+    cell.underline = s.underline;
 
-    cell.fg = style.fg;
-    cell.bg = style.bg;
-    cell.bold = style.bold;
-    cell.underline = style.underline;
+    buf.set(screenX, cy, cell);
 
-    buf.set(cx, rect.y, cell);
-
-    if (w == 2 && cx + 1 < maxX) {
-      backend::Cell wide_cell = cell;
-      wide_cell.ch = "";
-      buf.set(cx + 1, rect.y, wide_cell);
+    if (w == 2 && screenX + 1 < maxX) {
+      backend::Cell wide;
+      wide.ch = "";
+      wide.fg = s.fg;
+      wide.bg = s.bg;
+      buf.set(screenX + 1, cy, wide);
     }
 
-    cx += w;
+    screenX += w;
   }
 }
 

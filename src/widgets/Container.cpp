@@ -13,16 +13,10 @@ void Container::layout(int x, int y, int width, int height) {
   Widget::layout(x, y, width, height);
   if (children.empty())
     return;
-
-  int p = style.padding;
-  Rect inner = {x + p, y + p, std::max(0, width - p * 2),
-                std::max(0, height - p * 2)};
-
-  layoutEngine->apply(children, inner);
+  layoutEngine->apply(children, innerRect());
 }
 
-void Container::render(backend::Buffer &buf) {
-  Widget::render(buf);
+void Container::drawContent(backend::Buffer &buf, Rect inner) {
   for (auto &slot : children)
     slot.widget->render(buf);
 }

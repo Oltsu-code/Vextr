@@ -41,21 +41,35 @@ struct MarginSpec {
 };
 
 struct LayoutSpec {
-  float ratio = 1.0f;
-  ScalarSpec fixedW;
-  ScalarSpec fixedH;
-  ScalarSpec minW;
-  ScalarSpec minH;
-  ScalarSpec maxW;
-  ScalarSpec maxH;
+  // slot sizing
+  float ratio = 1.0f; // relative weight among siblings in layout
+  ScalarSpec fixedW; // fixed slot width  — overrides ratio in horizontal stacks
+  ScalarSpec fixedH; // fixed slot height — overrides ratio in vertical stacks
+
+  // widget sizing within slot
+  // if set, widget is this size inside its slot
+  // if not set, widget fills slot according to alignH/alignV
+  ScalarSpec sizeW;
+  ScalarSpec sizeH;
+
+  // constraints
+  ScalarSpec minW, minH;
+  ScalarSpec maxW, maxH;
+
+  // alignment of widget within slot
+  // only meaningful when sizeW/sizeH is set or widget is smaller than slot
   Align alignH = Align::Stretch;
   Align alignV = Align::Stretch;
+
+  // spacing
   MarginSpec margin;
+
   // grid
   int col = 0;
   int row = 0;
   int colSpan = 1;
   int rowSpan = 1;
+
   // absolute
   ScalarSpec absX;
   ScalarSpec absY;

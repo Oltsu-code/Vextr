@@ -13,22 +13,18 @@ void AbsoluteLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
     int availH =
         std::max(0, inner.height - slot.spec.absY.resolve(inner.height));
 
-    // resolve size
-    int w, h;
-    if (slot.spec.fixedW.isSet())
-      w = slot.spec.fixedW.resolve(inner.width);
-    else {
-      Size s = slot.widget->measure(availW, availH);
-      w = s.width;
-    }
-    if (slot.spec.fixedH.isSet())
-      h = slot.spec.fixedH.resolve(inner.height);
-    else {
-      Size s = slot.widget->measure(availW, availH);
-      h = s.height;
-    }
+    Size natural = slot.widget->measure(availW, availH);
 
-    // clamp to min/max
+    // sizeW/sizeH = explicit widget size
+    // fixedW/fixedH = fallback if sizeW/sizeH not set
+    int w = slot.spec.sizeW.isSet()    ? slot.spec.sizeW.resolve(inner.width)
+            : slot.spec.fixedW.isSet() ? slot.spec.fixedW.resolve(inner.width)
+                                       : natural.width;
+
+    int h = slot.spec.sizeH.isSet()    ? slot.spec.sizeH.resolve(inner.height)
+            : slot.spec.fixedH.isSet() ? slot.spec.fixedH.resolve(inner.height)
+                                       : natural.height;
+
     if (slot.spec.minW.isSet())
       w = std::max(w, slot.spec.minW.resolve(inner.width));
     if (slot.spec.maxW.isSet())
@@ -38,10 +34,7 @@ void AbsoluteLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
     if (slot.spec.maxH.isSet())
       h = std::min(h, slot.spec.maxH.resolve(inner.height));
 
-    w = std::max(0, w);
-    h = std::max(0, h);
-
-    slot.widget->layout(x, y, w, h);
+    slot.widget->layout(x, y, std::max(0, w), std::max(0, h));
   }
 }
 

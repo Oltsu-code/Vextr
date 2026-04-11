@@ -5,69 +5,53 @@
 namespace vextr::widgets {
 
 core::Size Button::measure(int availW, int availH) {
-  return {utils::unicode::stringWidth(label) + 4, 1};
+  int naturalW = utils::unicode::stringWidth(label) + 4;
+  return {naturalW, 1};
 }
 
-void Button::render(backend::Buffer &buf) {
+void Button::drawContent(backend::Buffer &buf, core::Rect inner) {
+  const auto &s = activeStyle();
   using namespace vextr::utils::unicode;
-  const core::Style &s = activeStyle();
 
-  // fill background
-  backend::Cell base;
-  base.ch = ' ';
-  base.fg = s.fg;
-  base.bg = s.bg;
-  for (int y = rect.y; y < rect.y + rect.height; ++y)
-    for (int x = rect.x; x < rect.x + rect.width; ++x)
-      buf.set(x, y, base);
+  if (inner.width <= 0 || inner.height <= 0)
+    return;
 
-  // draw "[ label ]"
-  int cx = rect.x;
-  int cy = rect.y + rect.height / 2;
-  int maxX = rect.x + rect.width;
+  int labelW = 0;
+  size_t i = 0;
+  while (i < label.size()) {
+    uint32_t cp = nextCodepoint(label, i);
+    labelW += displayWidth(cp);
+  }
 
-  auto putChar = [&](const std::string &ch, int width = 1) {
-    if (cx + width > maxX)
-      return;
+  core::Rect r =
+      alignContentRect(inner, labelW, 1, s.contentAlignX, s.contentAlignY);
+
+  size_t idx = 0;
+  int screenX = r.x;
+  int maxX = inner.x + inner.width;
+
+  while (idx < label.size() && screenX < maxX) {
+    uint32_t cp = nextCodepoint(label, idx);
+    int w = displayWidth(cp);
+    if (screenX + w > maxX)
+      break;
+
     backend::Cell cell;
-    cell.ch = ch;
+    cell.ch = encode(cp);
     cell.fg = s.fg;
     cell.bg = s.bg;
     cell.bold = s.bold;
     cell.underline = s.underline;
-    buf.set(cx, cy, cell);
+    buf.set(screenX, r.y, cell);
 
-    if (width == 2 && cx + 1 < maxX) {
-      backend::Cell wide_cell = cell;
-      wide_cell.ch = "";
-      buf.set(cx + 1, cy, wide_cell);
+    if (w == 2 && screenX + 1 < maxX) {
+      backend::Cell wide = cell;
+      wide.ch = "";
+      buf.set(screenX + 1, r.y, wide);
     }
-    cx += width;
-  };
 
-  putChar("[");
-  putChar(" ");
-
-  size_t i = 0;
-  while (i < label.size() && cx < maxX) {
-    size_t start_i = i;
-    uint32_t cp = nextCodepoint(label, i);
-
-    if (i == start_i)
-      break;
-
-    int w = displayWidth(cp);
-    if (w <= 0)
-      continue;
-
-    if (cx + w > maxX)
-      break;
-
-    putChar(encode(cp), w);
+    screenX += w;
   }
-
-  putChar(" ");
-  putChar("]");
 }
 
 bool Button::onEvent(const core::Event &e) {

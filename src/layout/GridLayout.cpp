@@ -22,7 +22,7 @@ void GridLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
     int slotW = cellW * cSpan + gapX * (cSpan - 1);
     int slotH = cellH * rSpan + gapY * (rSpan - 1);
 
-    // resolve margins
+    // margins
     int mT = slot.spec.margin.resolvedTop(slotH);
     int mB = slot.spec.margin.resolvedBottom(slotH);
     int mL = slot.spec.margin.resolvedLeft(slotW);
@@ -33,44 +33,54 @@ void GridLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
     int innerW = std::max(0, slotW - mL - mR);
     int innerH = std::max(0, slotH - mT - mB);
 
-    // alignment
-    int finalW = innerW, finalH = innerH;
+    Size natural = slot.widget->measure(innerW, innerH);
+
+    // widget size within cell
+    int finalW = slot.spec.sizeW.isSet() ? slot.spec.sizeW.resolve(innerW)
+                 : slot.spec.alignH == Align::Stretch
+                     ? innerW
+                     : std::clamp(natural.width, 0, innerW);
+
+    int finalH = slot.spec.sizeH.isSet() ? slot.spec.sizeH.resolve(innerH)
+                 : slot.spec.alignV == Align::Stretch
+                     ? innerH
+                     : std::clamp(natural.height, 0, innerH);
+
+    // clamp to min/max
+    if (slot.spec.minW.isSet())
+      finalW = std::max(finalW, slot.spec.minW.resolve(innerW));
+    if (slot.spec.maxW.isSet())
+      finalW = std::min(finalW, slot.spec.maxW.resolve(innerW));
+    if (slot.spec.minH.isSet())
+      finalH = std::max(finalH, slot.spec.minH.resolve(innerH));
+    if (slot.spec.maxH.isSet())
+      finalH = std::min(finalH, slot.spec.maxH.resolve(innerH));
+
+    // alignment within cell
     int offX = 0, offY = 0;
-
-    bool needMeasure = slot.spec.alignH != Align::Stretch ||
-                       slot.spec.alignV != Align::Stretch;
-    if (needMeasure) {
-      Size desired = slot.widget->measure(innerW, innerH);
-
-      if (slot.spec.alignH != Align::Stretch) {
-        finalW = std::clamp(desired.width, 0, innerW);
-        switch (slot.spec.alignH) {
-        case Align::Center:
-          offX = (innerW - finalW) / 2;
-          break;
-        case Align::End:
-          offX = innerW - finalW;
-          break;
-        default:
-          break;
-        }
-      }
-      if (slot.spec.alignV != Align::Stretch) {
-        finalH = std::clamp(desired.height, 0, innerH);
-        switch (slot.spec.alignV) {
-        case Align::Center:
-          offY = (innerH - finalH) / 2;
-          break;
-        case Align::End:
-          offY = innerH - finalH;
-          break;
-        default:
-          break;
-        }
-      }
+    switch (slot.spec.alignH) {
+    case Align::Center:
+      offX = (innerW - finalW) / 2;
+      break;
+    case Align::End:
+      offX = innerW - finalW;
+      break;
+    default:
+      break;
+    }
+    switch (slot.spec.alignV) {
+    case Align::Center:
+      offY = (innerH - finalH) / 2;
+      break;
+    case Align::End:
+      offY = innerH - finalH;
+      break;
+    default:
+      break;
     }
 
-    slot.widget->layout(innerX + offX, innerY + offY, finalW, finalH);
+    slot.widget->layout(innerX + offX, innerY + offY, std::max(0, finalW),
+                        std::max(0, finalH));
   }
 }
 
