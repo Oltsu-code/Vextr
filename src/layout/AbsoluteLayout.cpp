@@ -2,9 +2,9 @@
 #include <Vextr/layout/AbsoluteLayout.hpp>
 #include <algorithm>
 
-namespace vextr::core {
+namespace vextr::layout {
 
-void AbsoluteLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
+void AbsoluteLayout::apply(std::vector<core::ChildSlot> &children, core::Rect inner) {
   for (auto &slot : children) {
     int x = inner.x + slot.spec.absX.resolve(inner.width);
     int y = inner.y + slot.spec.absY.resolve(inner.height);
@@ -13,7 +13,7 @@ void AbsoluteLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
     int availH =
         std::max(0, inner.height - slot.spec.absY.resolve(inner.height));
 
-    Size natural = slot.widget->measure(availW, availH);
+    core::Size natural = slot.widget->measure(availW, availH);
 
     // sizeW/sizeH = explicit widget size
     // fixedW/fixedH = fallback if sizeW/sizeH not set

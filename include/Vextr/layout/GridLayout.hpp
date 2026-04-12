@@ -1,7 +1,7 @@
 #pragma once
 #include <Vextr/core/Layout.hpp>
 
-namespace vextr::core {
+namespace vextr::layout {
 
 /// @class GridLayout
 /// @brief A layout that arranges children in a 2D grid.
@@ -26,7 +26,7 @@ namespace vextr::core {
 /// grid->addChild(widget2, LayoutSpec{.col = 2, .row = 0});
 /// grid->addChild(widget3, LayoutSpec{.col = 0, .row = 1, .colSpan = 3});
 /// ```
-class GridLayout : public Layout {
+class GridLayout : public core::Layout {
 public:
   /// @brief Creates a grid layout.
   /// @param cols Number of columns
@@ -37,10 +37,10 @@ public:
       : cols(cols), rows(rows), gapX(gapX), gapY(gapY) {}
 
   /// @brief Applies the grid layout.
-  void apply(std::vector<ChildSlot> &children, Rect inner) override;
+  void apply(std::vector<core::ChildSlot> &children, core::Rect inner) override;
 
 private:
   int cols, rows, gapX, gapY;
 };
 
-} // namespace vextr::core
+} // namespace vextr::layout

@@ -4,12 +4,12 @@
 #include <Vextr/widgets/Container.hpp>
 #include <Vextr/widgets/Label.hpp>
 
-#include "Vextr/utils/Debug.hpp"
-
 using namespace vextr::core;
+using namespace vextr::widgets;
+using namespace vextr::layout;
 
 // a focusable label - lights up when focused
-class FocusableLabel : public vextr::widgets::Label {
+class FocusableLabel : public Label {
 public:
   explicit FocusableLabel(const std::string &text) : Label(text) {}
 
@@ -66,7 +66,7 @@ int main() {
   root->setStyle(Style{.bg = {15, 15, 25}});
 
   // header - not focusable
-  auto header = std::make_shared<vextr::widgets::Label>(
+  auto header = std::make_shared<Label>(
       "Tab to move focus  Enter to select  Q to quit");
   header->setStyle(Style{.fg = {150, 150, 150}, .bg = {25, 25, 40}});
 

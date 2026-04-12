@@ -2,9 +2,9 @@
 #include <Vextr/layout/GridLayout.hpp>
 #include <algorithm>
 
-namespace vextr::core {
+namespace vextr::layout {
 
-void GridLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
+void GridLayout::apply(std::vector<core::ChildSlot> &children, core::Rect inner) {
   if (cols <= 0 || rows <= 0 || children.empty())
     return;
 
@@ -33,16 +33,16 @@ void GridLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
     int innerW = std::max(0, slotW - mL - mR);
     int innerH = std::max(0, slotH - mT - mB);
 
-    Size natural = slot.widget->measure(innerW, innerH);
+    core::Size natural = slot.widget->measure(innerW, innerH);
 
     // widget size within cell
     int finalW = slot.spec.sizeW.isSet() ? slot.spec.sizeW.resolve(innerW)
-                 : slot.spec.alignH == Align::Stretch
+                 : slot.spec.alignH == core::Align::Stretch
                      ? innerW
                      : std::clamp(natural.width, 0, innerW);
 
     int finalH = slot.spec.sizeH.isSet() ? slot.spec.sizeH.resolve(innerH)
-                 : slot.spec.alignV == Align::Stretch
+                 : slot.spec.alignV == core::Align::Stretch
                      ? innerH
                      : std::clamp(natural.height, 0, innerH);
 
@@ -59,20 +59,20 @@ void GridLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
     // alignment within cell
     int offX = 0, offY = 0;
     switch (slot.spec.alignH) {
-    case Align::Center:
+    case core::Align::Center:
       offX = (innerW - finalW) / 2;
       break;
-    case Align::End:
+    case core::Align::End:
       offX = innerW - finalW;
       break;
     default:
       break;
     }
     switch (slot.spec.alignV) {
-    case Align::Center:
+    case core::Align::Center:
       offY = (innerH - finalH) / 2;
       break;
-    case Align::End:
+    case core::Align::End:
       offY = innerH - finalH;
       break;
     default:

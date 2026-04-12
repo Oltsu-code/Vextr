@@ -2,9 +2,9 @@
 #include <Vextr/layout/StackLayout.hpp>
 #include <algorithm>
 
-namespace vextr::core {
+namespace vextr::layout {
 
-void StackLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
+void StackLayout::apply(std::vector<core::ChildSlot> &children, core::Rect inner) {
   if (children.empty())
     return;
 
@@ -20,7 +20,7 @@ void StackLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
 
   for (size_t i = 0; i < children.size(); ++i) {
     auto &slot = children[i];
-    ScalarSpec f = isVert ? slot.spec.fixedH : slot.spec.fixedW;
+    core::ScalarSpec f = isVert ? slot.spec.fixedH : slot.spec.fixedW;
 
     if (f.isSet()) {
       // fixed slot size — ignores ratio
@@ -43,7 +43,7 @@ void StackLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
 
   for (size_t i = 0; i < children.size(); ++i) {
     auto &slot = children[i];
-    ScalarSpec f = isVert ? slot.spec.fixedH : slot.spec.fixedW;
+    core::ScalarSpec f = isVert ? slot.spec.fixedH : slot.spec.fixedW;
     if (f.isSet())
       continue;
 
@@ -65,14 +65,14 @@ void StackLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
   {
     int ratioUsed = 0;
     for (size_t i = 0; i < children.size(); ++i) {
-      ScalarSpec f = isVert ? children[i].spec.fixedH : children[i].spec.fixedW;
+      core::ScalarSpec f = isVert ? children[i].spec.fixedH : children[i].spec.fixedW;
       if (!f.isSet())
         ratioUsed += sizes[i];
     }
     int leftover = ratioPool - ratioUsed;
     if (leftover != 0) {
       for (int i = (int)children.size() - 1; i >= 0; --i) {
-        ScalarSpec f =
+        core::ScalarSpec f =
             isVert ? children[i].spec.fixedH : children[i].spec.fixedW;
         if (!f.isSet()) {
           sizes[i] = std::max(1, sizes[i] + leftover);
@@ -105,18 +105,18 @@ void StackLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
     int mainSlot = std::max(1, slotSize - mainMarA - mainMarB);
 
     // measure widget natural size
-    Size desired = slot.widget->measure(isVert ? crossSlot : mainSlot,
+    core::Size desired = slot.widget->measure(isVert ? crossSlot : mainSlot,
                                         isVert ? mainSlot : crossSlot);
 
     // ── cross axis ───────────────────────────────────────────
     // sizeW (vertical) or sizeH (horizontal) = explicit widget size
-    ScalarSpec crossSize = isVert ? slot.spec.sizeW : slot.spec.sizeH;
-    Align crossAlign = isVert ? slot.spec.alignH : slot.spec.alignV;
+    core::ScalarSpec crossSize = isVert ? slot.spec.sizeW : slot.spec.sizeH;
+    core::Align crossAlign = isVert ? slot.spec.alignH : slot.spec.alignV;
 
     int contentCross;
     if (crossSize.isSet()) {
       contentCross = std::clamp(crossSize.resolve(crossSlot), 1, crossSlot);
-    } else if (crossAlign == Align::Stretch) {
+    } else if (crossAlign == core::Align::Stretch) {
       contentCross = crossSlot;
     } else {
       int natural = std::max(1, isVert ? desired.width : desired.height);
@@ -131,10 +131,10 @@ void StackLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
 
     int crossOffset = 0;
     switch (crossAlign) {
-    case Align::Center:
+    case core::Align::Center:
       crossOffset = (crossSlot - contentCross) / 2;
       break;
-    case Align::End:
+    case core::Align::End:
       crossOffset = crossSlot - contentCross;
       break;
     default:
@@ -143,13 +143,13 @@ void StackLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
     int crossPos = (isVert ? inner.x : inner.y) + crossMarA + crossOffset;
 
     // main axis
-    ScalarSpec mainSize2 = isVert ? slot.spec.sizeH : slot.spec.sizeW;
-    Align mainAlign = isVert ? slot.spec.alignV : slot.spec.alignH;
+    core::ScalarSpec mainSize2 = isVert ? slot.spec.sizeH : slot.spec.sizeW;
+    core::Align mainAlign = isVert ? slot.spec.alignV : slot.spec.alignH;
 
     int contentMain;
     if (mainSize2.isSet()) {
       contentMain = std::clamp(mainSize2.resolve(mainSlot), 1, mainSlot);
-    } else if (mainAlign == Align::Stretch) {
+    } else if (mainAlign == core::Align::Stretch) {
       contentMain = mainSlot;
     } else {
       int natural = std::max(1, isVert ? desired.height : desired.width);
@@ -164,10 +164,10 @@ void StackLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
 
     int mainOffset = 0;
     switch (mainAlign) {
-    case Align::Center:
+    case core::Align::Center:
       mainOffset = (mainSlot - contentMain) / 2;
       break;
-    case Align::End:
+    case core::Align::End:
       mainOffset = mainSlot - contentMain;
       break;
     default:
@@ -175,7 +175,7 @@ void StackLayout::apply(std::vector<ChildSlot> &children, Rect inner) {
     }
     int mainPos = cursor + mainMarA + mainOffset;
 
-    Rect childRect;
+    core::Rect childRect;
     if (isVert)
       childRect = {crossPos, mainPos, contentCross, contentMain};
     else

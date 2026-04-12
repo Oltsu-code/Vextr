@@ -9,6 +9,7 @@
 
 using namespace vextr::core;
 using namespace vextr::widgets;
+using namespace vextr::layout;
 
 int main() {
   auto root = std::make_shared<Container>(

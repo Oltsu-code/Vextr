@@ -7,6 +7,7 @@
 
 using namespace vextr::core;
 using namespace vextr::widgets;
+using namespace vextr::layout;
 
 int main() {
   // root: horizontal stack

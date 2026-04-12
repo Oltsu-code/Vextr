@@ -1,7 +1,7 @@
 #pragma once
 #include <Vextr/core/Layout.hpp>
 
-namespace vextr::core {
+namespace vextr::layout {
 
 /// @class AbsoluteLayout
 /// @brief A layout where children are positioned using absolute coordinates.
@@ -33,10 +33,10 @@ namespace vextr::core {
 /// // Position at (20, 15)
 /// abs->addChild(button2, LayoutSpec{.absX = cells(20), .absY = cells(15)});
 /// ```
-class AbsoluteLayout : public Layout {
+class AbsoluteLayout : public core::Layout {
 public:
   /// @brief Applies absolute positioning to children.
-  void apply(std::vector<ChildSlot> &children, Rect inner) override;
+  void apply(std::vector<core::ChildSlot> &children, core::Rect inner) override;
 };
 
-} // namespace vextr::core
+} // namespace vextr::layout

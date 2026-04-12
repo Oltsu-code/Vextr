@@ -6,6 +6,7 @@
 
 using namespace vextr::core;
 using namespace vextr::widgets;
+using namespace vextr::layout;
 
 int main() {
   vextr::App app;

@@ -1,7 +1,7 @@
 #pragma once
 #include <Vextr/core/Layout.hpp>
 
-namespace vextr::core {
+namespace vextr::layout {
 
 /// @enum Axis
 /// @brief Specifies the direction for stack-based layout.
@@ -36,7 +36,7 @@ enum class Axis {
 ///   std::make_shared<StackLayout>(Axis::Horizontal, 2)
 /// );
 /// ```
-class StackLayout : public Layout {
+class StackLayout : public core::Layout {
 public:
   /// @brief Creates a stack layout.
   /// @param axis The direction to stack (default: Vertical)
@@ -45,13 +45,13 @@ public:
       : axis(axis), gap(gap) {}
 
   /// @brief Applies the layout by stacking children along the axis.
-  void apply(std::vector<ChildSlot> &children, Rect inner) override;
+  void apply(std::vector<core::ChildSlot> &children, core::Rect inner) override;
 
 private:
   Axis axis;
   int gap;
 
-  Rect resolveSlot(const ChildSlot &slot, int x, int y, int w, int h);
+  core::Rect resolveSlot(const core::ChildSlot &slot, int x, int y, int w, int h);
 };
 
-} // namespace vextr::core
+} // namespace vextr::layout
