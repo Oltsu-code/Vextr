@@ -20,6 +20,17 @@ struct Color {
   static Color clear() { return {0, 0, 0, true}; }
 };
 
+/// @struct TextDecoration
+/// @brief Represents text styling options such as bold, underline, and italic.
+///
+/// These styles can be combined to achieve various text effects.
+struct TextDecoration {
+  bool bold = false;
+  bool underline = false;
+  bool italic = false;
+  bool strikethrough = false;
+};
+
 /// @enum BorderStyle
 /// @brief Specifies the style of border to draw around widgets.
 ///
@@ -48,8 +59,8 @@ struct Border {
 struct Style {
   Color fg = {255, 255, 255}; ///< Foreground (text) color
   Color bg = {0, 0, 0};       ///< Background color
-  bool bold = false;          ///< Whether text is bold
-  bool underline = false;     ///< Whether text is underlined
+
+  TextDecoration text; ///< Text decoration (bold, underline, etc.)
 
   Border border; ///< Border configuration
 

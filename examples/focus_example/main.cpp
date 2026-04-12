@@ -52,8 +52,8 @@ public:
       cell.ch = c;
       cell.fg = activeStyle().fg;
       cell.bg = activeStyle().bg;
-      cell.bold = activeStyle().bold;
-      cell.underline = activeStyle().underline;
+      cell.bold = activeStyle().text.bold;
+      cell.underline = activeStyle().text.underline;
       buf.set(cx, rect.y, cell);
       cx++;
     }
@@ -74,17 +74,17 @@ int main() {
   auto item1 = std::make_shared<FocusableLabel>("  Option 1");
   item1->setStyle(Style{.fg = {200, 200, 255}, .bg = {30, 30, 60}});
   item1->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {60, 60, 120}, .bold = true});
+      Style{.fg = {255, 255, 100}, .bg = {60, 60, 120}, .text = {.bold = true}});
 
   auto item2 = std::make_shared<FocusableLabel>("  Option 2");
   item2->setStyle(Style{.fg = {200, 200, 255}, .bg = {30, 30, 60}});
   item2->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {60, 60, 120}, .bold = true});
+      Style{.fg = {255, 255, 100}, .bg = {60, 60, 120}, .text = {.bold = true}});
 
   auto item3 = std::make_shared<FocusableLabel>("  Option 3");
   item3->setStyle(Style{.fg = {200, 200, 255}, .bg = {30, 30, 60}});
   item3->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {60, 60, 120}, .bold = true});
+      Style{.fg = {255, 255, 100}, .bg = {60, 60, 120}, .text = {.bold = true}});
 
   // a non-focusable label at the bottom
   auto footer = std::make_shared<vextr::widgets::Label>("  Status: ready");
@@ -98,12 +98,12 @@ int main() {
   auto left = std::make_shared<FocusableLabel>("  Left panel");
   left->setStyle(Style{.fg = {200, 180, 255}, .bg = {40, 20, 60}});
   left->setFocusedStyle(
-      Style{.fg = {255, 220, 100}, .bg = {80, 40, 120}, .bold = true});
+      Style{.fg = {255, 220, 100}, .bg = {80, 40, 120}, .text = {.bold = true}});
 
   auto right = std::make_shared<FocusableLabel>("  Right panel");
   right->setStyle(Style{.fg = {200, 180, 255}, .bg = {40, 20, 60}});
   right->setFocusedStyle(
-      Style{.fg = {255, 220, 100}, .bg = {80, 40, 120}, .bold = true});
+      Style{.fg = {255, 220, 100}, .bg = {80, 40, 120}, .text = {.bold = true}});
 
   row->addChild(left, {.ratio = 1.0f});
   row->addChild(right, {.ratio = 1.0f});

@@ -40,8 +40,8 @@ void Button::drawContent(backend::Buffer &buf, core::Rect inner) {
     cell.ch = encode(cp);
     cell.fg = s.fg;
     cell.bg = s.bg;
-    cell.bold = s.bold;
-    cell.underline = s.underline;
+    cell.bold = s.text.bold;
+    cell.underline = s.text.underline;
     buf.set(screenX, r.y, cell);
 
     if (w == 2 && screenX + 1 < maxX) {

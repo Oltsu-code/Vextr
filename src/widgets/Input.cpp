@@ -101,8 +101,8 @@ void Input::drawContent(backend::Buffer &buf, core::Rect inner) {
       cell.fg = s.fg;
     }
     cell.bg = s.bg;
-    cell.bold = s.bold;
-    cell.underline = s.underline;
+    cell.bold = s.text.bold;
+    cell.underline = s.text.underline;
     buf.set(screenX, cy, cell);
 
     if (w == 2 && screenX + 1 < maxX) {

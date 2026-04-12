@@ -99,8 +99,8 @@ int main() {
     Style fs;
     fs.fg = {255, 255, 100};
     fs.bg = bg;
-    fs.bold = true;
-    fs.underline = true;
+    fs.text = {.bold = true};
+    fs.text.underline = true;
 
     fs.border.style = BorderStyle::Double;
     fs.border.color = {255, 255, 100};

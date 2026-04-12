@@ -37,8 +37,8 @@ void Label::drawContent(backend::Buffer &buf, core::Rect inner) {
     cell.ch = utils::unicode::encode(cp);
     cell.fg = s.fg;
     cell.bg = s.bg;
-    cell.bold = s.bold;
-    cell.underline = s.underline;
+    cell.bold = s.text.bold;
+    cell.underline = s.text.underline;
 
     buf.set(screenX, cy, cell);
 

@@ -41,7 +41,7 @@ int main() {
   auto submitBtn = std::make_shared<Button>("Submit");
   submitBtn->setStyle(Style{.fg = {255, 255, 255}, .bg = {40, 80, 40}});
   submitBtn->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {80, 160, 80}, .bold = true});
+      Style{.fg = {255, 255, 100}, .bg = {80, 160, 80}, .text = {.bold = true}});
   submitBtn->setOnClick([&]() {
     status->setText("Submitted: " + nameInput->getText());
     VEXTR_LOG(nameInput->getText());
