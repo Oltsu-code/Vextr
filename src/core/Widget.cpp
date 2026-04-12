@@ -80,6 +80,43 @@ void Widget::drawBackground(backend::Buffer &buf) {
       buf.set(x, y, cell);
 }
 
+void drawBorderLine(backend::Buffer &buf, int y, int x0, int x1,
+                    const std::vector<BorderLabel> &labels, const Style &s) {
+  if (labels.empty() || x1 <= x0)
+    return;
+
+  for (const auto &l : labels) {
+    int textW = (int)l.text.size(); // ASCII assumption
+    int availW = x1 - x0;
+    if (textW > availW) continue;
+
+    int startX;
+    switch (l.align) {
+      case Align::Center:
+        startX = x0 + (availW - textW) / 2;
+        break;
+      case Align::End:
+        startX = x1 - textW - 1; // 2 cell gap from right corner
+        break;
+      default: // Start
+        startX = x0 + 2; // 2 cell gap from left corner
+        break;
+    }
+
+    int x = startX;
+    for (char c : l.text) {
+      if (x >= x1) break;
+      backend::Cell cell;
+      cell.ch = std::string(1, c);
+      cell.fg = l.color;
+      cell.bg = s.bg;
+      cell.bold = l.textDecoration.bold;
+      cell.underline = l.textDecoration.underline;
+      buf.set(x++, y, cell);
+    }
+  }
+}
+
 void Widget::drawBorder(backend::Buffer &buf) {
   const Style &s = activeStyle();
   if (s.border.style == BorderStyle::None)
@@ -116,6 +153,13 @@ void Widget::drawBorder(backend::Buffer &buf) {
     put(x0, y, bc.v);
     put(x1, y, bc.v);
   }
+
+  // border labels
+  if (!style.border.title.empty())
+    drawBorderLine(buf, y0, x0 + 1, x1 - 1, style.border.title, s);
+
+  if (!style.border.footer.empty())
+    drawBorderLine(buf, y1, x0 + 1, x1 - 1, style.border.footer, s);
 }
 
 int Widget::justifyX(int innerX, int innerW, int contentW, Align align) const {

@@ -60,6 +60,9 @@ int main() {
   inputBoxStyle.bg = {20, 20, 40};
   inputBoxStyle.border.style = BorderStyle::Rounded;
   inputBoxStyle.border.color = {80, 80, 200};
+  inputBoxStyle.border.title = { {"I like cheese", Align::Start, {.bold = true }, {15, 100, 255}},
+                                    {"Input Box", Align::Center, {.bold = true}, {100, 150, 100}}};
+  inputBoxStyle.border.footer = { {"Footer", Align::End, {.bold = true}}};
   inputBoxStyle.padding = PaddingSpec::all(2);
   inputBox->setStyle(inputBoxStyle);
 

@@ -1,6 +1,8 @@
 #pragma once
 #include <Vextr/core/Align.hpp>
 #include <cstdint>
+#include <string>
+#include <vector>
 
 namespace vextr::core {
 
@@ -76,11 +78,27 @@ enum class BorderStyle {
   Dashed,  ///< Dashed border: ╌ ╎
 };
 
+///@struct BorderLabel
+///@brief Represents a label that can be displayed on a border edge of a widget.
+///
+/// Border labels are optional text elements that can be placed on the top or bottom.
+/// They can be aligned to any position (start, center, end) and can have their own text decoration and color.
+struct BorderLabel {
+  std::string text; ///< The text to display on the border
+  Align align = Align::Center; ///< Alignment (start, center, end) of the label on the border
+
+  TextDecoration textDecoration; /// Optional text decoration for the label (bold, underline, etc.)
+  Color color; /// Optional color for the label text
+};
+
 /// @struct Border
 /// @brief Describes the border styling for a widget.
 struct Border {
-  BorderStyle style = BorderStyle::None; ///< The border style
-  Color color = {255, 255, 255};         ///< The border color
+  BorderStyle style = BorderStyle::None;     ///< The border style
+  Color color = {255, 255, 255}; ///< The border color
+
+  std::vector<BorderLabel> title;     /// Optional labels to display on the top border
+  std::vector<BorderLabel> footer;  /// Optional labels to display on the bottom border
 };
 
 /// @struct Style
