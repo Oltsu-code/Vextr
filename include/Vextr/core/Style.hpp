@@ -31,6 +31,38 @@ struct TextDecoration {
   bool strikethrough = false;
 };
 
+/// @struct PaddingSpec
+/// @brief Specifies padding on all four sides of a widget's content area.
+///
+/// Padding is the space between a widget's border and its content.
+/// All values are in cells (characters) — percentage-based padding is not
+/// supported since it would require knowing the widget's final size in advance.
+///
+/// @example
+/// ```cpp
+/// style.padding = PaddingSpec::all(1);          // 1 cell on all sides
+/// style.padding = PaddingSpec::xy(2, 1);        // 2 left/right, 1 top/bottom
+/// style.padding = {.top = 1, .bottom = 1};      // manual per-side
+/// ```
+struct PaddingSpec {
+  int top = 0;    ///< Padding on the top edge (in cells)
+  int bottom = 0; ///< Padding on the bottom edge (in cells)
+  int left = 0;   ///< Padding on the left edge (in cells)
+  int right = 0;  ///< Padding on the right edge (in cells)
+
+  /// @brief Creates equal padding on all four sides.
+  /// @param v The number of cells to pad on each side
+  static PaddingSpec all(int v) { return {v, v, v, v}; }
+
+  /// @brief Creates padding with separate horizontal and vertical values.
+  /// @param x Padding on the left and right edges (in cells)
+  /// @param y Padding on the top and bottom edges (in cells)
+  static PaddingSpec xy(int x, int y) { return {y, y, x, x}; }
+
+  /// @brief Creates zero padding on all sides.
+  static PaddingSpec none() { return {}; }
+};
+
 /// @enum BorderStyle
 /// @brief Specifies the style of border to draw around widgets.
 ///
@@ -69,7 +101,8 @@ struct Style {
   Align innerAlignY =
       Align::Start; ///< Vertical alignment of content within widget
 
-  int padding = 0; ///< Padding in cells on all sides
+  PaddingSpec
+      padding; ///< Padding inside the widget, between border and content.
 };
 
 } // namespace vextr::core

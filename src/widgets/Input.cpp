@@ -8,7 +8,8 @@ namespace vextr::widgets {
 core::Size Input::measure(int availW, int availH) { return {availW, 1}; }
 
 void Input::updateScroll() {
-  int visibleW = rect.width - 2;
+  core::Rect inner = innerRect();
+  int visibleW = inner.width;
   if (visibleW <= 0)
     return;
   if (cursor - scroll >= visibleW)

@@ -28,7 +28,7 @@ int main() {
     s.bg = {25, 25, 45};
     s.border.style = bs;
     s.border.color = borderColor;
-    s.padding = 1;
+    s.padding = PaddingSpec::all(1);
     box->setStyle(s);
 
     auto lbl = std::make_shared<Label>(label);
@@ -60,7 +60,7 @@ int main() {
   inputBoxStyle.bg = {20, 20, 40};
   inputBoxStyle.border.style = BorderStyle::Rounded;
   inputBoxStyle.border.color = {80, 80, 200};
-  inputBoxStyle.padding = 1;
+  inputBoxStyle.padding = PaddingSpec::all(2);
   inputBox->setStyle(inputBoxStyle);
 
   auto inputLabel = std::make_shared<Label>("Type something:");
@@ -134,7 +134,7 @@ int main() {
                           .alignV = Align::Center});
 
   root->addChild(topRow, {.ratio = 1.0f});
-  root->addChild(inputBox, {.fixedH = pct(20)});
+  root->addChild(inputBox, {.fixedH = cells(9)});
   root->addChild(btnRow, {.fixedH = pct(50)});
 
   vextr::App app;

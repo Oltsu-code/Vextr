@@ -44,12 +44,14 @@ const Style &Widget::activeStyle() const {
 }
 
 Rect Widget::innerRect() const {
-  const Style &s = activeStyle();
+  const Style &s = style;
   int b = (s.border.style != BorderStyle::None) ? 1 : 0;
-  int p = s.padding;
-  int inset = b + p;
-  return {rect.x + inset, rect.y + inset, std::max(0, rect.width - inset * 2),
-          std::max(0, rect.height - inset * 2)};
+  return {
+      rect.x + b + s.padding.left,
+      rect.y + b + s.padding.top,
+      std::max(0, rect.width - b * 2 - s.padding.left - s.padding.right),
+      std::max(0, rect.height - b * 2 - s.padding.top - s.padding.bottom),
+  };
 }
 
 Size Widget::measure(int availW, int availH) { return {0, 0}; }
