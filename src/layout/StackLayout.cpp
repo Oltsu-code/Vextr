@@ -93,10 +93,13 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
     int crossTotal = isVert ? inner.width : inner.height;
 
     // margins
-    int mT = slot.spec.margin.resolvedTop(inner.height);
-    int mB = slot.spec.margin.resolvedBottom(inner.height);
-    int mL = slot.spec.margin.resolvedLeft(inner.width);
-    int mR = slot.spec.margin.resolvedRight(inner.width);
+    int slotCross = isVert ? inner.width : inner.height;
+    int slotMain = slotSize;
+
+    int mT = slot.spec.margin.resolvedTop(isVert ? slotMain : slotCross);
+    int mB = slot.spec.margin.resolvedBottom(isVert ? slotMain : slotCross);
+    int mL = slot.spec.margin.resolvedLeft(isVert ? slotCross : slotMain);
+    int mR = slot.spec.margin.resolvedRight(isVert ? slotCross : slotMain);
 
     int crossMarA = isVert ? mL : mT;
     int crossMarB = isVert ? mR : mB;

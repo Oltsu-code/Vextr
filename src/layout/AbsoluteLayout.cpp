@@ -14,28 +14,36 @@ void AbsoluteLayout::apply(std::vector<core::ChildSlot> &children,
     int availH =
         std::max(0, inner.height - slot.spec.absY.resolve(inner.height));
 
-    core::Size natural = slot.widget->measure(availW, availH);
+    // margins
+    int mL = slot.spec.margin.resolvedLeft(availW);
+    int mR = slot.spec.margin.resolvedRight(availW);
+    int mT = slot.spec.margin.resolvedTop(availH);
+    int mB = slot.spec.margin.resolvedBottom(availH);
 
-    // sizeW/sizeH = explicit widget size
-    // fixedW/fixedH = fallback if sizeW/sizeH not set
-    int w = slot.spec.sizeW.isSet()    ? slot.spec.sizeW.resolve(inner.width)
-            : slot.spec.fixedW.isSet() ? slot.spec.fixedW.resolve(inner.width)
+    int innerX = x + mL;
+    int innerY = y + mT;
+    int innerW = std::max(0, availW - mL - mR);
+    int innerH = std::max(0, availH - mT - mB);
+
+    core::Size natural = slot.widget->measure(innerW, innerH);
+
+    int w = slot.spec.sizeW.isSet()    ? slot.spec.sizeW.resolve(innerW)
+            : slot.spec.fixedW.isSet() ? slot.spec.fixedW.resolve(innerW)
                                        : natural.width;
-
-    int h = slot.spec.sizeH.isSet()    ? slot.spec.sizeH.resolve(inner.height)
-            : slot.spec.fixedH.isSet() ? slot.spec.fixedH.resolve(inner.height)
+    int h = slot.spec.sizeH.isSet()    ? slot.spec.sizeH.resolve(innerH)
+            : slot.spec.fixedH.isSet() ? slot.spec.fixedH.resolve(innerH)
                                        : natural.height;
 
     if (slot.spec.minW.isSet())
-      w = std::max(w, slot.spec.minW.resolve(inner.width));
+      w = std::max(w, slot.spec.minW.resolve(innerW));
     if (slot.spec.maxW.isSet())
-      w = std::min(w, slot.spec.maxW.resolve(inner.width));
+      w = std::min(w, slot.spec.maxW.resolve(innerW));
     if (slot.spec.minH.isSet())
-      h = std::max(h, slot.spec.minH.resolve(inner.height));
+      h = std::max(h, slot.spec.minH.resolve(innerH));
     if (slot.spec.maxH.isSet())
-      h = std::min(h, slot.spec.maxH.resolve(inner.height));
+      h = std::min(h, slot.spec.maxH.resolve(innerH));
 
-    slot.widget->layout(x, y, std::max(0, w), std::max(0, h));
+    slot.widget->layout(innerX, innerY, std::max(0, w), std::max(0, h));
   }
 }
 
