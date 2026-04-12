@@ -24,7 +24,7 @@ void Button::drawContent(backend::Buffer &buf, core::Rect inner) {
   }
 
   core::Rect r =
-      alignContentRect(inner, labelW, 1, s.contentAlignX, s.contentAlignY);
+      alignContentRect(inner, labelW, 1, s.innerAlignX, s.innerAlignY);
 
   size_t idx = 0;
   int screenX = r.x;

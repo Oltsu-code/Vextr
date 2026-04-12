@@ -13,7 +13,7 @@ void Label::drawContent(backend::Buffer &buf, core::Rect inner) {
   int textW = utils::unicode::stringWidth(text);
 
   core::Rect r =
-      alignContentRect(inner, textW, 1, s.contentAlignX, s.contentAlignY);
+      alignContentRect(inner, textW, 1, s.innerAlignX, s.innerAlignY);
 
   int screenX = r.x;
   int maxX = inner.x + inner.width;

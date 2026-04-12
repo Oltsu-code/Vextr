@@ -69,8 +69,8 @@ int main() {
   auto input = std::make_shared<Input>("Enter text...");
   input->setStyle(Style{.fg = {255, 255, 255},
                         .bg = {30, 30, 60},
-                        .contentAlignX = Align::Center,
-                        .contentAlignY = Align::Center});
+                        .innerAlignX = Align::Center,
+                        .innerAlignY = Align::Center});
   input->setFocusedStyle(Style{.fg = {255, 255, 255}, .bg = {50, 50, 100}});
 
   inputBox->addChild(inputLabel, {.fixedH = cells(1)});
@@ -91,8 +91,8 @@ int main() {
     s.border.style = BorderStyle::Single;
     s.border.color = borderColor;
 
-    s.contentAlignX = Align::Center;
-    s.contentAlignY = Align::Center;
+    s.innerAlignX = Align::Center;
+    s.innerAlignY = Align::Center;
 
     btn->setStyle(s);
 
@@ -105,8 +105,8 @@ int main() {
     fs.border.style = BorderStyle::Double;
     fs.border.color = {255, 255, 100};
 
-    fs.contentAlignX = Align::Center;
-    fs.contentAlignY = Align::Center;
+    fs.innerAlignX = Align::Center;
+    fs.innerAlignY = Align::Center;
 
     btn->setFocusedStyle(fs);
 

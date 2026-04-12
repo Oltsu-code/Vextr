@@ -53,9 +53,9 @@ struct Style {
 
   Border border; ///< Border configuration
 
-  Align contentAlignX =
+  Align innerAlignX =
       Align::Start; ///< Horizontal alignment of content within widget
-  Align contentAlignY =
+  Align innerAlignY =
       Align::Start; ///< Vertical alignment of content within widget
 
   int padding = 0; ///< Padding in cells on all sides
