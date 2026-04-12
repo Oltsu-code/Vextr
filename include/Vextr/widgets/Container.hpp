@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-namespace vextr::core {
+namespace vextr::widgets {
 
 /// @class Container
 /// @brief A widget that arranges child widgets using a layout engine.
@@ -34,12 +34,12 @@ namespace vextr::core {
 ///   std::make_shared<GridLayout>(2, 3) // 2 cols, 3 rows
 /// );
 /// ```
-class Container : public Widget {
+class Container : public core::Widget {
 public:
   /// @brief Creates a container with the specified layout.
   /// @param layout The layout engine to use (default: VerticalStackLayout)
   explicit Container(
-      std::shared_ptr<Layout> layout =
+      std::shared_ptr<core::Layout> layout =
           std::make_shared<layout::StackLayout>(layout::Axis::Vertical))
       : layoutEngine(std::move(layout)) {}
 
@@ -57,11 +57,11 @@ public:
   /// auto button = std::make_shared<Button>("Flex");
   /// container->addChild(button, LayoutSpec{.ratio = 2.0f}); // Double weight
   /// ```
-  void addChild(std::shared_ptr<Widget> child, LayoutSpec spec = {});
+  void addChild(std::shared_ptr<Widget> child, core::LayoutSpec spec = {});
 
   /// @brief Changes the layout engine.
   /// @param l The new layout to use
-  void setLayout(std::shared_ptr<Layout> l) { layoutEngine = std::move(l); }
+  void setLayout(std::shared_ptr<core::Layout> l) { layoutEngine = std::move(l); }
 
   /// @brief Measures the container's size (sum of children).
   core::Size measure(int availW, int availH) override;
@@ -70,7 +70,7 @@ public:
   void layout(int x, int y, int width, int height) override;
 
   /// @brief Passes events to focusable children.
-  bool onEvent(const Event &e) override;
+  bool onEvent(const core::Event &e) override;
 
   /// @brief Returns all child widgets.
   std::vector<std::shared_ptr<Widget>> getChildren() const override {
@@ -83,11 +83,11 @@ public:
 protected:
   /// @brief Draws the container's content (children are drawn by the
   /// framework).
-  void drawContent(backend::Buffer &buf, Rect inner) override;
+  void drawContent(backend::Buffer &buf, core::Rect inner) override;
 
 private:
-  std::shared_ptr<Layout> layoutEngine;
-  std::vector<ChildSlot> children;
+  std::shared_ptr<core::Layout> layoutEngine;
+  std::vector<core::ChildSlot> children;
 };
 
 } // namespace vextr::core

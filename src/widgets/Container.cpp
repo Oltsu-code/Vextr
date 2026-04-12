@@ -1,13 +1,13 @@
 #include <Vextr/widgets/Container.hpp>
 
-namespace vextr::core {
+namespace vextr::widgets {
 
-void Container::addChild(std::shared_ptr<Widget> child, LayoutSpec spec) {
+void Container::addChild(std::shared_ptr<core::Widget> child, core::LayoutSpec spec) {
   child->parent = shared_from_this();
   children.push_back({child, spec});
 }
 
-Size Container::measure(int availW, int availH) { return {availW, availH}; }
+core::Size Container::measure(int availW, int availH) { return {availW, availH}; }
 
 void Container::layout(int x, int y, int width, int height) {
   Widget::layout(x, y, width, height);
@@ -16,12 +16,12 @@ void Container::layout(int x, int y, int width, int height) {
   layoutEngine->apply(children, innerRect());
 }
 
-void Container::drawContent(backend::Buffer &buf, Rect inner) {
+void Container::drawContent(backend::Buffer &buf, core::Rect inner) {
   for (auto &slot : children)
     slot.widget->render(buf);
 }
 
-bool Container::onEvent(const Event &e) {
+bool Container::onEvent(const core::Event &e) {
   for (auto &slot : children)
     if (slot.widget->onEvent(e))
       return true;
