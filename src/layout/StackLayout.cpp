@@ -4,7 +4,8 @@
 
 namespace vextr::layout {
 
-void StackLayout::apply(std::vector<core::ChildSlot> &children, core::Rect inner) {
+void StackLayout::apply(std::vector<core::ChildSlot> &children,
+                        core::Rect inner) {
   if (children.empty())
     return;
 
@@ -65,7 +66,8 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children, core::Rect inner
   {
     int ratioUsed = 0;
     for (size_t i = 0; i < children.size(); ++i) {
-      core::ScalarSpec f = isVert ? children[i].spec.fixedH : children[i].spec.fixedW;
+      core::ScalarSpec f =
+          isVert ? children[i].spec.fixedH : children[i].spec.fixedW;
       if (!f.isSet())
         ratioUsed += sizes[i];
     }
@@ -106,7 +108,7 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children, core::Rect inner
 
     // measure widget natural size
     core::Size desired = slot.widget->measure(isVert ? crossSlot : mainSlot,
-                                        isVert ? mainSlot : crossSlot);
+                                              isVert ? mainSlot : crossSlot);
 
     // ── cross axis ───────────────────────────────────────────
     // sizeW (vertical) or sizeH (horizontal) = explicit widget size
@@ -187,4 +189,4 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children, core::Rect inner
   }
 }
 
-} // namespace vextr::core
+} // namespace vextr::layout

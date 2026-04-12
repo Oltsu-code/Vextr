@@ -4,7 +4,8 @@
 
 namespace vextr::layout {
 
-void GridLayout::apply(std::vector<core::ChildSlot> &children, core::Rect inner) {
+void GridLayout::apply(std::vector<core::ChildSlot> &children,
+                       core::Rect inner) {
   if (cols <= 0 || rows <= 0 || children.empty())
     return;
 
@@ -84,4 +85,4 @@ void GridLayout::apply(std::vector<core::ChildSlot> &children, core::Rect inner)
   }
 }
 
-} // namespace vextr::core
+} // namespace vextr::layout

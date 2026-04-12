@@ -66,8 +66,8 @@ int main() {
   root->setStyle(Style{.bg = {15, 15, 25}});
 
   // header - not focusable
-  auto header = std::make_shared<Label>(
-      "Tab to move focus  Enter to select  Q to quit");
+  auto header =
+      std::make_shared<Label>("Tab to move focus  Enter to select  Q to quit");
   header->setStyle(Style{.fg = {150, 150, 150}, .bg = {25, 25, 40}});
 
   // three focusable items

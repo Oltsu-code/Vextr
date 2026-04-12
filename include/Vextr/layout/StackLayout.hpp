@@ -51,7 +51,8 @@ private:
   Axis axis;
   int gap;
 
-  core::Rect resolveSlot(const core::ChildSlot &slot, int x, int y, int w, int h);
+  core::Rect resolveSlot(const core::ChildSlot &slot, int x, int y, int w,
+                         int h);
 };
 
 } // namespace vextr::layout

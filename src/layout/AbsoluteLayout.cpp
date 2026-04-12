@@ -4,7 +4,8 @@
 
 namespace vextr::layout {
 
-void AbsoluteLayout::apply(std::vector<core::ChildSlot> &children, core::Rect inner) {
+void AbsoluteLayout::apply(std::vector<core::ChildSlot> &children,
+                           core::Rect inner) {
   for (auto &slot : children) {
     int x = inner.x + slot.spec.absX.resolve(inner.width);
     int y = inner.y + slot.spec.absY.resolve(inner.height);
@@ -38,4 +39,4 @@ void AbsoluteLayout::apply(std::vector<core::ChildSlot> &children, core::Rect in
   }
 }
 
-} // namespace vextr::core
+} // namespace vextr::layout

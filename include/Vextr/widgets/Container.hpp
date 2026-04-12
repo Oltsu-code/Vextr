@@ -38,8 +38,9 @@ class Container : public Widget {
 public:
   /// @brief Creates a container with the specified layout.
   /// @param layout The layout engine to use (default: VerticalStackLayout)
-  explicit Container(std::shared_ptr<Layout> layout =
-                         std::make_shared<layout::StackLayout>(layout::Axis::Vertical))
+  explicit Container(
+      std::shared_ptr<Layout> layout =
+          std::make_shared<layout::StackLayout>(layout::Axis::Vertical))
       : layoutEngine(std::move(layout)) {}
 
   /// @brief Adds a child widget to the container.
