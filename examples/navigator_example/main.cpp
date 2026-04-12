@@ -18,7 +18,7 @@ int main() {
   nav->onPop = [](auto s) { VEXTR_LOG("popped screen"); };
   nav->onReplace = [](auto s) { VEXTR_LOG("replaced screen"); };
 
-  // ── main screen ──────────────────────────────────────────────
+  // main screen
   auto mainScreen = std::make_shared<Container>(
       std::make_shared<StackLayout>(Axis::Vertical, 1));
   mainScreen->setStyle(Style{.bg = {15, 15, 25}});
@@ -36,7 +36,7 @@ int main() {
   dialogBtn->setFocusedStyle(
       Style{.fg = {255, 255, 100}, .bg = {80, 160, 80}, .bold = true});
 
-  // ── settings screen ──────────────────────────────────────────
+  // settings screen
   auto settingsScreen = std::make_shared<Container>(
       std::make_shared<StackLayout>(Axis::Vertical, 1));
   settingsScreen->setStyle(Style{.bg = {25, 15, 35}});
@@ -55,7 +55,7 @@ int main() {
       backBtn,
       {.fixedH = pct(10), .alignH = Align::Center, .alignV = Align::Center});
 
-  // ── dialog overlay ───────────────────────────────────────────
+  // dialog overlay
   auto dialogOverlay =
       std::make_shared<Container>(std::make_shared<AbsoluteLayout>());
   // transparent bg - main screen shows through

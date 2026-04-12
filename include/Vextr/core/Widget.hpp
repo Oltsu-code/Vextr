@@ -38,7 +38,7 @@ class Widget : public std::enable_shared_from_this<Widget> {
 public:
   virtual ~Widget() = default;
 
-  // ---- Layout lifecycle ----
+  // Layout lifecycle
 
   /// @brief Measures how much space this widget needs.
   ///

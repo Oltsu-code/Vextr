@@ -68,7 +68,7 @@ int main() {
   center->addChild(g5,
                    {.margin = MarginSpec::all(cells(1)), .col = 2, .row = 1});
 
-  // ── RIGHT: nested stacks ─────────────────────────────────────────
+  // RIGHT: nested stacks
   auto right = std::make_shared<Container>(
       std::make_shared<StackLayout>(Axis::Vertical, 0));
   right->setStyle(Style{.bg = {40, 15, 15}});
@@ -109,7 +109,7 @@ int main() {
       rightBot,
       {.fixedH = pct(20), .alignH = Align::End, .alignV = Align::Center});
 
-  // ── root children ────────────────────────────────────────────────
+  // root children
   root->addChild(left, {.ratio = 1.0f});
   root->addChild(center, {.ratio = 2.0f});
   root->addChild(right, {.ratio = 1.0f});

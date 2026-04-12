@@ -14,7 +14,7 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
   int gapTotal = gap * (int)(children.size() - 1);
   int mainAvail = std::max(1, mainSize - gapTotal);
 
-  // ── pass 1: resolve slot sizes ───────────────────────────────
+  // pass 1: resolve slot sizes
   std::vector<int> sizes(children.size(), 0);
   float totalRatio = 0.f;
   int fixedUsed = 0;
@@ -39,7 +39,7 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
     }
   }
 
-  // ── pass 2: distribute ratio pool ────────────────────────────
+  // pass 2: distribute ratio pool
   int ratioPool = std::max(0, mainAvail - fixedUsed);
 
   for (size_t i = 0; i < children.size(); ++i) {
@@ -84,7 +84,7 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
     }
   }
 
-  // ── pass 3: position each child ──────────────────────────────
+  // pass 3: position each child
   int cursor = isVert ? inner.y : inner.x;
 
   for (size_t i = 0; i < children.size(); ++i) {
@@ -110,7 +110,7 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
     core::Size desired = slot.widget->measure(isVert ? crossSlot : mainSlot,
                                               isVert ? mainSlot : crossSlot);
 
-    // ── cross axis ───────────────────────────────────────────
+    // cross axis
     // sizeW (vertical) or sizeH (horizontal) = explicit widget size
     core::ScalarSpec crossSize = isVert ? slot.spec.sizeW : slot.spec.sizeH;
     core::Align crossAlign = isVert ? slot.spec.alignH : slot.spec.alignV;

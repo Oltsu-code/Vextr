@@ -15,7 +15,7 @@ int main() {
       std::make_shared<StackLayout>(Axis::Vertical, 1));
   root->setStyle(Style{.bg = {15, 15, 25}});
 
-  // top row — different border styles
+  // top row - different border styles
   auto topRow = std::make_shared<Container>(
       std::make_shared<StackLayout>(Axis::Horizontal, 1));
   topRow->setStyle(Style{.bg = {15, 15, 25}});
@@ -53,7 +53,7 @@ int main() {
       makeBorderBox("Dashed", BorderStyle::Dashed, {100, 255, 255}),
       {.ratio = 1.0f});
 
-  // middle — input with border
+  // middle - input with border
   auto inputBox = std::make_shared<Container>(
       std::make_shared<StackLayout>(Axis::Vertical, 1));
   Style inputBoxStyle;
@@ -76,7 +76,7 @@ int main() {
   inputBox->addChild(inputLabel, {.fixedH = cells(1)});
   inputBox->addChild(input, {.fixedH = cells(1)});
 
-  // bottom — buttons with borders
+  // bottom - buttons with borders
   auto btnRow = std::make_shared<Container>(
       std::make_shared<StackLayout>(Axis::Horizontal, 2));
   btnRow->setStyle(Style{.bg = {15, 15, 25}});
