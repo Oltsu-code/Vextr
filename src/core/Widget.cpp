@@ -88,24 +88,26 @@ void drawBorderLine(backend::Buffer &buf, int y, int x0, int x1,
   for (const auto &l : labels) {
     int textW = (int)l.text.size(); // ASCII assumption
     int availW = x1 - x0;
-    if (textW > availW) continue;
+    if (textW > availW)
+      continue;
 
     int startX;
     switch (l.align) {
-      case Align::Center:
-        startX = x0 + (availW - textW) / 2;
-        break;
-      case Align::End:
-        startX = x1 - textW - 1; // 2 cell gap from right corner
-        break;
-      default: // Start
-        startX = x0 + 2; // 2 cell gap from left corner
-        break;
+    case Align::Center:
+      startX = x0 + (availW - textW) / 2;
+      break;
+    case Align::End:
+      startX = x1 - textW - 1; // 2 cell gap from right corner
+      break;
+    default:           // Start
+      startX = x0 + 2; // 2 cell gap from left corner
+      break;
     }
 
     int x = startX;
     for (char c : l.text) {
-      if (x >= x1) break;
+      if (x >= x1)
+        break;
       backend::Cell cell;
       cell.ch = std::string(1, c);
       cell.fg = l.color;
