@@ -1,3 +1,15 @@
+/// @file Vextr.h
+/// @brief Main header file for the Vextr TUI framework.
+///
+/// This file includes all public API headers. Users can include this single header
+/// to get access to the entire framework.
+///
+/// **Library Structure:**
+/// - **App**: Main application class for event loop and rendering
+/// - **Core**: Fundamental types (Widget, Event, Style, Geometry, Alignment)
+/// - **Widgets**: UI components (Button, Label, Input, Container, Navigator)
+/// - **Layouts**: Layout engines (StackLayout, GridLayout)
+
 #pragma once
 
 #include <Vextr/App.hpp>
