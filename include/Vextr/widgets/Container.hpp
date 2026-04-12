@@ -61,7 +61,9 @@ public:
 
   /// @brief Changes the layout engine.
   /// @param l The new layout to use
-  void setLayout(std::shared_ptr<core::Layout> l) { layoutEngine = std::move(l); }
+  void setLayout(std::shared_ptr<core::Layout> l) {
+    layoutEngine = std::move(l);
+  }
 
   /// @brief Measures the container's size (sum of children).
   core::Size measure(int availW, int availH) override;
@@ -90,4 +92,4 @@ private:
   std::vector<core::ChildSlot> children;
 };
 
-} // namespace vextr::core
+} // namespace vextr::widgets

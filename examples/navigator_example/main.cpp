@@ -28,13 +28,13 @@ int main() {
 
   auto openBtn = std::make_shared<Button>("Open Settings");
   openBtn->setStyle(Style{.fg = {255, 255, 255}, .bg = {40, 40, 80}});
-  openBtn->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {80, 80, 160}, .text = {.bold = true}});
+  openBtn->setFocusedStyle(Style{
+      .fg = {255, 255, 100}, .bg = {80, 80, 160}, .text = {.bold = true}});
 
   auto dialogBtn = std::make_shared<Button>("Open Dialog");
   dialogBtn->setStyle(Style{.fg = {255, 255, 255}, .bg = {40, 80, 40}});
-  dialogBtn->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {80, 160, 80}, .text = {.bold = true}});
+  dialogBtn->setFocusedStyle(Style{
+      .fg = {255, 255, 100}, .bg = {80, 160, 80}, .text = {.bold = true}});
 
   // settings screen
   auto settingsScreen = std::make_shared<Container>(
@@ -46,8 +46,8 @@ int main() {
 
   auto backBtn = std::make_shared<Button>("Go Back");
   backBtn->setStyle(Style{.fg = {255, 200, 255}, .bg = {60, 30, 80}});
-  backBtn->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {100, 60, 140}, .text = {.bold = true}});
+  backBtn->setFocusedStyle(Style{
+      .fg = {255, 255, 100}, .bg = {100, 60, 140}, .text = {.bold = true}});
   backBtn->setOnClick([&]() { nav->pop(); });
 
   settingsScreen->addChild(settingsTitle, {.fixedH = pct(15)});
@@ -70,14 +70,14 @@ int main() {
 
   auto confirmBtn = std::make_shared<Button>("Yes");
   confirmBtn->setStyle(Style{.fg = {100, 255, 100}, .bg = {30, 60, 30}});
-  confirmBtn->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {60, 120, 60}, .text = {.bold = true}});
+  confirmBtn->setFocusedStyle(Style{
+      .fg = {255, 255, 100}, .bg = {60, 120, 60}, .text = {.bold = true}});
   confirmBtn->setOnClick([&]() { nav->pop(); });
 
   auto cancelBtn = std::make_shared<Button>("Cancel");
   cancelBtn->setStyle(Style{.fg = {255, 100, 100}, .bg = {60, 30, 30}});
-  cancelBtn->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {120, 60, 60}, .text = {.bold = true}});
+  cancelBtn->setFocusedStyle(Style{
+      .fg = {255, 255, 100}, .bg = {120, 60, 60}, .text = {.bold = true}});
   cancelBtn->setOnClick([&]() { nav->pop(); });
 
   auto btnRow = std::make_shared<Container>(

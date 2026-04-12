@@ -2,12 +2,15 @@
 
 namespace vextr::widgets {
 
-void Container::addChild(std::shared_ptr<core::Widget> child, core::LayoutSpec spec) {
+void Container::addChild(std::shared_ptr<core::Widget> child,
+                         core::LayoutSpec spec) {
   child->parent = shared_from_this();
   children.push_back({child, spec});
 }
 
-core::Size Container::measure(int availW, int availH) { return {availW, availH}; }
+core::Size Container::measure(int availW, int availH) {
+  return {availW, availH};
+}
 
 void Container::layout(int x, int y, int width, int height) {
   Widget::layout(x, y, width, height);
@@ -28,4 +31,4 @@ bool Container::onEvent(const core::Event &e) {
   return false;
 }
 
-} // namespace vextr::core
+} // namespace vextr::widgets

@@ -24,20 +24,20 @@ int main() {
 
   auto btn1 = std::make_shared<Button>("Click me");
   btn1->setStyle(Style{.fg = {255, 255, 255}, .bg = {40, 40, 80}});
-  btn1->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {80, 80, 160}, .text = {.bold = true}});
+  btn1->setFocusedStyle(Style{
+      .fg = {255, 255, 100}, .bg = {80, 80, 160}, .text = {.bold = true}});
   btn1->setOnClick([&]() { status->setText("Button 1 clicked!"); });
 
   auto btn2 = std::make_shared<Button>("Another button");
   btn2->setStyle(Style{.fg = {255, 255, 255}, .bg = {40, 80, 40}});
-  btn2->setFocusedStyle(
-      Style{.fg = {255, 255, 100}, .bg = {80, 160, 80}, .text = {.bold = true}});
+  btn2->setFocusedStyle(Style{
+      .fg = {255, 255, 100}, .bg = {80, 160, 80}, .text = {.bold = true}});
   btn2->setOnClick([&]() { status->setText("Button 2 clicked!"); });
 
   auto btn3 = std::make_shared<Button>("Quit");
   btn3->setStyle(Style{.fg = {255, 200, 200}, .bg = {80, 30, 30}});
-  btn3->setFocusedStyle(
-      Style{.fg = {255, 100, 100}, .bg = {160, 60, 60}, .text = {.bold = true}});
+  btn3->setFocusedStyle(Style{
+      .fg = {255, 100, 100}, .bg = {160, 60, 60}, .text = {.bold = true}});
   btn3->setOnClick([&]() { app.quit(); });
 
   auto row = std::make_shared<Container>(
