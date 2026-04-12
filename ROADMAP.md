@@ -32,17 +32,17 @@ Pluggable layout system replacing hardcoded direction logic.
 
 ---
 
-## Phase 3 — Style system 🔄
+## Phase 3 — Style system ✅
 
 Rich per-widget visual properties.
 
 - ✅ Color — RGB fg/bg per cell
 - ✅ Bold, underline per cell
-- 🔄 Padding — per-side with percent support
+- ✅ Padding — per-side with percent support
 - ✅ Margin — handled by parent layout
-- ⬜ Border — Single, Double, Rounded, Thick, Dashed styles
-- ⬜ Transparent color — widgets that don't fill their background
-- ⬜ Dim, italic, blink attributes
+- ✅ Border — Single, Double, Rounded, Thick, Dashed styles
+- ✅ Transparent color — widgets that don't fill their background
+- ✅ Dim, italic, blink attributes
 
 ---
 
