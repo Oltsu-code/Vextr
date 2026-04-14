@@ -1,10 +1,29 @@
 #include <Vextr/backend/Renderer.hpp>
+#include <Vextr/core/Context.hpp>
 #include <Vextr/utils/Ansi.hpp>
 #include <sstream>
 
 namespace vextr::backend {
 
-void Renderer::render(core::Widget &root, Buffer &buf) { root.render(buf); }
+void Renderer::renderTree(core::Widget &root, Buffer &buf) {
+  renderWidget(root, buf);
+}
+
+void Renderer::renderWidget(core::Widget &widget, Buffer &buf) {
+  widget.render(buf);
+  for (auto &child : widget.getChildren()) {
+    renderWidget(*child, buf);
+  }
+}
+
+void Renderer::renderOverlays(Buffer &buf) {
+  for (auto &[widget, rect] : core::Context::get().overlayManager.stack()) {
+    widget->render(buf);
+    for (auto &child : widget->getChildren()) {
+      renderWidget(*child, buf);
+    }
+  }
+}
 
 void Renderer::present(const Buffer &buf, Terminal &terminal) {
   std::ostringstream out;
@@ -19,32 +38,42 @@ void Renderer::present(const Buffer &buf, Terminal &terminal) {
     for (int x = 0; x < buf.width(); ++x) {
       const Cell &cell = buf.get(x, y);
 
-      if (cell.fg.r != lastFg.r || cell.fg.g != lastFg.g ||
-          cell.fg.b != lastFg.b) {
-        out << utils::ansi::fg_rgb(cell.fg.r, cell.fg.g, cell.fg.b);
-        lastFg = cell.fg;
-      }
-
-      // skip bg emit if transparent
+      // Check if attributes changed
+      bool attrChanged =
+          (cell.bold != lastBold || cell.underline != lastUnderline);
+      bool fgChanged = (cell.fg.r != lastFg.r || cell.fg.g != lastFg.g ||
+                        cell.fg.b != lastFg.b);
+      bool bgChanged = false;
       if (!cell.bg.transparent) {
-        if (cell.bg.r != lastBg.r || cell.bg.g != lastBg.g ||
-            cell.bg.b != lastBg.b) {
-          out << utils::ansi::bg_rgb(cell.bg.r, cell.bg.g, cell.bg.b);
-          lastBg = cell.bg;
-        }
+        bgChanged = (cell.bg.r != lastBg.r || cell.bg.g != lastBg.g ||
+                     cell.bg.b != lastBg.b);
       }
 
-      if (cell.bold != lastBold || cell.underline != lastUnderline) {
+      // emit style changes only when needed
+      if (attrChanged) {
         out << utils::ansi::reset();
         if (cell.bold)
           out << utils::ansi::bold();
         if (cell.underline)
           out << utils::ansi::underline();
+        // After reset, always re-emit colors
         out << utils::ansi::fg_rgb(cell.fg.r, cell.fg.g, cell.fg.b);
-        if (!cell.bg.transparent)
+        if (!cell.bg.transparent) {
           out << utils::ansi::bg_rgb(cell.bg.r, cell.bg.g, cell.bg.b);
+        }
         lastBold = cell.bold;
         lastUnderline = cell.underline;
+        lastFg = cell.fg;
+        lastBg = cell.bg;
+      } else {
+        if (fgChanged) {
+          out << utils::ansi::fg_rgb(cell.fg.r, cell.fg.g, cell.fg.b);
+          lastFg = cell.fg;
+        }
+        if (bgChanged) {
+          out << utils::ansi::bg_rgb(cell.bg.r, cell.bg.g, cell.bg.b);
+          lastBg = cell.bg;
+        }
       }
 
       out << cell.ch;
@@ -54,6 +83,11 @@ void Renderer::present(const Buffer &buf, Terminal &terminal) {
   }
 
   terminal.write(out.str());
+  previousBuffer.copyFrom(buf);
+}
+
+void Renderer::resize(int width, int height) {
+  previousBuffer.resize(width, height);
 }
 
 } // namespace vextr::backend

@@ -78,6 +78,7 @@ private:
 
   core::Size currentSize = {0, 0};
   bool running = false;
+  bool needsRedraw = false;
 };
 
 } // namespace vextr

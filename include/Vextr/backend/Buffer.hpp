@@ -19,6 +19,7 @@ public:
 
   void resize(int width, int height);
   void clear();
+  void copyFrom(const Buffer &other);
 
   void set(int x, int y, const Cell &cell);
   const Cell &get(int x, int y) const;

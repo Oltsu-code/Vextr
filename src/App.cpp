@@ -35,9 +35,15 @@ void App::run() {
 
   running = true;
   handleResize();
+  needsRedraw = true;
 
   while (running) {
     tick();
+#if defined(_WIN32)
+    Sleep(16);
+#else
+    usleep(16000);
+#endif
   }
 }
 
@@ -46,12 +52,14 @@ void App::tick() {
   if (resizePending) {
     resizePending = false;
     handleResize();
+    needsRedraw = true;
   }
 #else
   // check frame size every tick cz windows is bad
   core::Size s = terminal.terminalSize();
   if (s.width != currentSize.width || s.height != currentSize.height) {
     handleResize();
+    needsRedraw = true;
   }
 #endif
 
@@ -71,17 +79,33 @@ void App::tick() {
   // dispatch events
   while (inputParser.hasEvent()) {
     core::Event e = inputParser.nextEvent();
+    needsRedraw = true;
+
     if (e.key == 'q' && !e.ctrl && !e.shift) {
       running = false;
       return;
     }
-    core::Context::get().focusManager.dispatch(e, root);
+
+    auto &overlays = core::Context::get().overlayManager.stack();
+    if (!overlays.empty()) {
+      auto &topWidget = overlays.back().first;
+      // let focus manager handle tab within the overlay tree
+      if (!core::Context::get().focusManager.dispatch(e, topWidget)) {
+        // if focus manager didnt consume it, pass to the overlay widget
+        // directly
+        topWidget->onEvent(e);
+      }
+    } else {
+      core::Context::get().focusManager.dispatch(e, root);
+    }
   }
 
-  if (root) {
+  if (needsRedraw && root) {
     buffer->clear();
-    renderer.render(*root, *buffer);
+    renderer.renderTree(*root, *buffer);
+    renderer.renderOverlays(*buffer);
     renderer.present(*buffer, terminal);
+    needsRedraw = false;
   }
 }
 
@@ -91,9 +115,13 @@ void App::handleResize() {
   buffer =
       std::make_unique<backend::Buffer>(currentSize.width, currentSize.height);
 
-  if (root) {
+  renderer.resize(currentSize.width, currentSize.height);
+
+  if (root)
     root->layout(0, 0, currentSize.width, currentSize.height);
-  }
+
+  core::Context::get().overlayManager.resize(currentSize.width,
+                                             currentSize.height);
 
   terminal.clear();
   terminal.clear_scrollback();

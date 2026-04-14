@@ -13,6 +13,13 @@ void Buffer::resize(int width, int height) {
 
 void Buffer::clear() { cells.assign(w * h, defaultCell); }
 
+void Buffer::copyFrom(const Buffer &other) {
+  if (w != other.w || h != other.h) {
+    resize(other.w, other.h);
+  }
+  cells = other.cells;
+}
+
 void Buffer::set(int x, int y, const Cell &cell) {
   if (!inBounds(x, y))
     return;

@@ -46,14 +46,13 @@ add_example(button_example)
 add_example(navigator_example)
 add_example(input_example)
 add_example(border_example)
+add_example(overlay_example)
 
 # ============================================================================
 # EXTERNAL DEPENDENCIES
 # ============================================================================
 
 include(FetchContent)
-
-set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
 # GoogleTest
 FetchContent_Declare(
