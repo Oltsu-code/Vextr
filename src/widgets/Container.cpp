@@ -24,11 +24,4 @@ void Container::drawContent(backend::Buffer &buf, core::Rect inner) {
     slot.widget->render(buf);
 }
 
-bool Container::onEvent(const core::Event &e) {
-  for (auto &slot : children)
-    if (slot.widget->onEvent(e))
-      return true;
-  return false;
-}
-
 } // namespace vextr::widgets

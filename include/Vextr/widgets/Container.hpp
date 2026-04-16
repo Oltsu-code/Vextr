@@ -71,9 +71,6 @@ public:
   /// @brief Lays out all children using the layout engine.
   void layout(int x, int y, int width, int height) override;
 
-  /// @brief Passes events to focusable children.
-  bool onEvent(const core::Event &e) override;
-
   /// @brief Returns all child widgets.
   std::vector<std::shared_ptr<Widget>> getChildren() const override {
     std::vector<std::shared_ptr<Widget>> out;
@@ -83,8 +80,6 @@ public:
   }
 
 protected:
-  /// @brief Draws the container's content (children are drawn by the
-  /// framework).
   void drawContent(backend::Buffer &buf, core::Rect inner) override;
 
 private:
