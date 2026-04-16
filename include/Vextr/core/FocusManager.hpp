@@ -16,7 +16,10 @@ public:
   void focusNext(std::shared_ptr<Widget> root);
   void focusPrev(std::shared_ptr<Widget> root);
 
+  bool dispatchToFocused(const Event &e);
   bool dispatch(const Event &e, std::shared_ptr<Widget> root);
+
+  void focusTopOverlay();
 
 private:
   std::weak_ptr<Widget> current;

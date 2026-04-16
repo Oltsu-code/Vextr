@@ -1,5 +1,6 @@
 #include <Vextr/core/FocusManager.hpp>
 #include <Vextr/core/Widget.hpp>
+#include <Vextr/core/Context.hpp>
 #include <Vextr/utils/Input.hpp>
 
 namespace vextr::core {
@@ -31,7 +32,17 @@ void FocusManager::collectFocusable(std::shared_ptr<Widget> w,
     collectFocusable(child, out);
 }
 
+static std::shared_ptr<Widget> topOverlayRoot() {
+  auto &om = Context::get().overlayManager;
+  if (!om.hasOverlays())
+    return nullptr;
+  return om.stack().back().first;
+}
+
 void FocusManager::focusNext(std::shared_ptr<Widget> root) {
+  if (auto overlay = topOverlayRoot())
+    root = overlay;
+
   std::vector<std::shared_ptr<Widget>> focusable;
   collectFocusable(root, focusable);
   if (focusable.empty())
@@ -53,6 +64,9 @@ void FocusManager::focusNext(std::shared_ptr<Widget> root) {
 }
 
 void FocusManager::focusPrev(std::shared_ptr<Widget> root) {
+  if (auto overlay = topOverlayRoot())
+    root = overlay;
+
   std::vector<std::shared_ptr<Widget>> focusable;
   collectFocusable(root, focusable);
   if (focusable.empty())
@@ -73,38 +87,52 @@ void FocusManager::focusPrev(std::shared_ptr<Widget> root) {
   setFocus(focusable.back());
 }
 
-bool FocusManager::dispatch(const Event &e, std::shared_ptr<Widget> root) {
-  if (e.type == EventType::Key) {
-    if (e.key == utils::Key::Tab) {
-      focusNext(root);
-      return true;
-    }
-    if (e.key == utils::Key::ShiftTab) {
-      focusPrev(root);
-      return true;
-    }
-    if (e.key == utils::Key::Escape) {
-      clearFocus();
-      return true;
-    }
-  }
-
-  // route to focused widget
+bool FocusManager::dispatchToFocused(const Event &e) {
   auto fw = focused();
   if (!fw)
     return false;
-
   if (fw->onEvent(e))
     return true;
 
-  // bubble up
   auto p = fw->parent.lock();
   while (p) {
-    if (p->onEvent(e))
+    if (p->onEvent(e)) {
       return true;
+    }
     p = p->parent.lock();
   }
   return false;
+}
+
+bool FocusManager::dispatch(const Event &e, std::shared_ptr<Widget> root) {
+  if (!dispatchToFocused(e)) {
+    if (e.type == EventType::Key) {
+      if (e.key == utils::Key::Tab) {
+        focusNext(root);
+        return true;
+      }
+      if (e.key == utils::Key::ShiftTab) {
+        focusPrev(root);
+        return true;
+      }
+      if (e.key == utils::Key::Escape) {
+        clearFocus();
+        return true;
+      }
+    }
+    return false;
+  }
+  return true;
+}
+
+void FocusManager::focusTopOverlay() {
+  auto &om = Context::get().overlayManager;
+  if (!om.hasOverlays())
+    return;
+  std::vector<std::shared_ptr<Widget>> focusable;
+  collectFocusable(om.stack().back().first, focusable);
+  if (!focusable.empty())
+    setFocus(focusable.front());
 }
 
 } // namespace vextr::core

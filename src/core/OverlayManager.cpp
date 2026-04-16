@@ -8,7 +8,7 @@ void OverlayManager::push(std::shared_ptr<Widget> widget, Rect rect) {
   widget->layout(rect.x, rect.y, rect.width, rect.height);
   overlays.emplace_back(std::move(widget), rect);
   // focus first focusable in the new overlay
-  Context::get().focusManager.focusNext(overlays.back().first);
+  Context::get().focusManager.focusTopOverlay();
 }
 
 void OverlayManager::pop() {
@@ -16,10 +16,12 @@ void OverlayManager::pop() {
     return;
   overlays.pop_back();
   // refocus main tree or next overlay down
+  auto &fm = Context::get().focusManager;
   if (!overlays.empty())
-    Context::get().focusManager.focusNext(overlays.back().first);
+    fm.focusTopOverlay();
   else
-    Context::get().focusManager.clearFocus();
+    fm.clearFocus(); // TODO: make this return where focus was. maybe trough
+                     // saving the last focused thing
 }
 
 void OverlayManager::clear() { overlays.clear(); }

@@ -86,18 +86,7 @@ void App::tick() {
       return;
     }
 
-    auto &overlays = core::Context::get().overlayManager.stack();
-    if (!overlays.empty()) {
-      auto &topWidget = overlays.back().first;
-      // let focus manager handle tab within the overlay tree
-      if (!core::Context::get().focusManager.dispatch(e, topWidget)) {
-        // if focus manager didnt consume it, pass to the overlay widget
-        // directly
-        topWidget->onEvent(e);
-      }
-    } else {
-      core::Context::get().focusManager.dispatch(e, root);
-    }
+    core::Context::get().focusManager.dispatch(e, root);
   }
 
   if (needsRedraw && root) {

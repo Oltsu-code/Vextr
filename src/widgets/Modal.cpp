@@ -15,6 +15,10 @@ Modal::Modal(std::shared_ptr<Widget> content, std::function<void()> onClose,
 core::Size Modal::measure(int availW, int availH) { return {availW, availH}; }
 
 void Modal::layout(int x, int y, int width, int height) {
+  content->parent =
+      weak_from_this(); // yes ik its probably dumb to keep this here but it
+                        // works. some1 smarter then me can find a better way
+
   Widget::layout(x, y, width, height);
 
   // center content box
