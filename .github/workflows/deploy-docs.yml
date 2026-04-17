@@ -1,0 +1,146 @@
+name: Deploy Docs
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'docs/**'
+      - '.github/workflows/deploy-docs.yml'
+  workflow_dispatch:
+
+env:
+  DOCS_PATH: docs/site
+  DEPLOY_PATH: /var/www/vextr/docs
+  DOMAIN: vextr.oltsu.dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        working-directory: ${{ env.DOCS_PATH }}
+        run: npm ci
+
+      - name: Generate API docs
+        working-directory: ${{ env.DOCS_PATH }}
+        run: npm run generate
+
+      - name: Build docs
+        working-directory: ${{ env.DOCS_PATH }}
+        run: npm run build
+
+      - name: Generate version info
+        working-directory: ${{ env.DOCS_PATH }}
+        run: |
+          mkdir -p dist/_versions
+          echo "{
+            \"version\": \"$(git describe --tags --always)\",
+            \"branch\": \"${{ github.ref_name }}\",
+            \"commit\": \"${{ github.sha }}\",
+            \"timestamp\": \"$(date -u +'%Y-%m-%dT%H:%M:%SZ')\",
+            \"author\": \"${{ github.actor }}\"
+          }" > dist/_versions/info.json
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-build
+          path: ${{ env.DOCS_PATH }}/dist
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-build
+          path: ./docs-dist
+
+      - name: Deploy to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "./docs-dist/*"
+          target: "${{ env.DEPLOY_PATH }}/tmp"
+          strip_components: 1
+
+      - name: Activate deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            DEPLOY_PATH="${{ env.DEPLOY_PATH }}"
+            VERSION="${{ github.ref_name }}"
+            
+            echo "Deploying version: $VERSION"
+            
+            if [ "$VERSION" != "main" ]; then
+              VERSION_DIR="$DEPLOY_PATH/versions/$VERSION"
+              mkdir -p "$VERSION_DIR"
+              rm -rf "$VERSION_DIR"/*
+              cp -r "$DEPLOY_PATH/tmp"/* "$VERSION_DIR/"
+            else
+              # For main, use current symlink
+              mkdir -p "$DEPLOY_PATH/current"
+              rm -rf "$DEPLOY_PATH/current"/*
+              cp -r "$DEPLOY_PATH/tmp"/* "$DEPLOY_PATH/current/"
+            fi
+            
+            rm -rf "$DEPLOY_PATH/tmp"
+            
+            VERSIONS_FILE="$DEPLOY_PATH/current/_versions/versions.json"
+            mkdir -p "$(dirname "$VERSIONS_FILE")"
+            
+            cat > "$VERSIONS_FILE" << 'EOF'
+            {
+              "versions": [
+            EOF
+            
+            echo '    { "name": "main", "url": "/" }' >> "$VERSIONS_FILE"
+            
+            if [ -d "$DEPLOY_PATH/versions" ]; then
+              for version_dir in "$DEPLOY_PATH/versions"/*; do
+                if [ -d "$version_dir" ]; then
+                  version_name=$(basename "$version_dir")
+                  echo "," >> "$VERSIONS_FILE"
+                  echo "    { \"name\": \"$version_name\", \"url\": \"/$version_name/\" }" >> "$VERSIONS_FILE"
+                fi
+              done
+            fi
+            
+            sed -i '$ s/,$//' "$VERSIONS_FILE"
+            echo "" >> "$VERSIONS_FILE"
+            echo "  ]" >> "$VERSIONS_FILE"
+            echo "}" >> "$VERSIONS_FILE"
+            
+            echo "Reloading nginx..."
+            sudo systemctl reload nginx
+            
+            echo "Deployment complete!"
+            echo "Available versions:"
+            cat "$VERSIONS_FILE"

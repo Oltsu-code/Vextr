@@ -1,0 +1,19 @@
+{
+  "name": "starlight",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "generate": "moxygen --classes --anchors --output ../generated/api-%s.md ../doxygen-xml && node ../scripts/postprocess.js"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.38.3",
+    "astro": "^6.1.7"
+  }
+}

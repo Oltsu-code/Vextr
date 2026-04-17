@@ -94,3 +94,25 @@ target_include_directories(vextr_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/inclu
 
 gtest_discover_tests(vextr_tests WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
+# ============================================================================
+# DOCUMENTATION (Doxygen)
+# ============================================================================
+
+find_package(Doxygen)
+
+if (DOXYGEN_FOUND)
+    set(DOXYGEN_PROJECT_NAME ${PROJECT_NAME})
+    set(DOXYGEN_PROJECT_NUMBER ${PROJECT_VERSION})
+    set(DOXYGEN_GENERATE_HTML NO)
+    set(DOXYGEN_GENERATE_XML YES)
+    set(DOXYGEN_XML_OUTPUT ${CMAKE_SOURCE_DIR}/docs/doxygen-xml)
+    set(DOXYGEN_RECURSIVE YES)
+
+    doxygen_add_docs(docs
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
+            COMMENT "Generating Doxygen XML"
+    )
+else()
+    message(STATUS "Doxygen not found, skipping docs target.")
+endif()

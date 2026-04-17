@@ -75,4 +75,17 @@ Thumbs.db
 # Editor backups
 *#*
 
+# Documentation
+
+#Generated
+docs/generated/
+docs/doxygen-xml/
+#Site
+docs/site/dist/
+docs/site/.astro/
+docs/site/package-lock.json
+docs/site/src/content/
+docs/site/node_modules/
+docs/.env
+
 # End of .gitignore
