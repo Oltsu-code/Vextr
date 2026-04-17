@@ -34,7 +34,7 @@ enum class MouseButton {
 /// - **Mouse events**: @c mouseX, @c mouseY, @c button
 /// - **Resize events**: @c newWidth, @c newHeight
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// bool MyWidget::onEvent(const Event &e) {
 ///   if (e.type == EventType::Key && e.key == 'q') {

@@ -12,7 +12,7 @@ namespace vextr::widgets {
 /// activated via Enter key or mouse click. Use setOnClick() to handle
 /// activation.
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// auto btn = std::make_shared<Button>("Click me");
 /// btn->setOnClick([]() {
@@ -38,17 +38,11 @@ public:
   /// @param cb The function to call on activation (can be empty)
   void setOnClick(std::function<void()> cb) { onClick = std::move(cb); }
 
-  /// @brief Returns true - buttons can receive focus.
   bool isFocusable() const override { return true; }
-
-  /// @brief Measures the button's size based on label text.
   core::Size measure(int availW, int availH) override;
-
-  /// @brief Handles key press and mouse click events.
   bool onEvent(const core::Event &e) override;
 
 protected:
-  /// @brief Renders the button's text content.
   void drawContent(backend::Buffer &buf, core::Rect inner) override;
 
 private:

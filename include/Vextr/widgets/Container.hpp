@@ -51,7 +51,7 @@ public:
   /// @param child The widget to add
   /// @param spec Layout specification for this child (optional)
   ///
-  /// @example
+  /// **Example Usage:**
   /// ```cpp
   /// auto container = std::make_shared<Container>();
   /// auto button = std::make_shared<Button>("Flex");
@@ -65,13 +65,9 @@ public:
     layoutEngine = std::move(l);
   }
 
-  /// @brief Measures the container's size (sum of children).
   core::Size measure(int availW, int availH) override;
-
-  /// @brief Lays out all children using the layout engine.
   void layout(int x, int y, int width, int height) override;
 
-  /// @brief Returns all child widgets.
   std::vector<std::shared_ptr<Widget>> getChildren() const override {
     std::vector<std::shared_ptr<Widget>> out;
     for (auto &slot : children)

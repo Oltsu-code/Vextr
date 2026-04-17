@@ -1,5 +1,7 @@
 #pragma once
 
+///@namespace vextr::utils::Key
+/// @brief Key code definitions for keyboard input events.
 namespace vextr::utils::Key {
 constexpr int Tab = 9;
 constexpr int Enter = 10;

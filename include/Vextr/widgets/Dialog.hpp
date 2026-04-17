@@ -19,7 +19,7 @@ struct DialogButton {
 /// The dialog closes automatically when any button is clicked.
 /// Pressing Escape closes it if a cancel/close button exists.
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// showDialog("Confirm", "Are you sure?", {
 ///   {"Yes", [&]() { doThing(); }, true},

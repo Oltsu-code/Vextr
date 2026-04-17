@@ -17,12 +17,22 @@ public:
 
   explicit Dropdown(std::vector<Option> options = {});
 
+  /// @brief Sets the list of options to display.
+  /// @param opts The new list of options
   void setOptions(std::vector<Option> opts) { options = std::move(opts); }
+
+  /// @brief Sets the callback invoked when an option is selected.
+  /// @param cb The function to call when an option is selected
   void setOnChange(std::function<void(int, const std::string &)> cb) {
     onChange = std::move(cb);
   }
 
+  /// @brief Sets the style for the dropdown's popup list.
+  /// @param s The style to apply to the popup
   void setPopupStyle(const core::Style &s) { popupStyle = s; }
+
+  /// @brief Sets the style for the dropdown's popup list when focused.
+  /// @param s The style to apply to the popup when focused
   void setPopupFocusedStyle(const core::Style &s) { popupFocusedStyle = s; }
 
   int selectedIndex() const { return selected; }

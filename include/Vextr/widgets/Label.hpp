@@ -11,7 +11,7 @@ namespace vextr::widgets {
 /// descriptions, and other informational text. The label automatically sizes
 /// itself based on its text.
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// auto label = std::make_shared<Label>("Hello, World!");
 /// ```
@@ -32,11 +32,9 @@ public:
   /// @return The current text
   const std::string &getText() const { return text; }
 
-  /// @brief Measures the label's size based on its text.
   core::Size measure(int availW, int availH) override;
 
 protected:
-  /// @brief Renders the label's text content.
   void drawContent(backend::Buffer &buf, core::Rect inner) override;
 
 private:

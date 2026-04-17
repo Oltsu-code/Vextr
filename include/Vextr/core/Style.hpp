@@ -40,7 +40,7 @@ struct TextDecoration {
 /// All values are in cells (characters) — percentage-based padding is not
 /// supported since it would require knowing the widget's final size in advance.
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// style.padding = PaddingSpec::all(1);          // 1 cell on all sides
 /// style.padding = PaddingSpec::xy(2, 1);        // 2 left/right, 1 top/bottom

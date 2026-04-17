@@ -17,7 +17,7 @@ class Widget;
 /// - Absolute: measured in cells (characters)
 /// - Percentage: measured as % of parent size
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// ScalarSpec width = pct(50);        // 50% of parent width
 /// ScalarSpec height = cells(10);      // 10 cells tall

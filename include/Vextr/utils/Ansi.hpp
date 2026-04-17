@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+/// @namespace vextr::utils::ansi
+/// @brief Utility functions for generating ANSI escape codes for terminal control and styling.
 namespace vextr::utils::ansi {
 
 // cursor controls

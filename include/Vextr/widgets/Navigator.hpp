@@ -14,7 +14,7 @@ namespace vextr::widgets {
 /// displays the topmost one. This is useful for implementing multi-screen
 /// applications with back button support.
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// auto nav = std::make_shared<Navigator>();
 /// auto home = std::make_shared<HomeScreen>();
@@ -86,25 +86,11 @@ public:
   /// @return The number of widgets currently on the stack.
   int depth() const { return (int)stack.size(); }
 
-  /// @brief Measures the size needed for the navigator.
-  /// @note Override from core::Widget. Uses current widget's size requirements.
   core::Size measure(int availW, int availH) override;
-
-  /// @brief Positions and sizes the navigator and its current widget.
-  /// @note Override from core::Widget.
   void layout(int x, int y, int width, int height) override;
-
-  /// @brief Renders the navigator and its current widget.
-  /// @note Override from core::Widget.
   void render(backend::Buffer &buf) override;
-
-  /// @brief Handles input events and passes them to the current widget.
-  /// @note Override from core::Widget.
   bool onEvent(const core::Event &e) override;
 
-  /// @brief Returns the list of child widgets.
-  /// @note Override from core::Widget. Returns only the current (topmost)
-  /// widget.
   std::vector<std::shared_ptr<Widget>> getChildren() const override {
     if (stack.empty())
       return {};

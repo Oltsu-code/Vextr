@@ -19,7 +19,7 @@ namespace vextr::widgets {
 /// - onSubmit callback when user presses Enter
 /// - Horizontal scrolling for long text
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// auto input = std::make_shared<Input>("Enter name...");
 /// input->setOnChange([](const std::string &text) {
@@ -66,17 +66,11 @@ public:
     onSubmit = std::move(cb);
   }
 
-  /// @brief Returns true - input fields can receive focus.
   bool isFocusable() const override { return true; }
-
-  /// @brief Measures the input field's size.
   core::Size measure(int availW, int availH) override;
-
-  /// @brief Handles keyboard input and cursor movement.
   bool onEvent(const core::Event &e) override;
 
 protected:
-  /// @brief Renders the input field with text and cursor.
   void drawContent(backend::Buffer &buf, core::Rect inner) override;
 
 private:

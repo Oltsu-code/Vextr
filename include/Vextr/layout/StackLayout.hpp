@@ -24,7 +24,7 @@ enum class Axis {
 /// - Fixed sizing with cells() or pct()
 /// - Spacing between children (gap)
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// // Vertical stack (default)
 /// auto vstack = std::make_shared<Container>(

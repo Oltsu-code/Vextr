@@ -10,7 +10,7 @@ namespace vextr::layout {
 /// columns. Children position themselves using the col, row, colSpan, and
 /// rowSpan fields in their LayoutSpec.
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// // Create a 3x2 grid (3 columns, 2 rows) with 1 cell spacing
 /// auto grid = std::make_shared<Container>(

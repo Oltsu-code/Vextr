@@ -65,7 +65,8 @@ public:
   /// @brief Renders this widget to the buffer.
   ///
   /// The default implementation handles drawing borders and background.
-  /// **WARNING**: Overriding this will break border and background rendering!
+  ///
+  /// @warning Overriding this will break border and background rendering!
   /// Use drawContent() instead to draw your widget's content.
   ///
   /// @param buf The buffer to draw to
@@ -161,14 +162,43 @@ protected:
   /// @brief This widget's bounding rectangle (set during layout)
   Rect rect;
 
+  /// @brief Calculates the X position for content based on horizontal alignment.
+  /// @param innerX The inner rectangle's X coordinate
+  /// @param innerW The inner rectangle's width
+  /// @param contentW The content width
+  /// @param align The horizontal alignment
+  /// @return The X coordinate for the content's top-left corner
   int justifyX(int innerX, int innerW, int contentW, Align align) const;
+
+  /// @brief Calculates the Y position for content based on vertical alignment.
+  /// @param innerY The inner rectangle's Y coordinate
+  /// @param innerH The inner rectangle's height
+  /// @param contentH The content height
+  /// @param align The vertical alignment
+  /// @return The Y coordinate for the content's top-left corner
   int justifyY(int innerY, int innerH, int contentH, Align align) const;
 
+  /// @brief Calculates the aligned content rectangle within the inner area.
+  ///
+  /// Combines justifyX and justifyY to produce a full Rect for placing
+  /// content inside the inner rectangle with the given alignments.
+  ///
+  /// @param inner The inner rectangle to align within
+  /// @param contentW The content width
+  /// @param contentH The content height
+  /// @param ax Horizontal alignment
+  /// @param ay Vertical alignment
+  /// @return The rectangle where content should be drawn
   Rect alignContentRect(Rect inner, int contentW, int contentH, Align ax,
                         Align ay) const;
 
 private:
+  /// @brief Fills the widget's background area with the active background color.
+  /// @param buf The buffer to draw to
   void drawBackground(backend::Buffer &buf);
+
+  /// @brief Draws the widget's border using the active border style.
+  /// @param buf The buffer to draw to
   void drawBorder(backend::Buffer &buf);
 };
 

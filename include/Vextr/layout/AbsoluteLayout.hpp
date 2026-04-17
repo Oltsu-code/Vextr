@@ -18,7 +18,7 @@ namespace vextr::layout {
 /// - Widgets can overlap
 /// - Less maintainable for complex layouts
 ///
-/// @example
+/// **Example Usage:**
 /// ```cpp
 /// auto abs = std::make_shared<Container>(
 ///   std::make_shared<AbsoluteLayout>()
