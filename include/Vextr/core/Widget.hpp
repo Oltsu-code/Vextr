@@ -162,7 +162,8 @@ protected:
   /// @brief This widget's bounding rectangle (set during layout)
   Rect rect;
 
-  /// @brief Calculates the X position for content based on horizontal alignment.
+  /// @brief Calculates the X position for content based on horizontal
+  /// alignment.
   /// @param innerX The inner rectangle's X coordinate
   /// @param innerW The inner rectangle's width
   /// @param contentW The content width
@@ -193,7 +194,8 @@ protected:
                         Align ay) const;
 
 private:
-  /// @brief Fills the widget's background area with the active background color.
+  /// @brief Fills the widget's background area with the active background
+  /// color.
   /// @param buf The buffer to draw to
   void drawBackground(backend::Buffer &buf);
 
