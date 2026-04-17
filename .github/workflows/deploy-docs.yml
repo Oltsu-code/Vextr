@@ -35,7 +35,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ${{ env.DOCS_PATH }}
-        run: npm ci
+        run: npm install
 
       - name: Generate API docs
         working-directory: ${{ env.DOCS_PATH }}
