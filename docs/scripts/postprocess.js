@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, writeFileSync, mkdirSync, cpSync } from 'fs';
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, cpSync, existsSync } from 'fs';
 import { join, basename, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -14,11 +14,15 @@ title: Vextr
 description: A modern C++ TUI library
 ---
 `;
+
 mkdirSync(contentOutDir, { recursive: true });
 writeFileSync(join(contentOutDir, 'index.mdx'), homepage);
 
-if (readdirSync(contentDir).length > 0) {
-    cpSync(contentDir, contentOutDir, { recursive: true });
+if (existsSync(contentDir)) {
+    const entries = readdirSync(contentDir);
+    if (entries.length > 0) {
+        cpSync(contentDir, contentOutDir, { recursive: true });
+    }
 }
 
 function getSubdir(filename) {
