@@ -5,9 +5,12 @@ export default defineConfig({
     integrations: [
         starlight({
             title: 'Vextr',
+            social: [
+                {icon: 'github', label: 'GitHub', href: 'https://github.com/Oltsu-code/Vextr'},
+            ],
             sidebar: [
-                { label: 'Getting Started', link: '/' },
-                { label: 'API', autogenerate: { directory: 'api' } },
+                { label: 'Guide', autogenerate: { directory: 'guide' }, collapsed: true },
+                { label: 'API References', autogenerate: { directory: 'api' }, collapsed: true },
             ],
         }),
     ],
