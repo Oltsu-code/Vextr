@@ -1,5 +1,5 @@
-#include <Vextr/widgets/ScrollView.hpp>
 #include <Vextr/utils/Input.hpp>
+#include <Vextr/widgets/ScrollView.hpp>
 #include <algorithm>
 #include <utility>
 
@@ -51,7 +51,9 @@ void ScrollView::scrollBy(int dx, int dy) {
   setScroll(scroll.x + dx, scroll.y + dy);
 }
 
-core::Size ScrollView::measure(int availW, int availH) { return {availW, availH}; }
+core::Size ScrollView::measure(int availW, int availH) {
+  return {availW, availH};
+}
 
 core::Size ScrollView::resolveContentSize(core::Rect inner) const {
   if (hasExplicitContentSize)
@@ -83,7 +85,7 @@ void ScrollView::relayoutContent() {
 
   if (content)
     content->layout(-scroll.x, -scroll.y, currentContentSize.width,
-                   currentContentSize.height);
+                    currentContentSize.height);
 }
 
 void ScrollView::layout(int x, int y, int width, int height) {
@@ -154,4 +156,3 @@ void ScrollView::drawContent(backend::Buffer &buf, core::Rect inner) {
 }
 
 } // namespace vextr::widgets
-

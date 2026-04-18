@@ -139,5 +139,3 @@ TEST(ScrollViewTest, EventScrollingMovesViewportAndClamps) {
 }
 
 } // namespace vextr::widgets
-
-

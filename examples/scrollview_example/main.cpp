@@ -18,9 +18,10 @@ int main() {
 
   auto root = std::make_shared<Container>(
       std::make_shared<StackLayout>(Axis::Vertical, 1));
-  root->setStyle(Style{.bg = {12, 12, 18}, .padding = PaddingSpec{1,1,1,1}});
+  root->setStyle(Style{.bg = {12, 12, 18}, .padding = PaddingSpec{1, 1, 1, 1}});
 
-  auto title = std::make_shared<Label>("ScrollView demo - Arrow keys, PageUp/Down, Home/End");
+  auto title = std::make_shared<Label>(
+      "ScrollView demo - Arrow keys, PageUp/Down, Home/End");
   title->setStyle(Style{.fg = {180, 220, 255}, .bg = {12, 12, 18}});
 
   auto instructions = std::make_shared<Label>(
@@ -29,11 +30,12 @@ int main() {
 
   auto content = std::make_shared<Container>(
       std::make_shared<StackLayout>(Axis::Vertical, 0));
-  content->setStyle(Style{.bg = {20, 22, 30}, .padding = PaddingSpec{1,1,1,1}});
+  content->setStyle(
+      Style{.bg = {20, 22, 30}, .padding = PaddingSpec{1, 1, 1, 1}});
 
   for (int i = 1; i <= 24; ++i) {
-    auto line = std::make_shared<Label>(
-        "Item " + std::to_string(i) + " - keep scrolling to see more");
+    auto line = std::make_shared<Label>("Item " + std::to_string(i) +
+                                        " - keep scrolling to see more");
     line->setStyle(Style{.fg = {240, 240, 240}, .bg = {20, 22, 30}});
     content->addChild(line, {.fixedH = cells(1)});
   }
@@ -42,9 +44,7 @@ int main() {
   btn->setStyle(Style{.fg = {255, 255, 255}, .bg = {40, 40, 80}});
   btn->setFocusedStyle(Style{.fg = {255, 255, 255}, .bg = {60, 60, 120}});
   btn->setOnClick([]() {
-    showDialog("Button clicked", "You clicked the button!", {
-      {"OK", []() {}}
-    });
+    showDialog("Button clicked", "You clicked the button!", {{"OK", []() {}}});
   });
   content->addChild(btn, {.fixedH = cells(1)});
 
@@ -53,13 +53,13 @@ int main() {
       .fg = {255, 255, 255},
       .bg = {24, 28, 38},
       .border = {.style = BorderStyle::Single, .color = {90, 120, 180}},
-      .padding = PaddingSpec{1,1,1,1},
+      .padding = PaddingSpec{1, 1, 1, 1},
   });
   scrollView->setFocusedStyle(Style{
       .fg = {255, 255, 255},
       .bg = {34, 40, 56},
       .border = {.style = BorderStyle::Double, .color = {180, 220, 255}},
-      .padding = PaddingSpec{1,1,1,1},
+      .padding = PaddingSpec{1, 1, 1, 1},
   });
   scrollView->setContentSize({0, 28});
 
@@ -75,6 +75,3 @@ int main() {
   app.run();
   return 0;
 }
-
-
-
