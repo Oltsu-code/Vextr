@@ -130,6 +130,15 @@ public:
     return {};
   }
 
+  /// @brief Returns this widget's children for focus traversal.
+  ///
+  /// By default this matches getChildren(). Widgets with custom rendering
+  /// behavior (like clipping/compositing) can override this without affecting
+  /// paint traversal.
+  virtual std::vector<std::shared_ptr<Widget>> getFocusChildren() const {
+    return getChildren();
+  }
+
   /// @brief Weak pointer to this widget's parent.
   /// Use weak_ptr to avoid circular references.
   std::weak_ptr<Widget> parent;

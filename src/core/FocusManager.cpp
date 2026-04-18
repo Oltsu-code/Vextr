@@ -28,7 +28,7 @@ void FocusManager::collectFocusable(std::shared_ptr<Widget> w,
     return;
   if (w->isFocusable())
     out.push_back(w);
-  for (auto &child : w->getChildren())
+  for (auto &child : w->getFocusChildren())
     collectFocusable(child, out);
 }
 
