@@ -1,7 +1,7 @@
 #include <Vextr/utils/Input.hpp>
+#include <Vextr/utils/Unicode.hpp>
 #include <Vextr/widgets/TextArea.hpp>
 #include <Vextr/widgets/TextFlow.hpp>
-#include <Vextr/utils/Unicode.hpp>
 #include <algorithm>
 
 namespace vextr::widgets {

@@ -1,5 +1,5 @@
-#include <Vextr/widgets/TextFlow.hpp>
 #include <Vextr/utils/Unicode.hpp>
+#include <Vextr/widgets/TextFlow.hpp>
 #include <algorithm>
 #include <string>
 
