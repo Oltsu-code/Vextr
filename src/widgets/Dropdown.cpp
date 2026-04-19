@@ -6,6 +6,11 @@
 
 namespace vextr::widgets {
 
+namespace {
+constexpr const char *kScrollbarTrack = "│";
+constexpr const char *kScrollbarThumb = "█";
+} // namespace
+
 Dropdown::Dropdown(std::vector<Option> options) : options(std::move(options)) {}
 
 core::Size Dropdown::measure(int availW, int availH) {
@@ -186,11 +191,24 @@ void DropdownPopup::drawContent(backend::Buffer &buf, core::Rect inner) {
   int maxScroll = std::max(0, (int)options.size() - visibleItems);
   scrollOffset = std::min(scrollOffset, maxScroll);
 
+  const bool showScrollbar =
+      visibleItems > 0 && maxScroll > 0 && inner.width > 0;
+
   // make sure hovered item stays visible
   if (hovered < scrollOffset)
     scrollOffset = hovered;
   if (hovered >= scrollOffset + visibleItems)
     scrollOffset = hovered - visibleItems + 1;
+
+  const int thumbSize =
+      showScrollbar
+          ? std::max(1, (visibleItems * visibleItems) / (int)options.size())
+          : 0;
+  const int thumbTravel =
+      showScrollbar ? std::max(0, visibleItems - thumbSize) : 0;
+  const int thumbTop = (showScrollbar && maxScroll > 0)
+                           ? (scrollOffset * thumbTravel) / maxScroll
+                           : 0;
 
   // draw visible items
   for (int i = 0; i < visibleItems && (scrollOffset + i) < (int)options.size();
@@ -209,17 +227,12 @@ void DropdownPopup::drawContent(backend::Buffer &buf, core::Rect inner) {
       buf.set(x, inner.y + i, cell);
     }
 
-    // determine if we need scroll indicators
-    bool hasScrollAbove = (scrollOffset > 0 && i == 0);
-    bool hasScrollBelow = (scrollOffset + visibleItems < (int)options.size() &&
-                           i == visibleItems - 1);
-
     // draw label
     int x = inner.x;
     int maxX = inner.x + inner.width;
 
-    // reserve space for right indicator
-    if (hasScrollAbove || hasScrollBelow) {
+    // reserve one column for vertical scrollbar when content is scrollable
+    if (showScrollbar) {
       maxX--;
     }
 
@@ -254,18 +267,14 @@ void DropdownPopup::drawContent(backend::Buffer &buf, core::Rect inner) {
       x += w;
     }
 
-    // draw right indicator
-    if (hasScrollAbove) {
+    // draw right scrollbar
+    if (showScrollbar) {
+      const bool inThumb = i >= thumbTop && i < thumbTop + thumbSize;
       backend::Cell cell;
-      cell.ch = "↑";
-      cell.fg = fg;
-      cell.bg = bg;
-      buf.set(inner.x + inner.width - 1, inner.y + i, cell);
-    } else if (hasScrollBelow) {
-      backend::Cell cell;
-      cell.ch = "↓";
-      cell.fg = fg;
-      cell.bg = bg;
+      cell.ch = inThumb ? kScrollbarThumb : kScrollbarTrack;
+      // Keep scrollbar colors stable even when row hover inverts fg/bg.
+      cell.fg = s.fg;
+      cell.bg = s.bg;
       buf.set(inner.x + inner.width - 1, inner.y + i, cell);
     }
   }

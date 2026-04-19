@@ -5,6 +5,9 @@
 
 namespace {
 
+constexpr const char *kScrollbarTrack = "│";
+constexpr const char *kScrollbarThumb = "█";
+
 vextr::backend::Cell transparentCell() {
   vextr::backend::Cell cell;
   cell.ch = "";
@@ -67,7 +70,11 @@ core::Size ScrollView::resolveContentSize(core::Rect inner) const {
 }
 
 void ScrollView::clampScroll() {
-  int maxX = std::max(0, currentContentSize.width - currentInner.width);
+  const bool showScrollbar =
+      currentInner.width > 1 && currentContentSize.height > currentInner.height;
+  const int visibleWidth =
+      showScrollbar ? currentInner.width - 1 : currentInner.width;
+  int maxX = std::max(0, currentContentSize.width - visibleWidth);
   int maxY = std::max(0, currentContentSize.height - currentInner.height);
   scroll.x = std::clamp(scroll.x, 0, maxX);
   scroll.y = std::clamp(scroll.y, 0, maxY);
@@ -134,7 +141,14 @@ void ScrollView::drawContent(backend::Buffer &buf, core::Rect inner) {
 
     return;
 
-  core::Size visibleSize = {inner.width, inner.height};
+  const auto &s = activeStyle();
+  const int maxScrollY =
+      std::max(0, currentContentSize.height - currentInner.height);
+  const bool showScrollbar =
+      inner.width > 1 && inner.height > 0 && maxScrollY > 0;
+  const int visibleWidth = showScrollbar ? inner.width - 1 : inner.width;
+
+  core::Size visibleSize = {visibleWidth, inner.height};
   backend::Buffer viewport(visibleSize.width, visibleSize.height);
   for (int yy = 0; yy < viewport.height(); ++yy)
 
@@ -151,6 +165,25 @@ void ScrollView::drawContent(backend::Buffer &buf, core::Rect inner) {
           !cell.underline)
         continue;
       buf.set(inner.x + xx, inner.y + yy, cell);
+    }
+  }
+
+  if (showScrollbar) {
+    const int thumbSize =
+        std::max(1, (inner.height * inner.height) / currentContentSize.height);
+    const int thumbTravel = std::max(0, inner.height - thumbSize);
+    const int thumbTop =
+        maxScrollY > 0 ? (scroll.y * thumbTravel) / maxScrollY : 0;
+
+    for (int row = 0; row < inner.height; ++row) {
+      const bool inThumb = row >= thumbTop && row < thumbTop + thumbSize;
+      backend::Cell indicator;
+      indicator.ch = inThumb ? kScrollbarThumb : kScrollbarTrack;
+      indicator.fg = s.fg;
+      indicator.bg = s.bg;
+      indicator.bold = s.text.bold;
+      indicator.underline = s.text.underline;
+      buf.set(inner.right() - 1, inner.y + row, indicator);
     }
   }
 }
