@@ -53,8 +53,9 @@ The building blocks users actually put in their UIs.
 - ✅ Label — static text rendering
 - ✅ Button — focusable, onClick callback, hover/active states
 - ✅ Input — single-line text field with cursor, selection
-- ✅ TextView — multi-line read-only text with word wrap
-- 🔄 ScrollView — clipping container with vertical/horizontal scroll
+- 🔄 TextView — multi-line read-only text with word wrap
+- ✅ ScrollView — clipping container with vertical/horizontal scroll
+- 🔄 TextArea — multi-line editable text with cursor, selection, scrolling
 - ⬜ Checkbox — toggleable boolean widget
 - ⬜ RadioGroup — mutually exclusive options
 - ⬜ ProgressBar — horizontal fill indicator
