@@ -53,8 +53,8 @@ The building blocks users actually put in their UIs.
 - ✅ Label — static text rendering
 - ✅ Button — focusable, onClick callback, hover/active states
 - ✅ Input — single-line text field with cursor, selection
-- ⬜ TextView — multi-line read-only text with word wrap
-- ⬜ ScrollView — clipping container with vertical/horizontal scroll
+- ✅ TextView — multi-line read-only text with word wrap
+- 🔄 ScrollView — clipping container with vertical/horizontal scroll
 - ⬜ Checkbox — toggleable boolean widget
 - ⬜ RadioGroup — mutually exclusive options
 - ⬜ ProgressBar — horizontal fill indicator
@@ -69,7 +69,7 @@ Keyboard navigation and event routing.
 - ✅ FocusManager — tracks focused widget, lives in Context
 - ✅ Focus traversal — Tab/Shift-Tab cycles through focusable widgets in tree order
 - 🔄 Navigation groups — containers where arrow keys move focus between children
-- 🔄 Event bubbling — unhandled events walk up parent chain
+- ✅ Event bubbling — unhandled events walk up parent chain
 - ⬜ Mouse hit-testing — click sets focus to widget under cursor
 - ✅ isFocusable() — widgets declare focus eligibility
 - ✅ Focus styles — visual indicator on focused widget
