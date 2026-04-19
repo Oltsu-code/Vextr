@@ -53,9 +53,9 @@ The building blocks users actually put in their UIs.
 - ✅ Label — static text rendering
 - ✅ Button — focusable, onClick callback, hover/active states
 - ✅ Input — single-line text field with cursor, selection
-- 🔄 TextView — multi-line read-only text with word wrap
+- ✅ TextView — multi-line read-only text with word wrap
 - ✅ ScrollView — clipping container with vertical/horizontal scroll
-- 🔄 TextArea — multi-line editable text with cursor, selection, scrolling
+- ✅ TextArea — multi-line editable text with cursor, selection, scrolling
 - ⬜ Checkbox — toggleable boolean widget
 - ⬜ RadioGroup — mutually exclusive options
 - ⬜ ProgressBar — horizontal fill indicator
@@ -123,12 +123,12 @@ Correctness improvements for real-world text.
 
 ---
 
-## Phase 10 — Testing and examples ⬜
+## Phase 10 — Testing and examples 🔄
 
 Making the library usable and trustworthy.
 
 - ⬜ Unit tests — Buffer, StackLayout, GridLayout, Label measure/render
-- ⬜ Example: todo app — Input, Label, ScrollView, keyboard nav
+- 🔄 Example: todo app — Input, Label, ScrollView, keyboard nav
 - ⬜ Example: file browser — Navigator, tree view, keyboard focus
 - ⬜ Example: dashboard — Grid layout, ProgressBar, live updating data
 - ⬜ Example: form — Input, Checkbox, RadioGroup, Button, validation
