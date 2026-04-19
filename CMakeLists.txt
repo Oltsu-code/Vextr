@@ -48,6 +48,7 @@ add_example(input_example)
 add_example(border_example)
 add_example(overlay_example)
 add_example(scrollview_example)
+add_example(text_widgets_example)
 
 # ============================================================================
 # EXTERNAL DEPENDENCIES
@@ -86,6 +87,8 @@ add_executable(vextr_tests
     tests/test_geometry.cpp
     tests/test_input_parser.cpp
     tests/test_label_widget.cpp
+    tests/test_text_view.cpp
+    tests/test_text_area.cpp
     tests/test_scroll_view.cpp
     tests/test_unicode.cpp
     tests/test_app.cpp

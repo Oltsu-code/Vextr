@@ -92,10 +92,10 @@ TEST(ScrollViewTest, RenderClipsToViewport) {
 
   EXPECT_EQ(buffer.get(0, 0).ch, "1");
   EXPECT_EQ(buffer.get(1, 0).ch, "1");
-  EXPECT_EQ(buffer.get(2, 0).ch, "1");
+  EXPECT_EQ(buffer.get(2, 0).ch, "█");
   EXPECT_EQ(buffer.get(0, 1).ch, "2");
   EXPECT_EQ(buffer.get(1, 1).ch, "2");
-  EXPECT_EQ(buffer.get(2, 1).ch, "2");
+  EXPECT_EQ(buffer.get(2, 1).ch, "│");
 }
 
 TEST(ScrollViewTest, EventScrollingMovesViewportAndClamps) {
@@ -127,7 +127,7 @@ TEST(ScrollViewTest, EventScrollingMovesViewportAndClamps) {
   end.type = core::EventType::Key;
   end.key = utils::Key::End;
   EXPECT_TRUE(view.onEvent(end));
-  EXPECT_EQ(view.scrollX(), 2);
+  EXPECT_EQ(view.scrollX(), 3);
   EXPECT_EQ(view.scrollY(), 2);
 
   core::Event home{};
@@ -136,6 +136,20 @@ TEST(ScrollViewTest, EventScrollingMovesViewportAndClamps) {
   EXPECT_TRUE(view.onEvent(home));
   EXPECT_EQ(view.scrollX(), 0);
   EXPECT_EQ(view.scrollY(), 0);
+}
+
+TEST(ScrollViewTest, RenderShowsVerticalScrollIndicators) {
+  auto content = std::make_shared<PatternWidget>(3, 4);
+  ScrollView view(content);
+  view.setContentSize({3, 4});
+  view.layout(0, 0, 3, 2);
+  view.setScroll(0, 1);
+
+  backend::Buffer buffer(3, 2);
+  view.render(buffer);
+
+  EXPECT_EQ(buffer.get(2, 0).ch, "█");
+  EXPECT_EQ(buffer.get(2, 1).ch, "│");
 }
 
 } // namespace vextr::widgets

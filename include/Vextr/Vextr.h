@@ -23,6 +23,8 @@
 #include <Vextr/widgets/Button.hpp>
 #include <Vextr/widgets/Label.hpp>
 #include <Vextr/widgets/Input.hpp>
+#include <Vextr/widgets/TextView.hpp>
+#include <Vextr/widgets/TextArea.hpp>
 #include <Vextr/widgets/Container.hpp>
 #include <Vextr/widgets/Navigator.hpp>
 #include <Vextr/widgets/ScrollView.hpp>
