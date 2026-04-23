@@ -137,6 +137,40 @@ or build
 npm run build
 ```
 
+## Weather App Integration (Ruby)
+
+A full weather app example is available at `examples/weather_example/`.
+It uses:
+
+- Vextr (C++) for the terminal UI
+- Ruby for weather API integration and parsing
+- Open-Meteo API for geocoding + weather data
+
+### Requirements
+
+- Ruby installed and available in `PATH`
+- Internet connection
+
+### Build and run
+
+```bash
+cmake -S . -B build
+cmake --build build --target weather_example
+./build/bin/weather_example
+```
+
+On Windows use:
+
+```powershell
+build\bin\weather_example.exe
+```
+
+Inside the app:
+
+- Enter a city name (for example `Helsinki`)
+- Press Enter in the input field or activate `Fetch Weather`
+- View current conditions and the 5-day forecast
+
 ## Roadmap
 
 ---
