@@ -50,6 +50,17 @@ add_example(overlay_example)
 add_example(scrollview_example)
 add_example(text_widgets_example)
 
+add_executable(weather_example examples/weather_example/main.cpp)
+target_link_libraries(weather_example PRIVATE vextr)
+target_include_directories(weather_example PRIVATE examples)
+
+set(WEATHER_RUBY_SCRIPT_PATH
+    "${CMAKE_CURRENT_SOURCE_DIR}/examples/weather_example/weather_fetch.rb")
+file(TO_CMAKE_PATH "${WEATHER_RUBY_SCRIPT_PATH}" WEATHER_RUBY_SCRIPT_PATH)
+target_compile_definitions(
+    weather_example
+    PRIVATE WEATHER_RUBY_SCRIPT_PATH="${WEATHER_RUBY_SCRIPT_PATH}")
+
 # ============================================================================
 # EXTERNAL DEPENDENCIES
 # ============================================================================
