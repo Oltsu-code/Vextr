@@ -187,9 +187,8 @@ CursorLocation locateCursor(std::string_view text, int cursor,
 
     if (cursor == static_cast<int>(row.endByte)) {
       if (idx + 1 < rows.size() && rows[idx + 1].startByte > row.endByte) {
-        const VisualLine &next = rows[idx + 1];
-        return {static_cast<int>(idx + 1), 0, next.startByte, next.endByte,
-                next.width};
+        return {static_cast<int>(idx), row.width, row.startByte, row.endByte,
+                row.width};
       }
 
       if (idx + 1 == rows.size()) {

@@ -108,8 +108,14 @@ void TextArea::deleteBack() {
     return;
   }
 
-  text.erase(text.begin() + cursor - 1);
-  --cursor;
+  int cpStart = cursor - 1;
+  while (cpStart > 0 &&
+         (static_cast<uint8_t>(text[static_cast<std::size_t>(cpStart)]) &
+          0xC0) == 0x80) {
+    --cpStart;
+  }
+  text.erase(text.begin() + cpStart, text.begin() + cursor);
+  cursor = cpStart;
   preferredColumn = -1;
   updateScroll();
   if (onChange) {
@@ -122,7 +128,10 @@ void TextArea::deleteForward() {
     return;
   }
 
-  text.erase(text.begin() + cursor);
+  std::size_t end = static_cast<std::size_t>(cursor);
+  utils::unicode::nextCodepoint(text, end);
+  text.erase(text.begin() + cursor,
+             text.begin() + static_cast<std::ptrdiff_t>(end));
   preferredColumn = -1;
   updateScroll();
   if (onChange) {
@@ -131,7 +140,23 @@ void TextArea::deleteForward() {
 }
 
 void TextArea::moveCursorHorizontal(int delta) {
-  cursor = std::clamp(cursor + delta, 0, static_cast<int>(text.size()));
+  if (delta > 0) {
+    if (cursor < static_cast<int>(text.size())) {
+      std::size_t pos = static_cast<std::size_t>(cursor);
+      utils::unicode::nextCodepoint(text, pos);
+      cursor = static_cast<int>(pos);
+    }
+  } else if (delta < 0) {
+    if (cursor > 0) {
+      int pos = cursor - 1;
+      while (pos > 0 &&
+             (static_cast<uint8_t>(text[static_cast<std::size_t>(pos)]) &
+              0xC0) == 0x80) {
+        --pos;
+      }
+      cursor = pos;
+    }
+  }
   preferredColumn = -1;
   updateScroll();
 }
@@ -298,17 +323,30 @@ void TextArea::drawContent(backend::Buffer &buf, core::Rect inner) {
     int x = inner.x + (location.column - clampedScrollX);
     int y = inner.y + (location.row - clampedScrollY);
     if (x >= inner.x && x < rightEdge && y >= inner.y && y < bottomEdge) {
-      backend::Cell cursorCell;
-      cursorCell.ch = " ";
-      if (cursor < static_cast<int>(text.size()) &&
-          text[static_cast<size_t>(cursor)] != '\n') {
-        cursorCell.ch = std::string(1, text[static_cast<size_t>(cursor)]);
+      uint32_t cursorCp = ' ';
+      if (cursor < static_cast<int>(text.size())) {
+        std::size_t pos = static_cast<std::size_t>(cursor);
+        uint32_t cp = utils::unicode::nextCodepoint(text, pos);
+        if (cp != '\n') {
+          cursorCp = cp;
+        }
       }
+      backend::Cell cursorCell;
+      cursorCell.ch = utils::unicode::encode(cursorCp);
       cursorCell.fg = s.bg;
       cursorCell.bg = s.fg;
       cursorCell.bold = s.text.bold;
       cursorCell.underline = s.text.underline;
       buf.set(x, y, cursorCell);
+      if (utils::unicode::displayWidth(cursorCp) == 2 && x + 1 < rightEdge) {
+        backend::Cell wide;
+        wide.ch = "";
+        wide.fg = s.bg;
+        wide.bg = s.fg;
+        wide.bold = s.text.bold;
+        wide.underline = s.text.underline;
+        buf.set(x + 1, y, wide);
+      }
     }
   }
 
