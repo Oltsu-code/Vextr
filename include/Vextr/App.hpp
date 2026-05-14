@@ -1,12 +1,12 @@
 #pragma once
-#include <functional>
 #include <Vextr/backend/Buffer.hpp>
 #include <Vextr/backend/Renderer.hpp>
 #include <Vextr/backend/Terminal.hpp>
 #include <Vextr/core/Widget.hpp>
+#include <Vextr/utils/Input.hpp>
 #include <Vextr/utils/InputParser.hpp>
 #include <Vextr/utils/InputReader.hpp>
-#include <Vextr/utils/Input.hpp>
+#include <functional>
 #include <memory>
 
 namespace vextr {
@@ -67,13 +67,13 @@ public:
 
   /// @brief Predicate that decides whether an event should quit the app.
   /// Default: Ctrl+C.
-  std::function<bool(const core::events::Event&)> quitEvent =
-    [](const core::events::Event& e) {
-      if (auto* k = std::get_if<core::events::KeyEvent>(&e)) {
-        return k->key == 'c' && k->modifiers.ctrl;
-      }
-      return false;
-  };
+  std::function<bool(const core::events::Event &)> quitEvent =
+      [](const core::events::Event &e) {
+        if (auto *k = std::get_if<core::events::KeyEvent>(&e)) {
+          return k->key == 'c' && k->modifiers.ctrl;
+        }
+        return false;
+      };
 
   utils::InputReader inputReader;
   utils::InputParser inputParser;
