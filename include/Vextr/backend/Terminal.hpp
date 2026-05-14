@@ -13,7 +13,7 @@ public:
   void restore();
 
   void clear();
-  void clear_scrollback();
+  void clearScrollback();
 
   void write(std::string_view bytes);
 

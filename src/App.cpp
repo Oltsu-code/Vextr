@@ -113,7 +113,7 @@ void App::handleResize() {
                                              currentSize.height);
 
   terminal.clear();
-  terminal.clear_scrollback();
+  terminal.clearScrollback();
 }
 
 int App::pollInput() {

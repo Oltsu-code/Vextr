@@ -2,6 +2,7 @@
 #include <Vextr/utils/Ansi.hpp>
 #include <iostream>
 #include <sstream>
+#include <cstdio>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -40,9 +41,10 @@ void Terminal::setup() {
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 #endif
 
-  std::cout << utils::ansi::hide_cursor();
-  std::cout << utils::ansi::clear_screen();
-  std::cout << utils::ansi::clear_scrollback();
+  using namespace utils::ansi;
+  std::cout << hide_cursor();
+  std::cout << clear_screen();
+  std::cout << clear_scrollback();
   std::cout.flush();
 }
 
@@ -53,32 +55,32 @@ void Terminal::restore() {
 #else
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &originalTermios);
 #endif
-
-  std::cout << utils::ansi::show_cursor();
-  std::cout << utils::ansi::clear_screen();
-  std::cout << utils::ansi::clear_scrollback();
-  std::cout << utils::ansi::reset();
-  std::cout << utils::ansi::cursor(0, 0);
+  using namespace utils::ansi;
+  std::cout << show_cursor();
+  std::cout << clear_screen();
+  std::cout << clear_scrollback();
+  std::cout << reset();
+  std::cout << cursor(0, 0);
   std::cout.flush();
 }
 
 void Terminal::clear() {
-  std::cout << utils::ansi::reset() << utils::ansi::clear_screen()
-            << utils::ansi::cursor(0, 0);
+  using namespace utils::ansi;
+  std::cout << reset() << clear_screen()
+            << cursor(0, 0);
 }
 
-void Terminal::clear_scrollback() {
-  std::cout << utils::ansi::clear_scrollback();
+void Terminal::clearScrollback() {
+  using namespace utils::ansi;
+  std::cout << clear_scrollback();
 }
-
-#include <cstdio>
 
 void Terminal::write(std::string_view bytes) {
   std::fwrite(bytes.data(), 1, bytes.size(), stdout);
   std::fflush(stdout);
 }
 
-vextr::core::Size Terminal::terminalSize() const {
+core::Size Terminal::terminalSize() const {
 #if defined(_WIN32)
   HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
   CONSOLE_SCREEN_BUFFER_INFO csbi;
