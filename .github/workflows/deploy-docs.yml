@@ -34,7 +34,7 @@ jobs:
           mkdir -p build
           cd build
           cmake ..
-          cmake --build . --target docs
+          cmake --build . --target vextr_docs
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
