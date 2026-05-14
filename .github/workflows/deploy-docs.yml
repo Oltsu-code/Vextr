@@ -42,7 +42,7 @@ jobs:
           node-version: '22'
 
       - name: Install moxygen
-        run: npm install -g moxygen
+        run: npm install -g moxygen@2.1.2
 
       - name: Install dependencies
         working-directory: ${{ env.DOCS_PATH }}
