@@ -26,19 +26,27 @@ function extractTitleFromContent(filename, content) {
     return titleFromFilename(filename);
 }
 
+function yamlQuote(s) {
+    const cleaned = String(s).replace(/[\r\n\t]+/g, ' ').trim();
+    const escaped = cleaned.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    return `"${escaped}"`;
+}
 
 function stripAnchorNumbers(content) {
     return content.replace(/\(\/api\/[^)]+#([a-zA-Z0-9_-]+)\)/g, (match) => {
         return match.replace(/#([a-zA-Z0-9_-]+)-\d+\)/, '#$1)');
     });
 }
+
 function injectFrontmatter(content, title) {
     if (content.startsWith('---')) return content;
-    return `---\ntitle: ${title}\n---\n\n${content}`;
+    return `---\ntitle: ${yamlQuote(title)}\n---\n\n${content}`;
 }
 
+// Anchored to top-of-file so we only strip a leading heading,
+// not the first heading anywhere in the document.
 function stripHeading(content) {
-    return content.replace(/^#+\s+.+\n?/m, '');
+    return content.replace(/^\s*#+\s+.+\n?/, '');
 }
 
 function isEffectivelyEmpty(content) {
@@ -102,11 +110,14 @@ function writeApiRootIndex(dir) {
     const links = sections.map(s => `- [${capitalize(s)}](/api/${s})`).join('\n');
 
     writeFileSync(join(dir, 'index.mdx'),
-        `---\ntitle: API Reference\n---
-        
-        API Reference for Vextr. Organized by module/namespace.
-        
-        ${links}`
+        `---
+title: API Reference
+---
+
+API Reference for Vextr. Organized by module/namespace.
+
+${links}
+`
     );
     console.log('API root index written');
 }
@@ -161,10 +172,12 @@ function processApiFile(file) {
     const title  = extractTitleFromContent(file, raw);
     const name   = basename(file, '.md').replace(/^api-vextr--?/, '');
     const parts  = name.split('--');
-    const subdir = parts.length >= 2 ? parts[0] : '';
-    const slug   = parts[parts.length - 1].toLowerCase();
-    const outDir = subdir ? join(API_OUT, subdir) : API_OUT;
-    const currentPath = subdir ? `/api/${subdir}/${slug}` : `/api/${slug}`;
+    const slug   = parts.pop().toLowerCase();
+    const subdirs = parts.map(p => p.toLowerCase());
+    const outDir = subdirs.length ? join(API_OUT, ...subdirs) : API_OUT;
+    const currentPath = subdirs.length
+        ? `/api/${subdirs.join('/')}/${slug}`
+        : `/api/${slug}`;
 
     let content = stripHeading(raw);
     content = injectFrontmatter(content, title);
@@ -179,7 +192,7 @@ function processApiFile(file) {
     }
 
     mkdirSync(outDir, { recursive: true });
-    writeFileSync(join(outDir, slug + '.mdx'), content);
+    writeFileSync(join(outDir, slug + '.md'), content);
     console.log(`API: ${currentPath}`);
 }
 
