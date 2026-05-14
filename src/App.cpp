@@ -114,6 +114,15 @@ void App::handleResize() {
 
   terminal.clear();
   terminal.clearScrollback();
+
+  // dispatch resize event
+  // TODO: currently, it dispatches the event to only the focused widget. in the
+  // future, add a dispatch to all, to send these kinds of events to every
+  // widget
+  core::events::Event e =
+      core::events::ResizeEvent(currentSize.width, currentSize.height);
+
+  core::Context::get().focusManager.dispatch(e, root);
 }
 
 int App::pollInput() {
