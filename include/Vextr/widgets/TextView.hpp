@@ -36,7 +36,7 @@ public:
   TextFlowMode getFlowMode() const { return flowMode; }
 
   bool isFocusable() const override;
-  bool onEvent(const core::Event &event) override;
+  bool onEvent(const core::events::Event &e) override;
 
   void setScrollX(int x);
   int scrollX() const { return scrollOffsetX; }

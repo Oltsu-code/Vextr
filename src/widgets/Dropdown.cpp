@@ -108,14 +108,16 @@ void Dropdown::drawContent(backend::Buffer &buf, core::Rect inner) {
   }
 }
 
-bool Dropdown::onEvent(const core::Event &e) {
-  if (e.type != core::EventType::Key)
+bool Dropdown::onEvent(const core::events::Event &e) {
+  auto *k = std::get_if<core::events::KeyEvent>(&e);
+  if (!k)
     return false;
-  if (e.key == utils::Key::Enter || e.key == ' ') {
+
+  if (k->key == utils::Key::Enter || k->key == ' ') {
     open ? closePopup() : openPopup();
     return true;
   }
-  if (e.key == utils::Key::Escape && open) {
+  if (k->key == utils::Key::Escape && open) {
     closePopup();
     return true;
   }
@@ -280,10 +282,12 @@ void DropdownPopup::drawContent(backend::Buffer &buf, core::Rect inner) {
   }
 }
 
-bool DropdownPopup::onEvent(const core::Event &e) {
-  if (e.type != core::EventType::Key)
+bool DropdownPopup::onEvent(const core::events::Event &e) {
+  auto *k = std::get_if<core::events::KeyEvent>(&e);
+  if (!k)
     return false;
-  switch (e.key) {
+
+  switch (k->key) {
   case utils::Key::Up:
     if (hovered > 0) {
       hovered--;

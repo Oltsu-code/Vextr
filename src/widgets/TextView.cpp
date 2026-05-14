@@ -77,10 +77,10 @@ bool TextView::isFocusable() const {
   return state.maxScrollX > 0 || state.maxScrollY > 0;
 }
 
-bool TextView::onEvent(const core::Event &event) {
-  if (event.type != core::EventType::Key) {
+bool TextView::onEvent(const core::events::Event &e) {
+  auto *k = std::get_if<core::events::KeyEvent>(&e);
+  if (!k)
     return false;
-  }
 
   const core::Rect inner = innerRect();
   const ViewportState state = layoutState(text, flowMode, inner);
@@ -88,7 +88,7 @@ bool TextView::onEvent(const core::Event &event) {
     return false;
   }
 
-  switch (event.key) {
+  switch (k->key) {
   case utils::Key::Up:
     if (state.maxScrollY <= 0)
       return false;

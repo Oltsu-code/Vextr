@@ -44,7 +44,7 @@ public:
 
   bool isFocusable() const override { return true; }
   core::Size measure(int availW, int availH) override;
-  bool onEvent(const core::Event &e) override;
+  bool onEvent(const core::events::Event &e) override;
 
   void layout(int x, int y, int width, int height) override;
 
@@ -81,7 +81,7 @@ public:
                 std::weak_ptr<Dropdown> parentDropdown);
 
   core::Size measure(int availW, int availH) override;
-  bool onEvent(const core::Event &e) override;
+  bool onEvent(const core::events::Event &e) override;
   bool isFocusable() const override { return true; }
 
 protected:

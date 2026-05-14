@@ -78,12 +78,14 @@ void App::tick() {
 
   // dispatch events
   while (inputParser.hasEvent()) {
-    core::Event e = inputParser.nextEvent();
+    core::events::Event e = inputParser.nextEvent();
     needsRedraw = true;
 
-    if (e.key == 'q' && !e.ctrl && !e.shift) {
-      running = false;
-      return;
+    if (auto *k = std::get_if<core::events::KeyEvent>(&e)) {
+      if (k->key == 'q' && !k->modifiers.ctrl && !k->modifiers.shift) {
+        running = false;
+        return;
+      }
     }
 
     core::Context::get().focusManager.dispatch(e, root);

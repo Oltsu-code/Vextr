@@ -81,7 +81,7 @@ public:
   ///
   /// @param event The input event
   /// @return True if this widget handled the event
-  virtual bool onEvent(const Event &event) { return false; }
+  virtual bool onEvent(const events::Event &event) { return false; }
 
   /// @brief Returns whether this widget can receive keyboard focus.
   ///

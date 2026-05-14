@@ -87,7 +87,7 @@ void FocusManager::focusPrev(std::shared_ptr<Widget> root) {
   setFocus(focusable.back());
 }
 
-bool FocusManager::dispatchToFocused(const Event &e) {
+bool FocusManager::dispatchToFocused(const events::Event &e) {
   auto fw = focused();
   if (!fw)
     return false;
@@ -104,18 +104,19 @@ bool FocusManager::dispatchToFocused(const Event &e) {
   return false;
 }
 
-bool FocusManager::dispatch(const Event &e, std::shared_ptr<Widget> root) {
+bool FocusManager::dispatch(const events::Event &e,
+                            std::shared_ptr<Widget> root) {
   if (!dispatchToFocused(e)) {
-    if (e.type == EventType::Key) {
-      if (e.key == utils::Key::Tab) {
+    if (auto *k = std::get_if<events::KeyEvent>(&e)) {
+      if (k->key == utils::Key::Tab) {
         focusNext(root);
         return true;
       }
-      if (e.key == utils::Key::ShiftTab) {
+      if (k->key == utils::Key::ShiftTab) {
         focusPrev(root);
         return true;
       }
-      if (e.key == utils::Key::Escape) {
+      if (k->key == utils::Key::Escape) {
         clearFocus();
         return true;
       }

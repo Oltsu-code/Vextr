@@ -50,17 +50,18 @@ void Modal::drawContent(backend::Buffer &buf, core::Rect inner) {
   }
 }
 
-bool Modal::onEvent(const core::Event &e) {
+bool Modal::onEvent(const core::events::Event &e) {
   // forward to content first
   if (content->onEvent(e))
     return true;
 
-  if (dismissable && e.type == core::EventType::Key &&
-      e.key == utils::Key::Escape) {
-    if (onClose)
-      onClose();
-    core::Context::get().overlayManager.pop();
-    return true;
+  if (auto *k = std::get_if<core::events::KeyEvent>(&e)) {
+    if (dismissable && k->key == utils::Key::Escape) {
+      if (onClose)
+        onClose();
+      core::Context::get().overlayManager.pop();
+      return true;
+    }
   }
   return false;
 }

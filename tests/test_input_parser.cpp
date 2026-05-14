@@ -6,16 +6,23 @@ namespace vextr::utils {
 class InputParserTest : public ::testing::Test {
 protected:
   InputParser parser;
+
+  // helper to avoid repeating get_if everywhere
+  core::events::KeyEvent getKey(core::events::Event e) {
+    auto *k = std::get_if<core::events::KeyEvent>(&e);
+    EXPECT_NE(k, nullptr) << "Event is not a KeyEvent";
+    return k ? *k : core::events::KeyEvent{};
+  }
 };
 
 TEST_F(InputParserTest, SimpleKeyEvent) {
   parser.feed('a');
   EXPECT_TRUE(parser.hasEvent());
-  auto event = parser.nextEvent();
-  EXPECT_EQ(event.key, 'a');
-  EXPECT_FALSE(event.shift);
-  EXPECT_FALSE(event.ctrl);
-  EXPECT_FALSE(event.alt);
+  auto k = getKey(parser.nextEvent());
+  EXPECT_EQ(k.key, 'a');
+  EXPECT_FALSE(k.modifiers.shift);
+  EXPECT_FALSE(k.modifiers.ctrl);
+  EXPECT_FALSE(k.modifiers.alt);
 }
 
 TEST_F(InputParserTest, MultipleKeyEvents) {
@@ -24,41 +31,33 @@ TEST_F(InputParserTest, MultipleKeyEvents) {
   parser.feed('c');
 
   EXPECT_TRUE(parser.hasEvent());
-  auto e1 = parser.nextEvent();
-  EXPECT_EQ(e1.key, 'a');
-
+  EXPECT_EQ(getKey(parser.nextEvent()).key, 'a');
   EXPECT_TRUE(parser.hasEvent());
-  auto e2 = parser.nextEvent();
-  EXPECT_EQ(e2.key, 'b');
-
+  EXPECT_EQ(getKey(parser.nextEvent()).key, 'b');
   EXPECT_TRUE(parser.hasEvent());
-  auto e3 = parser.nextEvent();
-  EXPECT_EQ(e3.key, 'c');
-
+  EXPECT_EQ(getKey(parser.nextEvent()).key, 'c');
   EXPECT_FALSE(parser.hasEvent());
 }
 
 TEST_F(InputParserTest, EnterKeyFromNewline) {
-  parser.feed(10); // newline
+  parser.feed(10);
   EXPECT_TRUE(parser.hasEvent());
-  auto event = parser.nextEvent();
-  EXPECT_EQ(event.key, 10); // should be newline/enter
+  EXPECT_EQ(getKey(parser.nextEvent()).key, 10);
 }
 
 TEST_F(InputParserTest, EscapeKeyPending) {
-  parser.feed(27); // ESC
+  parser.feed(27);
   EXPECT_TRUE(parser.pendingEscape());
-  EXPECT_FALSE(parser.hasEvent()); // escape is pending, not yet emitted
+  EXPECT_FALSE(parser.hasEvent());
 }
 
 TEST_F(InputParserTest, EscapeKeyFlush) {
-  parser.feed(27); // ESC
+  parser.feed(27);
   EXPECT_TRUE(parser.pendingEscape());
   parser.flushEscape();
   EXPECT_FALSE(parser.pendingEscape());
   EXPECT_TRUE(parser.hasEvent());
-  auto event = parser.nextEvent();
-  EXPECT_EQ(event.key, 27); // Escape key
+  EXPECT_EQ(getKey(parser.nextEvent()).key, 27);
 }
 
 TEST_F(InputParserTest, NoEventsInitially) { EXPECT_FALSE(parser.hasEvent()); }
@@ -74,22 +73,17 @@ TEST_F(InputParserTest, NumericalKeyEvents) {
   parser.feed('2');
   parser.feed('3');
 
-  EXPECT_TRUE(parser.hasEvent());
-  EXPECT_EQ(parser.nextEvent().key, '1');
-  EXPECT_TRUE(parser.hasEvent());
-  EXPECT_EQ(parser.nextEvent().key, '2');
-  EXPECT_TRUE(parser.hasEvent());
-  EXPECT_EQ(parser.nextEvent().key, '3');
+  EXPECT_EQ(getKey(parser.nextEvent()).key, '1');
+  EXPECT_EQ(getKey(parser.nextEvent()).key, '2');
+  EXPECT_EQ(getKey(parser.nextEvent()).key, '3');
 }
 
 TEST_F(InputParserTest, SpecialCharacterKeys) {
-  parser.feed(' ');  // space
-  parser.feed('\t'); // tab
+  parser.feed(' ');
+  parser.feed('\t');
 
-  EXPECT_TRUE(parser.hasEvent());
-  EXPECT_EQ(parser.nextEvent().key, ' ');
-  EXPECT_TRUE(parser.hasEvent());
-  EXPECT_EQ(parser.nextEvent().key, '\t');
+  EXPECT_EQ(getKey(parser.nextEvent()).key, ' ');
+  EXPECT_EQ(getKey(parser.nextEvent()).key, '\t');
 }
 
 } // namespace vextr::utils

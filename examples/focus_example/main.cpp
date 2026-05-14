@@ -19,16 +19,18 @@ public:
     // swap to focused style handled by activeStyle()
   }
 
-  bool onEvent(const Event &e) override {
-    if (e.type == EventType::Key && e.key == vextr::utils::Key::Enter) {
-      // enter pressed while focused
+  bool onEvent(const events::Event &e) override {
+    if (auto *k = std::get_if<events::KeyEvent>(&e)) {
+      if (k->key == vextr::utils::Key::Enter) {
+        // enter pressed while focused
 
-      if (getText().contains("[") && getText().contains("]"))
-        setText(getText().substr(1, getText().size() - 2));
-      else
-        setText("[" + getText() + "]");
+        if (getText().contains("[") && getText().contains("]"))
+          setText(getText().substr(1, getText().size() - 2));
+        else
+          setText("[" + getText() + "]");
 
-      return true;
+        return true;
+      }
     }
     return false;
   }

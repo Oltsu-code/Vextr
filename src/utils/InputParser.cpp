@@ -4,13 +4,7 @@
 namespace vextr::utils {
 
 void InputParser::emit(int key, bool shift, bool ctrl, bool alt) {
-  core::Event e;
-  e.type = core::EventType::Key;
-  e.key = key;
-  e.shift = shift;
-  e.ctrl = ctrl;
-  e.alt = alt;
-  events.push(e);
+  events.push(core::events::KeyEvent{key, {shift, ctrl, alt}});
   buf.clear();
 }
 
@@ -45,6 +39,30 @@ void InputParser::tryParse() {
   if (buf[1] == '[') {
     if (buf.size() == 2)
       return; // wait for more
+
+    // f1-f4: esc [ [ a-d (linux console) - must check before size==3
+    if (buf.size() == 4 && buf[2] == '[') {
+      switch (buf[3]) {
+      case 'A':
+        emit(Key::F1);
+        return;
+      case 'B':
+        emit(Key::F2);
+        return;
+      case 'C':
+        emit(Key::F3);
+        return;
+      case 'D':
+        emit(Key::F4);
+        return;
+      case 'E':
+        emit(Key::F5);
+        return;
+      default:
+        buf.clear();
+        return;
+      }
+    }
 
     // esc [ x - simple sequences
     if (buf.size() == 3) {
@@ -109,16 +127,6 @@ void InputParser::tryParse() {
     }
 
     // esc [ 1 ; 2 x - modified sequences (shift/ctrl/alt + arrow)
-    if (buf.size() == 5 && buf[2] == '1' && buf[3] == ';') {
-      bool shift =
-          (buf[4] == '2' || buf[4] == '4' || buf[4] == '6' || buf[4] == '8');
-      bool alt =
-          (buf[4] == '3' || buf[4] == '4' || buf[4] == '7' || buf[4] == '8');
-      bool ctrl =
-          (buf[4] == '5' || buf[4] == '6' || buf[4] == '7' || buf[4] == '8');
-      if (buf.size() < 6)
-        return; // wait for final byte
-    }
     if (buf.size() == 6 && buf[2] == '1' && buf[3] == ';') {
       bool shift = (buf[4] == '2');
       bool ctrl = (buf[4] == '5');
@@ -135,30 +143,6 @@ void InputParser::tryParse() {
         return;
       case 'D':
         emit(Key::Left, shift, ctrl, alt);
-        return;
-      default:
-        buf.clear();
-        return;
-      }
-    }
-
-    // f1-f4: esc [ [ a-d (linux console)
-    if (buf.size() == 4 && buf[2] == '[') {
-      switch (buf[3]) {
-      case 'A':
-        emit(Key::F1);
-        return;
-      case 'B':
-        emit(Key::F2);
-        return;
-      case 'C':
-        emit(Key::F3);
-        return;
-      case 'D':
-        emit(Key::F4);
-        return;
-      case 'E':
-        emit(Key::F5);
         return;
       default:
         buf.clear();
@@ -207,8 +191,8 @@ void InputParser::tryParse() {
   buf.clear();
 }
 
-core::Event InputParser::nextEvent() {
-  core::Event e = events.front();
+core::events::Event InputParser::nextEvent() {
+  core::events::Event e = events.front();
   events.pop();
   return e;
 }

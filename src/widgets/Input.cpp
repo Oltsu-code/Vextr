@@ -131,11 +131,12 @@ void Input::drawContent(backend::Buffer &buf, core::Rect inner) {
   }
 }
 
-bool Input::onEvent(const core::Event &e) {
-  if (e.type != core::EventType::Key)
+bool Input::onEvent(const core::events::Event &e) {
+  auto *k = std::get_if<core::events::KeyEvent>(&e);
+  if (!k)
     return false;
 
-  switch (e.key) {
+  switch (k->key) {
   case utils::Key::Left:
     moveCursor(-1);
     return true;
@@ -163,8 +164,9 @@ bool Input::onEvent(const core::Event &e) {
   case utils::Key::Escape:
     return false;
   default:
-    if (e.key >= 32 && e.key < 127 && !e.ctrl && !e.alt) {
-      insertChar((char)e.key);
+    if (k->key >= 32 && k->key < 127 && !k->modifiers.ctrl &&
+        !k->modifiers.alt) {
+      insertChar((char)k->key);
       return true;
     }
     return false;

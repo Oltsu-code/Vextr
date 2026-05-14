@@ -55,16 +55,11 @@ TEST(TextViewTest, ScrollModeRespondsToKeyboardScrolling) {
   TextView view("abcdefghij\nsecond\nthird");
   view.layout(0, 0, 4, 2);
 
-  core::Event down{core::EventType::Key};
-  down.key = utils::Key::Down;
-  core::Event right{core::EventType::Key};
-  right.key = utils::Key::Right;
-  core::Event pageDown{core::EventType::Key};
-  pageDown.key = utils::Key::PageDown;
-  core::Event end{core::EventType::Key};
-  end.key = utils::Key::End;
-  core::Event home{core::EventType::Key};
-  home.key = utils::Key::Home;
+  core::events::Event down = core::events::KeyEvent{utils::Key::Down};
+  core::events::Event right = core::events::KeyEvent{utils::Key::Right};
+  core::events::Event pageDown = core::events::KeyEvent{utils::Key::PageDown};
+  core::events::Event end = core::events::KeyEvent{utils::Key::End};
+  core::events::Event home = core::events::KeyEvent{utils::Key::Home};
 
   EXPECT_TRUE(view.onEvent(down));
   EXPECT_EQ(view.scrollY(), 1);
@@ -89,8 +84,7 @@ TEST(TextViewTest, WrapModeIgnoresKeyboardScrolling) {
   view.setFlowMode(TextFlowMode::Wrap);
   view.layout(0, 0, 4, 2);
 
-  core::Event down{core::EventType::Key};
-  down.key = utils::Key::Down;
+  core::events::Event down = core::events::KeyEvent{utils::Key::Down};
 
   EXPECT_FALSE(view.onEvent(down));
   EXPECT_EQ(view.scrollY(), 0);

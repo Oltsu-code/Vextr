@@ -13,11 +13,11 @@ public:
   bool pendingEscape() const { return buf.size() == 1 && buf[0] == 27; }
   void flushEscape();
 
-  core::Event nextEvent();
+  core::events::Event nextEvent();
 
 private:
   std::vector<unsigned char> buf;
-  std::queue<core::Event> events;
+  std::queue<core::events::Event> events;
 
   void tryParse();
   void emit(int key, bool shift = false, bool ctrl = false, bool alt = false);

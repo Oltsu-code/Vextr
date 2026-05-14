@@ -15,12 +15,9 @@ TEST(TextAreaTest, StartsEmptyAndFocusable) {
 TEST(TextAreaTest, HandlesTypingAndBackspace) {
   TextArea area;
 
-  core::Event typeA{core::EventType::Key};
-  typeA.key = 'a';
-  core::Event typeB{core::EventType::Key};
-  typeB.key = 'b';
-  core::Event backspace{core::EventType::Key};
-  backspace.key = utils::Key::Backspace;
+  core::events::Event typeA = core::events::KeyEvent{'a'};
+  core::events::Event typeB = core::events::KeyEvent{'b'};
+  core::events::Event backspace = core::events::KeyEvent{utils::Key::Backspace};
 
   EXPECT_TRUE(area.onEvent(typeA));
   EXPECT_TRUE(area.onEvent(typeB));
@@ -34,10 +31,8 @@ TEST(TextAreaTest, SupportsMultilineInsertionAndVerticalMovement) {
   TextArea area;
   area.setText("ab\ncd");
 
-  core::Event up{core::EventType::Key};
-  up.key = utils::Key::Up;
-  core::Event enter{core::EventType::Key};
-  enter.key = utils::Key::Enter;
+  core::events::Event up = core::events::KeyEvent{utils::Key::Up};
+  core::events::Event enter = core::events::KeyEvent{utils::Key::Enter};
 
   EXPECT_TRUE(area.onEvent(up));
   EXPECT_TRUE(area.onEvent(enter));
@@ -89,8 +84,7 @@ TEST(TextAreaTest, HorizontalScrollbarThumbMovesWhenScrolled) {
   area.setText("abcdef");
   area.layout(0, 0, 4, 2);
 
-  core::Event left{core::EventType::Key};
-  left.key = utils::Key::Left;
+  core::events::Event left = core::events::KeyEvent{utils::Key::Left};
   EXPECT_TRUE(area.onEvent(left));
 
   backend::Buffer buffer(4, 2);

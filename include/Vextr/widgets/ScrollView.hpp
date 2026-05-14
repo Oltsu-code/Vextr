@@ -52,7 +52,7 @@ public:
   bool isFocusable() const override { return true; }
   core::Size measure(int availW, int availH) override;
   void layout(int x, int y, int width, int height) override;
-  bool onEvent(const core::Event &event) override;
+  bool onEvent(const core::events::Event &e) override;
 
   std::vector<std::shared_ptr<Widget>> getChildren() const override {
     // ScrollView renders its content through an internal clipped viewport, so

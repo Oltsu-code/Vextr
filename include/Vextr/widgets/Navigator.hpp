@@ -89,7 +89,7 @@ public:
   core::Size measure(int availW, int availH) override;
   void layout(int x, int y, int width, int height) override;
   void render(backend::Buffer &buf) override;
-  bool onEvent(const core::Event &e) override;
+  bool onEvent(const core::events::Event &e) override;
 
   std::vector<std::shared_ptr<Widget>> getChildren() const override {
     if (stack.empty())

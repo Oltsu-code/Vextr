@@ -68,7 +68,7 @@ public:
 
   bool isFocusable() const override { return true; }
   core::Size measure(int availW, int availH) override;
-  bool onEvent(const core::Event &e) override;
+  bool onEvent(const core::events::Event &e) override;
 
 protected:
   void drawContent(backend::Buffer &buf, core::Rect inner) override;

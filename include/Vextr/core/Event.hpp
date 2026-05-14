@@ -1,22 +1,18 @@
 #pragma once
+#include <variant>
 
-namespace vextr::core {
+namespace vextr::core::events {
 
-/// @enum EventType
-/// @brief Enumeration of all possible input event types.
-///
-/// Used to distinguish between different kinds of input events that widgets can
-/// receive.
-enum class EventType {
-  Key,          ///< Keyboard key press
-  MousePress,   ///< Mouse button pressed
-  MouseRelease, ///< Mouse button released
-  MouseMove,    ///< Mouse pointer moved
-  Resize,       ///< Terminal window resized
+/// @struct KeyModifiers
+/// @brief Keyboard modifier keys held during a key event
+struct KeyModifiers {
+  bool shift = false;
+  bool ctrl = false;
+  bool alt = false;
 };
 
 /// @enum MouseButton
-/// @brief Mouse button identifier.
+/// @brief Mouse button identifier
 enum class MouseButton {
   None,   ///< No button (used in MouseMove events)
   Left,   ///< Left mouse button
@@ -24,61 +20,80 @@ enum class MouseButton {
   Middle, ///< Middle mouse button
 };
 
-/// @struct Event
-/// @brief Represents a single input event from the terminal.
+/// @struct KeyEvent
+/// @brief A keyboard key press event.
 ///
-/// An event can be a keyboard input, mouse action, or terminal resize.
-/// Which fields are meaningful depends on the @c type field:
+/// Key codes match standard ASCII where applicable. Special keys use
+/// values from @c vextr::utils::Key.
 ///
-/// - **Key events**: @c key, @c shift, @c ctrl, @c alt
-/// - **Mouse events**: @c mouseX, @c mouseY, @c button
-/// - **Resize events**: @c newWidth, @c newHeight
-///
-/// **Example Usage:**
+/// **Example:**
 /// ```cpp
-/// bool MyWidget::onEvent(const Event &e) {
-///   if (e.type == EventType::Key && e.key == 'q') {
+/// if (auto* k = std::get_if<KeyEvent>(&e)) {
+///   if (k->key == 'q' && !k->modifiers.ctrl)
 ///     app->quit();
-///     return true;
-///   }
-///   if (e.type == EventType::MousePress && e.button == MouseButton::Left) {
-///     handleClick(e.mouseX, e.mouseY);
-///     return true;
+/// }
+/// ```
+struct KeyEvent {
+  int key;                ///< Key code (ASCII or utils::Key value)
+  KeyModifiers modifiers; ///< Modifier keys held during the press
+};
+
+/// @struct MousePressEvent
+/// @brief A mouse button press event.
+/// @note This has not been implemented yet!
+struct MousePressEvent {
+  int x, y;           ///< Cursor position (0-based, relative to terminal)
+  MouseButton button; ///< Which button was pressed
+};
+
+/// @struct MouseReleaseEvent
+/// @brief A mouse button release event
+/// @note This has not been implemented yet!
+struct MouseReleaseEvent {
+  int x, y;           ///< Cursor position (0-based, relative to terminal)
+  MouseButton button; ///< Which button was released
+};
+
+/// @struct MouseMoveEvent
+/// @brief A mouse move event (no button pressed)
+/// @note This has not been implemented yet!
+struct MouseMoveEvent {
+  int x, y; ///< New cursor position (0-based, relative to terminal)
+};
+
+/// @struct ResizeEvent
+/// @brief A terminal resize event
+struct ResizeEvent {
+  int width, height; ///< New terminal dimensions in columns and rows
+};
+
+/// @struct Event
+/// @brief A tagged union of all possible input events.
+///
+/// Use @c std::get_if to check the active type and access its fields:
+/// ```cpp
+/// bool Widget::onEvent(const Event& e) {
+///   if (auto* k = std::get_if<KeyEvent>(&e)) {
+///     // handle key
 ///   }
 ///   return false;
 /// }
 /// ```
-struct Event {
-  /// @brief The type of event.
-  EventType type;
-
-  /// @brief The key code (for EventType::Key).
-  /// Key codes match standard ASCII where applicable.
-  int key = 0;
-
-  /// @brief True if Shift was held during key press.
-  bool shift = false;
-
-  /// @brief True if Ctrl was held during key press.
-  bool ctrl = false;
-
-  /// @brief True if Alt was held during key press.
-  bool alt = false;
-
-  /// @brief X coordinate of mouse event (0-based, relative to terminal).
-  int mouseX = 0;
-
-  /// @brief Y coordinate of mouse event (0-based, relative to terminal).
-  int mouseY = 0;
-
-  /// @brief Which mouse button was pressed/released.
-  MouseButton button = MouseButton::None;
-
-  /// @brief New terminal width (for EventType::Resize).
-  int newWidth = 0;
-
-  /// @brief New terminal height (for EventType::Resize).
-  int newHeight = 0;
+struct Event : std::variant<KeyEvent, MousePressEvent, MouseReleaseEvent,
+                            MouseMoveEvent, ResizeEvent> {
+  using variant::variant; // inherit constructors
 };
 
-} // namespace vextr::core
+/// @brief Helper for exhaustive std::visit with multiple lambdas.
+///
+/// **Example:**
+/// ```cpp
+/// std::visit(overloaded{
+///   [](const KeyEvent& k)        { /* ... */ },
+///   [](const MousePressEvent& m) { /* ... */ },
+///   [](const auto&)              { /* catch-all */ }
+/// }, event);
+/// ```
+template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+
+} // namespace vextr::core::events

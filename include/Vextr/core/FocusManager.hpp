@@ -32,7 +32,7 @@ public:
 
   /// @brief Dispatch an event to the currently focused widget, if any
   /// @param e The event to dispatch
-  bool dispatchToFocused(const Event &e);
+  bool dispatchToFocused(const events::Event &e);
 
   /// @brief Dispatch an event
   /// This also includes handling of global focus-related keys like Tab and
@@ -41,7 +41,7 @@ public:
   /// @param e The event to dispatch
   /// @param root The root widget for focus traversal if needed (e.g. on Tab
   /// key))
-  bool dispatch(const Event &e, std::shared_ptr<Widget> root);
+  bool dispatch(const events::Event &e, std::shared_ptr<Widget> root);
 
   /// @brief Focus the top overlay from the overlay stack
   void focusTopOverlay();

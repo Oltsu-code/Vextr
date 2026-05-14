@@ -104,9 +104,10 @@ TEST(ScrollViewTest, EventScrollingMovesViewportAndClamps) {
   view.setContentSize({5, 4});
   view.layout(0, 0, 3, 2);
 
-  core::Event down{};
-  down.type = core::EventType::Key;
-  down.key = utils::Key::Down;
+  core::events::Event down = core::events::KeyEvent{utils::Key::Down};
+  core::events::Event pageUp = core::events::KeyEvent{utils::Key::PageUp};
+  core::events::Event end = core::events::KeyEvent{utils::Key::End};
+  core::events::Event home = core::events::KeyEvent{utils::Key::Home};
 
   EXPECT_TRUE(view.onEvent(down));
   EXPECT_EQ(view.scrollY(), 1);
@@ -117,22 +118,13 @@ TEST(ScrollViewTest, EventScrollingMovesViewportAndClamps) {
   EXPECT_TRUE(view.onEvent(down));
   EXPECT_EQ(view.scrollY(), 2);
 
-  core::Event pageUp{};
-  pageUp.type = core::EventType::Key;
-  pageUp.key = utils::Key::PageUp;
   EXPECT_TRUE(view.onEvent(pageUp));
   EXPECT_EQ(view.scrollY(), 0);
 
-  core::Event end{};
-  end.type = core::EventType::Key;
-  end.key = utils::Key::End;
   EXPECT_TRUE(view.onEvent(end));
   EXPECT_EQ(view.scrollX(), 3);
   EXPECT_EQ(view.scrollY(), 2);
 
-  core::Event home{};
-  home.type = core::EventType::Key;
-  home.key = utils::Key::Home;
   EXPECT_TRUE(view.onEvent(home));
   EXPECT_EQ(view.scrollX(), 0);
   EXPECT_EQ(view.scrollY(), 0);

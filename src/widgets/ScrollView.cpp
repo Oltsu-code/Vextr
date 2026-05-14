@@ -102,11 +102,12 @@ void ScrollView::layout(int x, int y, int width, int height) {
   relayoutContent();
 }
 
-bool ScrollView::onEvent(const core::Event &event) {
-  if (event.type != core::EventType::Key)
+bool ScrollView::onEvent(const core::events::Event &e) {
+  auto *k = std::get_if<core::events::KeyEvent>(&e);
+  if (!k)
     return false;
 
-  switch (event.key) {
+  switch (k->key) {
   case utils::Key::Up:
     scrollBy(0, -1);
     return true;

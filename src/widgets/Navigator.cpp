@@ -62,7 +62,7 @@ void Navigator::render(backend::Buffer &buf) {
     screen->render(buf);
 }
 
-bool Navigator::onEvent(const core::Event &e) {
+bool Navigator::onEvent(const core::events::Event &e) {
   // only top screen receives events
   if (auto top = current())
     return top->onEvent(e);

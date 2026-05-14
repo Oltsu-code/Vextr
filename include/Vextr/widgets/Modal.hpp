@@ -18,7 +18,7 @@ public:
 
   core::Size measure(int availW, int availH) override;
   void layout(int x, int y, int width, int height) override;
-  bool onEvent(const core::Event &e) override;
+  bool onEvent(const core::events::Event &e) override;
   bool isFocusable() const override { return false; }
   void handleResize(int termWidth, int termHeight);
 

@@ -403,12 +403,12 @@ void TextArea::drawContent(backend::Buffer &buf, core::Rect inner) {
   }
 }
 
-bool TextArea::onEvent(const core::Event &e) {
-  if (e.type != core::EventType::Key) {
+bool TextArea::onEvent(const core::events::Event &e) {
+  auto *k = std::get_if<core::events::KeyEvent>(&e);
+  if (!k)
     return false;
-  }
 
-  switch (e.key) {
+  switch (k->key) {
   case utils::Key::Left:
     moveCursorHorizontal(-1);
     return true;
@@ -439,8 +439,9 @@ bool TextArea::onEvent(const core::Event &e) {
   case utils::Key::Escape:
     return false;
   default:
-    if (e.key >= 32 && e.key < 127 && !e.ctrl && !e.alt) {
-      insertChar(static_cast<char>(e.key));
+    if (k->key >= 32 && k->key < 127 && !k->modifiers.ctrl &&
+        !k->modifiers.ctrl) {
+      insertChar(static_cast<char>(k->key));
       return true;
     }
     return false;
