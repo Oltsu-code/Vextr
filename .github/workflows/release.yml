@@ -42,10 +42,10 @@ jobs:
         run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
       - name: Build
-        run: cmake --build build -j 4
+        run: cmake --build build --config ${{ matrix.build_type }} -j 4
 
       - name: Test
-        run: ctest --test-dir build --output-on-failure
+        run: ctest --test-dir build --build-config ${{ matrix.build_type }} --output-on-failure
 
   package:
     name: Package (${{ matrix.os }})
@@ -70,20 +70,31 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y g++ gcc
 
       - name: Configure install
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=dist
+        run: >
+          cmake -B build
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_INSTALL_PREFIX=dist
+          -DVEXTR_BUILD_TESTS=OFF
+          -DVEXTR_BUILD_EXAMPLES=OFF
+          -DVEXTR_BUILD_DOCS=OFF
 
-      - name: Build + install
-        run: |
-          cmake --build build -j 4
-          cmake --install build
+      - name: Build
+        run: cmake --build build --config Release -j 4
 
-      - name: Archive
-        run: |
-          tar -czf vextr-${{ runner.os }}.tar.gz dist
+      - name: Install
+        run: cmake --install build --config Release
+
+      - name: Archive (Unix)
+        if: runner.os != 'Windows'
+        run: tar -czf vextr-${{ runner.os }}.tar.gz dist
+
+      - name: Archive (Windows)
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path dist -DestinationPath vextr-${{ runner.os }}.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: vextr-${{ runner.os }}
-          path: vextr-${{ runner.os }}.tar.gz
+          path: vextr-${{ runner.os }}.*
           retention-days: 30
