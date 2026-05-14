@@ -46,7 +46,32 @@ function injectFrontmatter(content, title) {
 // Anchored to top-of-file so we only strip a leading heading,
 // not the first heading anywhere in the document.
 function stripHeading(content) {
-    return content.replace(/^\s*#+\s+.+\n?/, '');
+    return content.replace(/^(\s*\n)*#+\s+.+\n?/, '');
+}
+
+function rewriteIncludes(content, file) {
+
+    const name = basename(file, '.md').replace(/^api-vextr--?/, '');
+    const parts = name.split('--');
+    const headerName = parts[parts.length - 1]; // e.g. "Event"
+
+    // The include path is Vextr/<subpath>/<ClassName>.hpp
+    // subpath comes from all parts except the last
+    const subpath = parts.slice(0, -1).map(p => p).join('/'); // e.g. "core/events"
+    const correctInclude = subpath
+        ? `Vextr/${subpath}/${headerName}.hpp`
+        : `Vextr/${headerName}.hpp`;
+
+    return content.replace(
+        /#include\s+<[^>]*\b(\w+\.hpp)>/g,
+        (match, filename) => {
+            // Only rewrite if it looks like a bare include (no path separator)
+            if (!match.includes('/')) {
+                return `#include <${correctInclude}>`;
+            }
+            return match;
+        }
+    );
 }
 
 function isEffectivelyEmpty(content) {
