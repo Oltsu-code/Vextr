@@ -25,9 +25,9 @@ Vextr is a flexible **widget-based terminal UI framework for modern C++**.
 include(FetchContent)
 
 FetchContent_Declare(
-    vextr
-    GIT_REPOSITORY https://github.com/Oltsu-code/Vextr.git
-    GIT_TAG main
+        vextr
+        GIT_REPOSITORY https://github.com/Oltsu-code/Vextr.git
+        GIT_TAG main
 )
 
 FetchContent_MakeAvailable(vextr)
@@ -100,7 +100,42 @@ target_link_libraries(my_app PRIVATE vextr)
 
 ## Documentation
 
-TBD
+You can find the online documentation [here](https:/vextr.oltsu.dev/).
+All guides should also be available in the `docs/content/` folder.
+The code also has doxygen comments.
+
+This repository uses [Moxygen](https://github.com/sourcey/moxygen) to generate the API reference documentation from Doxygen XML.
+
+**Note:** The documentation is currently a work in progress.
+
+### Building the docs site
+
+1. Install [Moxygen](https://github.com/sourcey/moxygen)
+```bash
+npm install -g moxygen
+```
+
+2. Install dependencies
+```bash
+cd docs/site
+npm instll
+```
+
+3. Generate the API References and format the content for astro
+```bash
+npm run generate
+```
+
+4. Start the development server
+```bash
+npm run dev
+```
+
+or build
+
+```bash 
+npm run build
+```
 
 ## Roadmap
 
