@@ -1,8 +1,8 @@
 #include <Vextr/backend/Terminal.hpp>
 #include <Vextr/utils/Ansi.hpp>
+#include <cstdio>
 #include <iostream>
 #include <sstream>
-#include <cstdio>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -66,8 +66,7 @@ void Terminal::restore() {
 
 void Terminal::clear() {
   using namespace utils::ansi;
-  std::cout << reset() << clear_screen()
-            << cursor(0, 0);
+  std::cout << reset() << clear_screen() << cursor(0, 0);
 }
 
 void Terminal::clearScrollback() {
