@@ -78,6 +78,9 @@ bool TextView::isFocusable() const {
 }
 
 bool TextView::onEvent(const core::events::Event &e) {
+  if (Widget::onEvent(e))
+    return true;
+
   auto *k = std::get_if<core::events::KeyEvent>(&e);
   if (!k)
     return false;

@@ -109,6 +109,9 @@ void Dropdown::drawContent(backend::Buffer &buf, core::Rect inner) {
 }
 
 bool Dropdown::onEvent(const core::events::Event &e) {
+  if (Widget::onEvent(e))
+    return true;
+
   auto *k = std::get_if<core::events::KeyEvent>(&e);
   if (!k)
     return false;

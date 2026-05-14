@@ -55,6 +55,9 @@ void Button::drawContent(backend::Buffer &buf, core::Rect inner) {
 }
 
 bool Button::onEvent(const core::events::Event &e) {
+  if (Widget::onEvent(e))
+    return true;
+
   if (auto *k = std::get_if<core::events::KeyEvent>(&e)) {
     if (k->key == utils::Key::Enter || k->key == ' ') {
       if (onClick)

@@ -96,13 +96,16 @@ void ScrollView::relayoutContent() {
 }
 
 void ScrollView::layout(int x, int y, int width, int height) {
-  core::Widget::layout(x, y, width, height);
+  Widget::layout(x, y, width, height);
   hasLayout = true;
   currentInner = innerRect();
   relayoutContent();
 }
 
 bool ScrollView::onEvent(const core::events::Event &e) {
+  if (Widget::onEvent(e))
+    return true;
+
   auto *k = std::get_if<core::events::KeyEvent>(&e);
   if (!k)
     return false;

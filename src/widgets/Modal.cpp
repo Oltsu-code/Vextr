@@ -55,6 +55,9 @@ bool Modal::onEvent(const core::events::Event &e) {
   if (content->onEvent(e))
     return true;
 
+  if (Widget::onEvent(e))
+    return true;
+
   if (auto *k = std::get_if<core::events::KeyEvent>(&e)) {
     if (dismissable && k->key == utils::Key::Escape) {
       if (onClose)

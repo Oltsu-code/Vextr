@@ -4,6 +4,7 @@
 #include <Vextr/core/Event.hpp>
 #include <Vextr/core/Geometry.hpp>
 #include <Vextr/core/Style.hpp>
+#include <functional>
 #include <memory>
 #include <vector>
 
@@ -74,14 +75,59 @@ public:
 
   // ---- Input and focus ----
 
+  /// @brief Function signature for event listeners.
+  ///
+  /// Takes the event and returns true if the listener handled it (stopping
+  /// propagation) or false to let the event continue to the widget's own
+  /// onEvent() and then bubble to the parent.
+  using EventHandler = std::function<bool(const events::Event &)>;
+
   /// @brief Handles an input event.
   ///
-  /// Return true if you handled the event, false to pass it to the parent.
-  /// The framework may stop event propagation if true is returned.
+  /// Called by the framework to deliver an event to this widget. The default
+  /// implementation runs any listeners registered via addEventListener(),
+  /// then returns false. Subclasses (Button, Input, etc.) override this to
+  /// add built-in behavior, and should call Widget::onEvent(event) first to
+  /// give user listeners a chance to handle the event before the widget's
+  /// own logic.
+  ///
+  /// Return true if the event was handled, false to let it bubble to the
+  /// parent widget.
   ///
   /// @param event The input event
-  /// @return True if this widget handled the event
-  virtual bool onEvent(const events::Event &event) { return false; }
+  /// @return True if this widget (or one of its listeners) handled the event
+  virtual bool onEvent(const events::Event &event) {
+    for (auto &listener : listeners) {
+      if (listener(event))
+        return true;
+    }
+    return false;
+  }
+
+  /// @brief Registers an event listener on this widget.
+  ///
+  /// Listeners are called by onEvent() before the widget's built-in
+  /// behavior. If a listener returns true, the event is considered handled
+  /// and will not propagate further. Multiple listeners can be registered
+  /// and are called in registration order.
+  ///
+  /// **Example:**
+  /// ```cpp
+  /// root->addEventListener([&](const events::Event& e) -> bool {
+  ///   if (auto* k = std::get_if<events::KeyEvent>(&e)) {
+  ///     if (k->modifiers.ctrl && k->key == 's') {
+  ///       save();
+  ///       return true;
+  ///     }
+  ///   }
+  ///   return false;
+  /// });
+  /// ```
+  ///
+  /// @param handler The function to call when this widget receives an event
+  void addEventListener(EventHandler handler) {
+    listeners.push_back(std::move(handler));
+  }
 
   /// @brief Returns whether this widget can receive keyboard focus.
   ///
@@ -170,6 +216,9 @@ protected:
 
   /// @brief This widget's bounding rectangle (set during layout)
   Rect rect;
+
+  /// @brief Registered event listeners, called by onEvent() in order.
+  std::vector<EventHandler> listeners;
 
   /// @brief Calculates the X position for content based on horizontal
   /// alignment.
