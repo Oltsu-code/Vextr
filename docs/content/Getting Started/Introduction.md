@@ -1,157 +1,53 @@
-[![CI](https://github.com/Oltsu-code/Vextr/actions/workflows/ci.yml/badge.svg)](https://github.com/Oltsu-code/Vextr/actions/workflows/ci.yml)
+introduction.md
 
-# Vextr
+Presenting file(s)...
+# Introduction
 
-Vextr is a flexible **widget-based terminal UI framework for modern C++**.
+Vextr is a widget-based terminal UI framework for modern C++. It lets you
+build interactive terminal apps - layouts, styling, events, navigation -
+with an API that stays out of your way.
 
----
+```cpp
+auto button = std::make_shared<Button>("Save");
+button->setStyle(Style{ .bg = {31, 189, 0} });
+button->setFocusedStyle(Style{ .bg = {0, 255, 68} });
+button->setOnClick([&]() { save(); });
+```
 
-## Features
+That's a styled, focusable, interactive button in four lines.
 
-- Cross-platform: Windows and Unix terminals supported
-- Flexible layout system: stack, grid, absolute positioning
-- Rich styling: RGB colors, bold/underline, padding/margin
-- Common widgets: labels, buttons, inputs, scroll views
-- Simple API for building complex UIs
-- Flexibility oriented
-- Events
+## What Vextr gives you
 
----
+- **Layouts** - stack, grid, and absolute positioning with per-child size constraints
+- **Widgets** - labels, buttons, inputs, text areas, scroll views, dropdowns, modals, and more
+- **Styling** - RGB colors, bold/italic/underline, padding, margins, and five border styles
+- **Events** - keyboard input, event bubbling, and per-widget listeners
+- **Navigation** - multi-screen navigator with overlays and dialogs
+- **Cross-platform** - Windows and Unix terminals, out of the box
+- 
+## Requirements
+
+- C++23 compiler (GCC 13+, Clang 16+, MSVC 2022+)
+- CMake 3.20+
+- Windows or Unix terminal
 
 ## Installation
 
-### CMake FetchContent
+Add this to your `CMakeLists.txt`:
+
 ```cmake
 include(FetchContent)
-
 FetchContent_Declare(
-        vextr
-        GIT_REPOSITORY https://github.com/Oltsu-code/Vextr.git
-        GIT_TAG main
+    vextr
+    GIT_REPOSITORY https://github.com/Oltsu-code/Vextr.git
+    GIT_TAG v0.1.0 # check latest release from https://github.com/Oltsu-code/Vextr
 )
-
 FetchContent_MakeAvailable(vextr)
-
-target_link_libraries(my_app PRIVATE vextr)
+target_link_libraries(my_app PRIVATE vextr) # change my_app to the actual project in your CMakeLists
 ```
 
----
+Then include the library in your code:
 
-## Quick Start
-
-1. Include the header:
-   ```c++
-   #include "vextr.h"
-   ```
-
-2. Create a root Container:
-   ```c++
-   auto root = std::make_shared<vextr::core::Container>(
-      std::make_shared<vextr::core::StackLayout>(vextr::core::Axis::Vertical, 1)); 
-   ```
-
-3. Create a Label widget:
-   ```c++
-   auto label = std::make_shared<vextr::widgets::Label>("Hello, Vextr!");
-   ```
-
-4. create a Style for the Label and apply it:
-   ```c++
-   vextr::core::Style style = {
-      .fg = {54, 9, 217},
-      .bold = true
-   };
-   label->set_style(style);
-   ```
-
-5. Add the label to the root container:
-   ```c++
-   root->add_child(label);
-   ```
-
-6. Create the application, set the root container, and run:
-   ```c++
-   vextr::App app;
-   app.setRoot(root);
-   app.run();
-   ```
-
----
-
-## Building from source
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Oltsu-code/Vextr.git
-   cd Vextr
-   ```
-
-2. Build with CMake:
-   ```bash
-   mkdir build
-   cd build
-   cmake ..
-   cmake --build .
-   ```
-
-3. Have fun!
-
----
-
-## Documentation
-
-You can find the online documentation [here](https:/vextr.oltsu.dev/).
-All guides should also be available in the `docs/content/` folder.
-The code also has doxygen comments.
-
-This repository uses [Moxygen](https://github.com/sourcey/moxygen) to generate the API reference documentation from Doxygen XML.
-
-**Note:** The documentation is currently a work in progress.
-
-### Building the docs site
-
-1. Install [Moxygen](https://github.com/sourcey/moxygen)
-```bash
-npm install -g moxygen
+```cpp
+#include <Vextr/Vextr.hpp>
 ```
-
-2. Install dependencies
-```bash
-cd docs/site
-npm instll
-```
-
-3. Generate the API References and format the content for astro
-```bash
-npm run generate
-```
-
-4. Start the development server
-```bash
-npm run dev
-```
-
-or build
-
-```bash 
-npm run build
-```
-
-## Roadmap
-
----
-
-Check the currently planned roadmap [here](ROADMAP.md).
-
-## Contributing
-
----
-
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-## License
-
-Mozilla Public License Version 2.0. See [LICENSE](LICENSE) for details.
-
-
-   
