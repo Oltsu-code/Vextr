@@ -1,7 +1,4 @@
-introduction.md
-
-Presenting file(s)...
-# Introduction
+# Introduction 
 
 Vextr is a widget-based terminal UI framework for modern C++. It lets you
 build interactive terminal apps - layouts, styling, events, navigation -
