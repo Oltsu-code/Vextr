@@ -82,7 +82,6 @@ public:
 private:
   void tick();
   void handleResize();
-  int pollInput(); // returns key code or -1
 
   std::shared_ptr<core::Widget> root;
   backend::Terminal terminal;
