@@ -19,7 +19,7 @@ public:
   /// @brief Clear focus from any widget
   void clearFocus();
 
-  /// @brif Get the currently focused widget, if any
+  /// @brief Get the currently focused widget, if any
   std::shared_ptr<Widget> focused() const { return current.lock(); }
 
   /// @brief Move focus to the next focusable widget in the tree
