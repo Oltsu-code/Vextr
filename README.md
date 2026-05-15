@@ -55,18 +55,18 @@ target_link_libraries(my_app PRIVATE vextr)
    auto label = std::make_shared<vextr::widgets::Label>("Hello, Vextr!");
    ```
 
-4. create a Style for the Label and apply it:
+4. Create a Style for the Label and apply it:
    ```c++
    vextr::core::Style style = {
       .fg = {54, 9, 217},
       .bold = true
    };
-   label->set_style(style);
+   label->setStyle(style);
    ```
 
 5. Add the label to the root container:
    ```c++
-   root->add_child(label);
+   root->addChild(label);
    ```
    
 6. Create the application, set the root container, and run:
