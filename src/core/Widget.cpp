@@ -44,7 +44,7 @@ const Style &Widget::activeStyle() const {
 }
 
 Rect Widget::innerRect() const {
-  const Style &s = style;
+  const Style &s = activeStyle();
   int b = (s.border.style != BorderStyle::None) ? 1 : 0;
   return {
       rect.x + b + s.padding.left,
