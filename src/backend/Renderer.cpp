@@ -37,9 +37,8 @@ void Renderer::present(const Buffer &buf, Terminal &terminal) {
       const Cell &prev = previousBuffer.get(x, y);
 
       // skip unchanged cells
-      if (cell.ch == prev.ch &&
-          cell.fg.r == prev.fg.r && cell.fg.g == prev.fg.g &&
-          cell.fg.b == prev.fg.b &&
+      if (cell.ch == prev.ch && cell.fg.r == prev.fg.r &&
+          cell.fg.g == prev.fg.g && cell.fg.b == prev.fg.b &&
           cell.bg.transparent == prev.bg.transparent &&
           (cell.bg.transparent ||
            (cell.bg.r == prev.bg.r && cell.bg.g == prev.bg.g &&
@@ -53,7 +52,8 @@ void Renderer::present(const Buffer &buf, Terminal &terminal) {
         out << utils::ansi::cursor(y + 1, x + 1);
 
       // only emit style codes that changed
-      bool attrChanged = (cell.bold != lastBold || cell.underline != lastUnderline);
+      bool attrChanged =
+          (cell.bold != lastBold || cell.underline != lastUnderline);
       bool fgChanged = (cell.fg.r != lastFg.r || cell.fg.g != lastFg.g ||
                         cell.fg.b != lastFg.b);
       bool bgChanged = !cell.bg.transparent &&
