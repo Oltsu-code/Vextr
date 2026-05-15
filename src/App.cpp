@@ -125,18 +125,4 @@ void App::handleResize() {
   core::Context::get().focusManager.dispatch(e, root);
 }
 
-int App::pollInput() {
-#if defined(_WIN32)
-  if (_kbhit())
-    return _getch();
-  return -1;
-#else
-  unsigned char c;
-  int n = read(STDIN_FILENO, &c, 1);
-  if (n == 1)
-    return (int)c;
-  return -1;
-#endif
-}
-
 } // namespace vextr
