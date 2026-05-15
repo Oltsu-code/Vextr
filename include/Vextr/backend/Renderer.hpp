@@ -23,6 +23,11 @@ private:
   void renderWidget(core::Widget &widget, Buffer &buf);
 
   Buffer previousBuffer{0, 0};
+
+  core::Color lastFg{255, 255, 255};
+  core::Color lastBg{0, 0, 0};
+  bool lastBold = false;
+  bool lastUnderline = false;
 };
 
 } // namespace vextr::backend
