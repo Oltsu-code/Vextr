@@ -27,7 +27,7 @@ include(FetchContent)
 FetchContent_Declare(
     vextr
     GIT_REPOSITORY https://github.com/Oltsu-code/Vextr.git
-    GIT_TAG main
+    GIT_TAG main # or check https://github.com/Oltsu-code/Vextr for the latest release
 )
 
 FetchContent_MakeAvailable(vextr)
@@ -41,7 +41,7 @@ target_link_libraries(my_app PRIVATE vextr)
 
 1. Include the header:
    ```c++
-   #include "vextr.h"
+   #include <Vextr/Vextr.hpp>
    ```
 
 2. Create a root Container:
