@@ -54,7 +54,7 @@ inline std::string fg_bright_yellow() { return "\033[93m"; }
 inline std::string fg_bright_blue() { return "\033[94m"; }
 inline std::string fg_bright_magenta() { return "\033[95m"; }
 inline std::string fg_bright_cyan() { return "\033[96m"; }
-inline std::string fg_bright_whit() { return "\033[97m"; }
+inline std::string fg_bright_white() { return "\033[97m"; }
 
 inline std::string bg_black() { return "\033[40m"; }
 inline std::string bg_red() { return "\033[41m"; }
