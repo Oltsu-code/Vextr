@@ -7,6 +7,8 @@ namespace vextr::layout {
 void AbsoluteLayout::apply(std::vector<core::ChildSlot> &children,
                            core::Rect inner) {
   for (auto &slot : children) {
+    if (!slot.widget->visible)
+      continue;
     int x = inner.x + slot.spec.absX.resolve(inner.width);
     int y = inner.y + slot.spec.absY.resolve(inner.height);
 

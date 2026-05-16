@@ -24,7 +24,7 @@ void FocusManager::clearFocus() {
 
 void FocusManager::collectFocusable(std::shared_ptr<Widget> w,
                                     std::vector<std::shared_ptr<Widget>> &out) {
-  if (!w)
+  if (!w || !w->visible)
     return;
   if (w->isFocusable())
     out.push_back(w);

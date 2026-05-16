@@ -185,6 +185,10 @@ public:
     return getChildren();
   }
 
+  /// @brief Whether this widget is visible and participates in layout.
+  /// When false, the widget is not rendered, not focusable, and takes no space.
+  bool visible = true;
+
   /// @brief Weak pointer to this widget's parent.
   /// Use weak_ptr to avoid circular references.
   std::weak_ptr<Widget> parent;

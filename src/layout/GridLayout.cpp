@@ -13,6 +13,8 @@ void GridLayout::apply(std::vector<core::ChildSlot> &children,
   int cellH = std::max(1, (inner.height - gapY * (rows - 1)) / rows);
 
   for (auto &slot : children) {
+    if (!slot.widget->visible)
+      continue;
     int c = std::clamp(slot.spec.col, 0, cols - 1);
     int r = std::clamp(slot.spec.row, 0, rows - 1);
     int cSpan = std::clamp(slot.spec.colSpan, 1, cols - c);

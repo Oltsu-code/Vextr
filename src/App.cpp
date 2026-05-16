@@ -90,6 +90,7 @@ void App::tick() {
   }
 
   if (needsRedraw && root) {
+    root->layout(0, 0, currentSize.width, currentSize.height);
     buffer->clear();
     renderer.renderTree(*root, *buffer);
     renderer.renderOverlays(*buffer);

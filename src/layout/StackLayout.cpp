@@ -11,7 +11,13 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
 
   bool isVert = (axis == Axis::Vertical);
   int mainSize = std::max(1, isVert ? inner.height : inner.width);
-  int gapTotal = gap * (int)(children.size() - 1);
+
+  int visibleCount = 0;
+  for (auto &slot : children)
+    if (slot.widget->visible)
+      visibleCount++;
+
+  int gapTotal = gap * std::max(0, visibleCount - 1);
   int mainAvail = std::max(1, mainSize - gapTotal);
 
   // pass 1: resolve slot sizes
@@ -21,6 +27,8 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
 
   for (size_t i = 0; i < children.size(); ++i) {
     auto &slot = children[i];
+    if (!slot.widget->visible)
+      continue;
     core::ScalarSpec f = isVert ? slot.spec.fixedH : slot.spec.fixedW;
 
     if (f.isSet()) {
@@ -44,6 +52,8 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
 
   for (size_t i = 0; i < children.size(); ++i) {
     auto &slot = children[i];
+    if (!slot.widget->visible)
+      continue;
     core::ScalarSpec f = isVert ? slot.spec.fixedH : slot.spec.fixedW;
     if (f.isSet())
       continue;
@@ -66,6 +76,8 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
   {
     int ratioUsed = 0;
     for (size_t i = 0; i < children.size(); ++i) {
+      if (!children[i].widget->visible)
+        continue;
       core::ScalarSpec f =
           isVert ? children[i].spec.fixedH : children[i].spec.fixedW;
       if (!f.isSet())
@@ -74,6 +86,8 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
     int leftover = ratioPool - ratioUsed;
     if (leftover != 0) {
       for (int i = (int)children.size() - 1; i >= 0; --i) {
+        if (!children[i].widget->visible)
+          continue;
         core::ScalarSpec f =
             isVert ? children[i].spec.fixedH : children[i].spec.fixedW;
         if (!f.isSet()) {
@@ -89,6 +103,8 @@ void StackLayout::apply(std::vector<core::ChildSlot> &children,
 
   for (size_t i = 0; i < children.size(); ++i) {
     auto &slot = children[i];
+    if (!slot.widget->visible)
+      continue;
     int slotSize = std::max(1, sizes[i]);
     int crossTotal = isVert ? inner.width : inner.height;
 

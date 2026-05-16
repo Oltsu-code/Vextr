@@ -11,6 +11,8 @@ void Renderer::renderTree(core::Widget &root, Buffer &buf) {
 
 void Renderer::renderWidget(core::Widget &widget, Buffer &buf) {
   widget.render(buf);
+  if (!widget.visible)
+    return;
   for (auto &child : widget.getChildren()) {
     renderWidget(*child, buf);
   }
@@ -106,6 +108,15 @@ void Renderer::present(const Buffer &buf, Terminal &terminal) {
 
 void Renderer::resize(int width, int height) {
   previousBuffer.resize(width, height);
+
+  // fill with a sentinel so every cell is considered changed on the next render
+  // (prevents skipping cells that happen to match the default on first draw)
+  Cell sentinel;
+  sentinel.ch = "\x01";
+  for (int y = 0; y < height; ++y)
+    for (int x = 0; x < width; ++x)
+      previousBuffer.set(x, y, sentinel);
+
   // terminal cleared on resize -> style state invalid
   lastFg = {255, 255, 255};
   lastBg = {0, 0, 0};

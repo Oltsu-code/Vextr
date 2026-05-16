@@ -61,6 +61,8 @@ void Widget::layout(int x, int y, int width, int height) {
 }
 
 void Widget::render(backend::Buffer &buf) {
+  if (!visible)
+    return;
   drawBackground(buf);
   drawBorder(buf);
   drawContent(buf, innerRect());
